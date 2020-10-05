@@ -76,8 +76,12 @@ namespace WorkReportCreator
 
         private void ShowMainWindow(object sender, RoutedEventArgs e)
         {
-            Hide();
-            _mainWindow.Show();
+            if (MessageBox.Show("Все несохраненные данные будут удалены!\nВы уверены?", "Внимание!",
+                           MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
+            {
+                Hide();
+                _mainWindow.Show();
+            }
         }
 
         private void CheckAllWorks(object sender, RoutedEventArgs e)

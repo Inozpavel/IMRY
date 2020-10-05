@@ -16,7 +16,7 @@ namespace WorkReportCreator.ViewModels.Commands
             set
             {
                 _student = value;
-                OnPropertyCHanged();
+                OnPropertyChanged();
             }
         }
 
@@ -64,7 +64,7 @@ namespace WorkReportCreator.ViewModels.Commands
             }
         }
 
-        public void OnPropertyCHanged([CallerMemberName] string propertyName = "")
+        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
