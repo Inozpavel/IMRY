@@ -1,0 +1,149 @@
+﻿<Window x:Class="WorkReportCreator.WorkAndStudentInfo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WorkReportCreator"
+        mc:Ignorable="d"
+        Title="Информация для титульника" Width="800" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight">
+    <Grid Background="#FF1E1E1E">
+        
+        <Grid.Resources>
+            
+            <!--Дизайн групповых контейнеров-->
+            <Style TargetType="GroupBox">
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Margin" Value="5 0 5 0"/>
+            </Style>
+        </Grid.Resources>
+        
+        <StackPanel>
+            <GroupBox Header="Информация о студенте" Width="300">
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.Resources>
+                        <!--Дизайн надписей-->
+                        <Style TargetType="TextBox">
+                            <Setter Property="Margin" Value="10 3 10 3"/>
+                            <Setter Property="Width" Value="100"/>
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                            <Setter Property="Grid.Column" Value="1"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        </Style>
+                    </Grid.Resources>
+
+                    <!--Фамилия студента-->
+                    <TextBlock Text="Фамилия" Grid.Row="0"/>
+                    <TextBox Grid.Row="0" Text="{Binding Student.SecondName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+
+                    <!--Имя студента-->
+                    <TextBlock Text="Имя" Grid.Row="1"/>
+                    <TextBox Grid.Row="1" Text="{Binding Student.FirstName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    
+                    <!--Отчество студента-->
+                    <TextBlock Text="Отчество" Grid.Row="2"/>
+                    <TextBox Grid.Row="2" Text="{Binding Student.MiddleName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+
+                    <!--Номер группы студента-->
+                    <TextBlock Text="Группа" Grid.Row="3"/>
+                    <TextBox Grid.Row="3" Text="{Binding Student.GroupName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                </Grid>
+
+            </GroupBox>
+            
+            <GroupBox Header="Выбор работ для генерации отчета">
+                <!--Выбор номеров работ-->
+                <StackPanel x:Name="SPWorks" Orientation="Vertical" >
+                    <StackPanel.Resources>
+                        
+                        <Style x:Key="NumberButton" TargetType="ToggleButton">
+                            <Setter Property="Width" Value="30"/>
+                            <Setter Property="Margin" Value="5"/>
+                            <Setter Property="Padding" Value="5"/>
+                        </Style>
+                        
+                    </StackPanel.Resources>
+                    <GroupBox Header="Практические работы" HorizontalAlignment="Stretch">
+                        <StackPanel x:Name="SPPracticalWorks" Orientation="Horizontal">
+                            <Button Content="Все работы" Click="CheckAllWorks" Margin="5" Padding="5"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Лабораторные работы" HorizontalAlignment="Stretch">
+                        <StackPanel x:Name="SPLaboratoryWorks" Orientation="Horizontal">
+                            <Button Content="Все работы" Click="CheckAllWorks" Margin="5" Padding="5"/>
+                        </StackPanel>
+                    </GroupBox>
+                    
+                </StackPanel>
+            </GroupBox>
+            
+            <!--Длинная панель с кнопками-->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel.Resources>
+                    <!--Анимированный дизайн кнопок-->
+                    <Style TargetType="Button">
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="7"/>
+                        <Setter Property="Padding" Value="3"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    
+                                    <Border Background="Transparent" BorderThickness="2" BorderBrush="White" CornerRadius="8">
+                                        <Label Name="TB" Content="{TemplateBinding Content}" Background="Transparent" BorderBrush="Transparent" Foreground="White" Margin="5"/>
+                                    </Border>
+                                    
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            
+                                            <!--Анимация при заходе мышки на элемент-->
+                                            <Trigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation To="Orange" Duration="0:0:0.1" Storyboard.TargetName="TB" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.EnterActions>
+                                            
+                                            <!--Анимация при выходе мышки с элемента-->
+                                            <Trigger.ExitActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation To="White" Duration="0:0:0.1" Storyboard.TargetName="TB" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.ExitActions>
+                                        </Trigger>
+                                        
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                                
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </StackPanel.Resources>
+                
+                <Button Content="Вернуться назад" Click="ShowMainWindow"/>
+                <Button Content="Сохранить информация о студенте" Command="{Binding SaveStudentInfo}"/>
+                <Button Content="Загрузить информация о студенте" Command="{Binding LoadStudentInfo}"/>
+                <Button Content="Перейти к отчетам" Click="GenerateReport"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
