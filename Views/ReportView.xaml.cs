@@ -16,7 +16,6 @@ namespace WorkReportCreator
 
         private void ChooseFile(object sender, System.Windows.RoutedEventArgs e)
         {
-            int a = 2;
         }
     }
 }

@@ -4,34 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WorkReportCreator"
+             xmlns:item="clr-namespace:WorkReportCreator.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="200"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <ListBox ItemsSource="{Binding Array, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFileInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel.Resources>
-                            <Style TargetType="TextBox">
-                                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                            </Style>
-                        </StackPanel.Resources>
-                        
-                        <Label Content="Комментарий к коду"/>
-                        <TextBox Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="40"/>
-                        <Label Content="Путь до файла"/>
-                        <Button Content="Выбрать файл" Click="ChooseFile"/>
-                        <TextBox x:Name="TBFilePath" Text="{Binding FilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="40"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
- 
-        </ListBox>
+        <ListBox Background="#FF1E1E1E" Height="300" ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Array, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFileInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
         <DockPanel Grid.Row="1">
             <!--Кнопки с управлением для файлов-->
             <DockPanel.Resources>

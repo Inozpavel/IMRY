@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using WorkReportCreator.Views;
 
 namespace WorkReportCreator
 {
@@ -8,17 +9,18 @@ namespace WorkReportCreator
 
         public Command RemoveFileInfo { get; private set; }
 
-        public ObservableCollection<ReportFileInfo> Array { get; set; } = new ObservableCollection<ReportFileInfo>();
+        public ObservableCollection<ReportMenuItem> Array { get; set; } = new ObservableCollection<ReportMenuItem>();
 
-        public ReportFileInfo SelectedFileInfo { get; set; }
+        public ReportMenuItem SelectedFileInfo { get; set; }
 
         public ReportViewModel()
         {
+            Array.Add(new ReportMenuItem());
             AddFileInfo = new Command(AddNewFileInfo, null);
             RemoveFileInfo = new Command(RemoveSelectedFileInfo, RemoveSelectedFileInfoCanExecute);
         }
 
-        public void AddNewFileInfo(object parameter) => Array.Add(new ReportFileInfo());
+        public void AddNewFileInfo(object parameter) => Array.Add(new ReportMenuItem());
 
         public void RemoveSelectedFileInfo(object fileInfo) => Array.Remove(SelectedFileInfo);
 
