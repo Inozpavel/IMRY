@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -56,10 +55,10 @@ namespace WorkReportCreator
             {
                 TabItem tabItem = new TabItem() { Header = $"{i.Content} лаб. ", Content = new ReportView() };
                 report.tabControl.Items.Add(tabItem);
-                if (Directory.Exists("./Reports") == false)
-                    Directory.CreateDirectory("./Reports");
+                //if (Directory.Exists("./Reports") == false)
+                //    Directory.CreateDirectory("./Reports");
 
-                string documentPath = "./Reports/Lab_" + i.Content + ".docx";
+                //string documentPath = "./Reports/Lab_" + i.Content + ".docx";
 
                 //DocX doc = DocX.Create(documentPath);
                 //doc.InsertParagraph("123");
@@ -68,7 +67,7 @@ namespace WorkReportCreator
 
             foreach (var i in _practicalWorksButtons.Where(x => x.IsChecked ?? false))
             {
-                report.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} лаб. ", Content = new ReportView() });
+                report.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} пр. ", Content = new ReportView() });
             }
             Hide();
             report.Show();

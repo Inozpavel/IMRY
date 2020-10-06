@@ -39,8 +39,7 @@
                         <!--Дизайн надписей-->
                         <Style TargetType="TextBox">
                             <Setter Property="Margin" Value="10 3 10 3"/>
-                            <Setter Property="Width" Value="100"/>
-                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
                             <Setter Property="Grid.Column" Value="1"/>
                             <Setter Property="FontSize" Value="14"/>
                             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -140,8 +139,8 @@
                 </StackPanel.Resources>
                 
                 <Button Content="Вернуться назад" Click="ShowMainWindow"/>
-                <Button Content="Сохранить информация о студенте" Command="{Binding SaveStudentInfo}"/>
-                <Button Content="Загрузить информация о студенте" Command="{Binding LoadStudentInfo}"/>
+                <Button Content="Сохранить информацию о студенте" Command="{Binding SaveStudentInfo}"/>
+                <Button Content="Загрузить информацию о студенте" Command="{Binding LoadStudentInfo}"/>
                 <Button Content="Перейти к отчетам" Click="GenerateReport"/>
             </StackPanel>
         </StackPanel>

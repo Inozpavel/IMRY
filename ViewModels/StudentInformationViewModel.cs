@@ -41,6 +41,7 @@ namespace WorkReportCreator.ViewModels.Commands
                 Title = "Загрузка информации о студенте",
                 Filter = "Xml файлы(*.xml)|*.xml|Все файлы (*.*)|*.*",
                 DefaultExt = "xml",
+                FileName = "StudentInformation"
             };
 
             if (dialog.ShowDialog() == true)
