@@ -13,7 +13,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <ListBox Background="#FF1E1E1E" Height="300" ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Array, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFileInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <ListBox Background="#FF1E1E1E" Height="300" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectedIndex="{Binding FileInfoSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Array, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFileInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
         <DockPanel Grid.Row="1">
             <!--Кнопки с управлением для файлов-->
@@ -28,8 +28,8 @@
 
             <Button Content="Добавить элемент" Command="{Binding AddFileInfo}"/>
             <Button Content="Удалить выбранный элемент" Command="{Binding RemoveFileInfo}"/>
-            <Button Content="Вверх"/>
-            <Button Content="Вниз"/>
+            <Button Content="Вверх" Command="{Binding SwapUpFileInfo}"/>
+            <Button Content="Вниз" Command="{Binding SwapDownFileInfo}"/>
         </DockPanel>
 
         <!--<FlowDocumentReader Name ="Document"/>-->

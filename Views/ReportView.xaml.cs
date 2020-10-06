@@ -13,9 +13,5 @@ namespace WorkReportCreator
             InitializeComponent();
             DataContext = _model;
         }
-
-        private void ChooseFile(object sender, System.Windows.RoutedEventArgs e)
-        {
-        }
     }
 }
