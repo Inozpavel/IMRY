@@ -32,8 +32,20 @@
                         <Setter Property="Padding" Value="5"/>
                         <Setter Property="Margin" Value="5"/>
                     </Style>
+
+                    <Style TargetType="Label" x:Key="DigitIndexButton">
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="Padding" Value="5"/>
+                        <Setter Property="Margin" Value="5"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </Style>
                 </StackPanel.Resources>
-                <Label Content="{Binding Number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <Grid Margin="2">
+                    <Ellipse Width="30" Height="30" StrokeThickness="2" Stroke="Aqua"/>
+                    <Label Content="{Binding Number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DigitIndexButton}"/>
+                </Grid>
                 <Label Content="Имя файла" Visibility="{Binding FileNameVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding FileNameVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Путь до файла"/>
