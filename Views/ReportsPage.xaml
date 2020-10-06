@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WorkReportCreator"
+        xmlns:local="clr-namespace:WorkReportCreator.Views"
         mc:Ignorable="d"
-        Title="Report" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Report" Height="450" WindowStartupLocation="CenterScreen">
     <TabControl x:Name="Tabs" Background="#FF1E1E1E"> 
         <TabItem Header="Быстрые действия">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
