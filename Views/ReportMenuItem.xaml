@@ -5,36 +5,45 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WorkReportCreator.Views"
              mc:Ignorable="d">
-    <Border CornerRadius="5" Background="#FF3E3E42">
-        <StackPanel Orientation="Horizontal">
-            <StackPanel.Resources>
+    <Border CornerRadius="5" Background="#FF3E3E42" MaxWidth="1100">
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel.Resources>
+                 
+                    <Style TargetType="TextBox">
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="MinWidth" Value="100"/>
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="TextWrapping" Value="Wrap"/>
+                        <Setter Property="TextAlignment" Value="Center"/>
+                        <Setter Property="SpellCheck.IsEnabled" Value="True"/>
+                        <Setter Property="Language" Value="ru-ru"/>
+                    </Style>
                 
-                <Style TargetType="TextBox">
-                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                    <Setter Property="MinWidth" Value="100"/>
-                    <Setter Property="FontSize" Value="14"/>
-                    <Setter Property="TextWrapping" Value="Wrap"/>
-                    <Setter Property="TextAlignment" Value="Center"/>
-                </Style>
-                
-                <Style TargetType="Label">
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Margin" Value="5"/>
-                    <Setter Property="Foreground" Value="White"/>
-                </Style>
+                    <Style TargetType="Label">
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="5"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="MinWidth" Value="60"/>
+                    </Style>
 
-                <Style TargetType="Button">
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Padding" Value="5"/>
-                    <Setter Property="Margin" Value="5"/>
-                </Style>
-            </StackPanel.Resources>
-
-            <Label Content="Комментарий к коду"/>
-            <TextBox Text="{Binding CodeFileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <Label Content="Путь до файла"/>
-            <Button Content="Выбрать файл"/>
-            <TextBox x:Name="TBFilePath" Text="{Binding CodeFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Style TargetType="Button">
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Padding" Value="5"/>
+                        <Setter Property="Margin" Value="5"/>
+                    </Style>
+                </StackPanel.Resources>
+                <Label Content="{Binding Number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Content="Имя файла" Visibility="{Binding FileNameVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Content="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding FileNameVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Content="Путь до файла"/>
+                <Button Content="Выбрать файл" Click="ChooseFile"/>
+                <Label Content="{Binding CodeFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Visibility="{Binding TextBoxVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <Label Content="Комментарий к коду" Foreground="White"/>
+                <TextBox Text="{Binding CodeFileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="57" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+            </StackPanel>
         </StackPanel>
     </Border>
 </UserControl>
