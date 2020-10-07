@@ -9,12 +9,13 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="317"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <ListBox Background="#FF1E1E1E" Height="300" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectedIndex="{Binding FileInfoSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Array, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFileInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
+        <ListBox Background="#FF1E1E1E" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectedIndex="{Binding FileInfoSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Array, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFileInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Grid.Row="0"/>
+        
         <DockPanel Grid.Row="1">
             <!--Кнопки с управлением для файлов-->
             <DockPanel.Resources>
@@ -32,7 +33,6 @@
             <Button Content="Вниз" Command="{Binding SwapDownFileInfo}"/>
         </DockPanel>
 
-        <!--<FlowDocumentReader Name ="Document"/>-->
         <StatusBar VerticalAlignment="Bottom" Grid.Row="2">
             <Button Content="Сохранить отчет" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </StatusBar>
