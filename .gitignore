@@ -3,6 +3,7 @@ bin/
 obj/
 packages/
 Properties/
+MigrationBackup/
 *.sln
 *.user
 *.csproj
