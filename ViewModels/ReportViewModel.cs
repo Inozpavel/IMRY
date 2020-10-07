@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Controls;
 using WorkReportCreator.Views;
 
 namespace WorkReportCreator
@@ -26,56 +28,59 @@ namespace WorkReportCreator
             }
         }
 
-        public ObservableCollection<ReportMenuItem> Array { get; set; } = new ObservableCollection<ReportMenuItem>();
+        public ObservableCollection<ListBoxItem> Array { get; set; } = new ObservableCollection<ListBoxItem>();
 
-        private ReportMenuItem _selectedFileInfo;
+        private ListBoxItem _selectedFileInfo;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public ReportMenuItem SelectedFileInfo
+        public ListBoxItem SelectedFileInfo
         {
             get => _selectedFileInfo;
             set
             {
                 if (_selectedFileInfo != null)
-                    _selectedFileInfo.IsSelected = false;
+                    (_selectedFileInfo.Content as ReportMenuItem).IsSelected = false;
 
                 _selectedFileInfo = value;
 
-                if (value != null)
-                    value.IsSelected = true;
+                if (_selectedFileInfo != null)
+                    (_selectedFileInfo.Content as ReportMenuItem).IsSelected = true;
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public ReportViewModel()
         {
-            Array.Add(new ReportMenuItem() { Number = 1 });
+            Array.Add(new ListBoxItem() { Content = new ReportMenuItem() { Number = 1 }, HorizontalContentAlignment = HorizontalAlignment.Stretch });
             AddFileInfo = new Command(AddNewFileInfo, null);
             RemoveFileInfo = new Command(RemoveSelectedFileInfo, RemoveSelectedFileInfoCanExecute);
             SwapUpFileInfo = new Command(SwapUpSelectedFileInfo, SwapUpSelectedFileInfoCanExecute);
             SwapDownFileInfo = new Command(SwapDownSelectedFileInfo, SwapDownSelectedFileInfoCanExecute);
         }
+        public void AddNewFileInfo(object sender) => Array.Add(new ListBoxItem() { Content = new ReportMenuItem() { Number = Array.Count + 1 }, HorizontalContentAlignment = HorizontalAlignment.Stretch });
 
-        public void AddNewFileInfo(object sender) => Array.Add(new ReportMenuItem() { Number = Array.Count + 1 });
+        public void RemoveSelectedFileInfo(object fileInfo)
+        {
+            ReportMenuItem reportMenuItem = _selectedFileInfo.Content as ReportMenuItem;
+            if (string.IsNullOrEmpty(reportMenuItem.FileName) == false || string.IsNullOrEmpty(reportMenuItem.CodeFileDescription) == false)
+            {
+                if (MessageBox.Show("В выбранном элементе имеются введеные данные!\nОни удалятся БЕЗ возможности восстановления!\nВы уверены?",
+                    "Подтвердите действие", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No)
+                    return;
+            }
 
-        public void RemoveSelectedFileInfo(object fileInfo) => Array.Remove(SelectedFileInfo);
+            Array.Remove(SelectedFileInfo);
+            for (int i = 0; i < Array.Count; i++)
+                (Array[i].Content as ReportMenuItem).Number = i + 1;
+        }
 
         public bool RemoveSelectedFileInfoCanExecute(object fileInfo) => SelectedFileInfo != null;
 
         public void SwapUpSelectedFileInfo(object sender)
         {
-            int number = _selectedFileInfo.Number - 1;
-
-            var temp = Array[number - 1];
-            Array[number - 1] = Array[number];
-            Array[number] = temp;
-
-            int tempNumber = Array[number - 1].Number;
-            Array[number - 1].Number = Array[number].Number;
-            Array[number].Number = tempNumber;
-
+            int number = (_selectedFileInfo.Content as ReportMenuItem).Number - 1;
+            SwapArrayItems(number, number - 1);
             FileInfoSelectedIndex = number - 1;
-
             OnPropertyChanged();
         }
 
@@ -83,16 +88,8 @@ namespace WorkReportCreator
 
         public void SwapDownSelectedFileInfo(object sender)
         {
-            int number = _selectedFileInfo.Number - 1;
-
-            var temp = Array[number + 1];
-            Array[number + 1] = Array[number];
-            Array[number] = temp;
-
-            int tempNumber = Array[number + 1].Number;
-            Array[number + 1].Number = Array[number].Number;
-            Array[number].Number = tempNumber;
-
+            int number = (_selectedFileInfo.Content as ReportMenuItem).Number - 1;
+            SwapArrayItems(number, number + 1);
             FileInfoSelectedIndex = number + 1;
             OnPropertyChanged();
         }
@@ -101,6 +98,17 @@ namespace WorkReportCreator
         public void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void SwapArrayItems(int firstIndex, int secondIndex)
+        {
+            ReportMenuItem temp = Array[firstIndex].Content as ReportMenuItem;
+            Array[firstIndex].Content = Array[secondIndex].Content;
+            Array[secondIndex].Content = temp;
+
+            int tempNumber = (Array[firstIndex].Content as ReportMenuItem).Number;
+            (Array[firstIndex].Content as ReportMenuItem).Number = (Array[secondIndex].Content as ReportMenuItem).Number;
+            (Array[secondIndex].Content as ReportMenuItem).Number = tempNumber;
         }
     }
 }
