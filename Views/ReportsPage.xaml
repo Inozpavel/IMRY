@@ -6,22 +6,27 @@
         xmlns:local="clr-namespace:WorkReportCreator.Views"
         mc:Ignorable="d"
         Title="Report" Height="450" WindowStartupLocation="CenterScreen">
-    <TabControl x:Name="Tabs" Background="#FF1E1E1E"> 
+    <TabControl x:Name="Tabs" Background="#FF1E1E1E">
+        
         <TabItem Header="Быстрые действия">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                
                 <StackPanel.Resources>
                     <Style TargetType="Button">
                         <Setter Property="HorizontalAlignment" Value="Center"/>
-                        <Setter Property="VerticalAlignment" Value="Center"/>   
+                        <Setter Property="VerticalAlignment" Value="Center"/>
                         <Setter Property="Margin" Value="5"/>
                         <Setter Property="Padding" Value="10"/>
                         <Setter Property="FontSize" Value="14"/>
                         <Setter Property="Width" Value="200"/>
                     </Style>
                 </StackPanel.Resources>
+
                 <Button Content="Сохранить все отчеты"/>
                 <Button Content="Вернуться назад" Click="ShowWorkAndStudentInformation"/>
+
             </StackPanel>
         </TabItem>
+        
     </TabControl>
 </Window>
