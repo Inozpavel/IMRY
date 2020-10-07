@@ -11,7 +11,41 @@ namespace WorkReportCreator.Views
     {
         private Visibility _textBoxVisiblity = Visibility.Visible;
 
+        public Visibility TextBoxVisiblity
+        {
+            get => _textBoxVisiblity;
+            set
+            {
+                _textBoxVisiblity = value;
+                OnPropertyChanged();
+            }
+        }
+
         private Visibility _fileNameVisiblity = Visibility.Collapsed;
+
+        public Visibility FileNameVisiblity
+        {
+            get => _fileNameVisiblity;
+            set
+            {
+                _fileNameVisiblity = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _fileName;
+
+        public string FileName
+        {
+            get => _fileName;
+            set
+            {
+                _fileName = value;
+                TextBoxVisiblity = string.IsNullOrEmpty(_fileName) == false && IsSelected ? Visibility.Visible : Visibility.Collapsed;
+                FileNameVisiblity = string.IsNullOrEmpty(_fileName) == false ? Visibility.Visible : Visibility.Collapsed;
+                OnPropertyChanged();
+            }
+        }
 
         private int _number;
 
@@ -25,38 +59,15 @@ namespace WorkReportCreator.Views
             }
         }
 
-        public Visibility TextBoxVisiblity
-        {
-            get => _textBoxVisiblity;
-            set
-            {
-                _textBoxVisiblity = value;
-                OnPropertyChanged();
-            }
-        }
-        public Visibility FileNameVisiblity
-        {
-            get => _fileNameVisiblity;
-            set
-            {
-                _fileNameVisiblity = value;
-                OnPropertyChanged();
-            }
-        }
+        public static readonly DependencyProperty CodeFileDescriptionProperty =
+            DependencyProperty.Register("CodeFileDescription", typeof(string), typeof(ReportMenuItem), new PropertyMetadata("", CodeFileDescriptionPropertyChanged));
+
+        public static readonly DependencyProperty CodeFilePathProperty =
+            DependencyProperty.Register("CodeFilePath", typeof(string), typeof(ReportMenuItem), new PropertyMetadata("", CodeFilePathPropertyChanged));
 
 
-        private string _fileName;
-        public string FileName
-        {
-            get => _fileName;
-            set
-            {
-                _fileName = value;
-                TextBoxVisiblity = _fileName != "" && IsSelected ? Visibility.Visible : Visibility.Collapsed;
-                FileNameVisiblity = _fileName != "" ? Visibility.Visible : Visibility.Collapsed;
-                OnPropertyChanged();
-            }
-        }
+        public static readonly DependencyProperty IsSelectedProperty =
+           DependencyProperty.Register("IsSelected", typeof(bool), typeof(ReportMenuItem), new PropertyMetadata(false));
 
         public string CodeFileDescription
         {
@@ -67,9 +78,6 @@ namespace WorkReportCreator.Views
                 OnPropertyChanged();
             }
         }
-
-        public static readonly DependencyProperty CodeFileDescriptionProperty =
-            DependencyProperty.Register("CodeFileDescription", typeof(string), typeof(ReportMenuItem), new PropertyMetadata(""));
 
         public string CodeFilePath
         {
@@ -82,34 +90,38 @@ namespace WorkReportCreator.Views
             }
         }
 
-        public static readonly DependencyProperty CodeFilePathProperty =
-            DependencyProperty.Register("CodeFilePath", typeof(string), typeof(ReportMenuItem), new PropertyMetadata(""));
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public bool IsSelected
         {
             get { return (bool)GetValue(IsSelectedProperty); }
             set
             {
                 SetValue(IsSelectedProperty, value);
-                TextBoxVisiblity = _fileName != "" && IsSelected ? Visibility.Visible : Visibility.Collapsed;
+                TextBoxVisiblity = string.IsNullOrEmpty(_fileName) == false && IsSelected ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
-        public static readonly DependencyProperty IsSelectedProperty =
-            DependencyProperty.Register("IsSelected", typeof(bool), typeof(ReportMenuItem), new PropertyMetadata(false));
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public ReportMenuItem()
         {
             InitializeComponent();
-            TextBoxVisiblity = Visibility.Collapsed;
             DataContext = this;
+            TextBoxVisiblity = Visibility.Collapsed;
+        }
+
+        private static void CodeFileDescriptionPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            (sender as ReportMenuItem).CodeFileDescription = e.NewValue as string;
+        }
+
+        private static void CodeFilePathPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            (sender as ReportMenuItem).CodeFilePath = e.NewValue as string;
+        }
+
+        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void ChooseFile(object sender, RoutedEventArgs e)
