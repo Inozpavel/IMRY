@@ -20,7 +20,7 @@
                             <ControlTemplate TargetType="Button">
                                 
                                 <Border CornerRadius="6" BorderBrush="White" BorderThickness="2" Background="Transparent" Padding="5" Height="50">
-                                    <TextBlock x:Name="Text_1" Text="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFBAC3C3" Margin="0 3 0 3"/>
+                                    <TextBlock x:Name="LBText" Text="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFBAC3C3" Margin="0 3 0 3"/>
                                 </Border>
                                 
                                 <ControlTemplate.Triggers>
@@ -30,7 +30,7 @@
                                         <Trigger.EnterActions>
                                             <BeginStoryboard>
                                                 <Storyboard>
-                                                    <DoubleAnimation Duration="0:0:0.1" To="18" Storyboard.TargetProperty="FontSize" Storyboard.TargetName="Text_1"/>
+                                                    <DoubleAnimation Duration="0:0:0.1" To="18" Storyboard.TargetProperty="FontSize" Storyboard.TargetName="LBText"/>
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </Trigger.EnterActions>
@@ -39,7 +39,7 @@
                                         <Trigger.ExitActions>
                                             <BeginStoryboard>
                                                 <Storyboard>
-                                                    <DoubleAnimation Duration="0:0:0.1" To="14" Storyboard.TargetProperty="FontSize" Storyboard.TargetName="Text_1"/>
+                                                    <DoubleAnimation Duration="0:0:0.1" To="14" Storyboard.TargetProperty="FontSize" Storyboard.TargetName="LBText"/>
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </Trigger.ExitActions>
