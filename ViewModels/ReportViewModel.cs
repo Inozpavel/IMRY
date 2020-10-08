@@ -82,7 +82,7 @@ namespace WorkReportCreator
             }
 
             int number = reportMenuItem.Number - 1;
-            
+
             Array.Remove(SelectedFileInfo);
             UpdateAllNumbers();
 

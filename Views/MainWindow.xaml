@@ -19,8 +19,8 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="Button">
                                 
-                                <Border CornerRadius="6" BorderBrush="White" BorderThickness="2" Background="Transparent" Padding="5" Height="50">
-                                    <TextBlock x:Name="LBText" Text="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFBAC3C3" Margin="0 3 0 3"/>
+                                <Border CornerRadius="10" BorderBrush="White" BorderThickness="2" Background="Transparent" Padding="5" Height="50">
+                                    <TextBlock x:Name="textBlock" Text="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFBAC3C3" Margin="0 3 0 3"/>
                                 </Border>
                                 
                                 <ControlTemplate.Triggers>
@@ -30,16 +30,16 @@
                                         <Trigger.EnterActions>
                                             <BeginStoryboard>
                                                 <Storyboard>
-                                                    <DoubleAnimation Duration="0:0:0.1" To="18" Storyboard.TargetProperty="FontSize" Storyboard.TargetName="LBText"/>
+                                                    <DoubleAnimation Duration="0:0:0.2" To="18" Storyboard.TargetProperty="FontSize" Storyboard.TargetName="textBlock"/>
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </Trigger.EnterActions>
-                                        
-                                        <!--Анимация про уходе мышки с элемент-->
+
+                                        <!--Анимация про уходе мышки с элемента-->
                                         <Trigger.ExitActions>
                                             <BeginStoryboard>
                                                 <Storyboard>
-                                                    <DoubleAnimation Duration="0:0:0.1" To="14" Storyboard.TargetProperty="FontSize" Storyboard.TargetName="LBText"/>
+                                                    <DoubleAnimation Duration="0:0:0.2" To="14" Storyboard.TargetProperty="FontSize" Storyboard.TargetName="textBlock"/>
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </Trigger.ExitActions>
@@ -48,7 +48,6 @@
                                 
                             </ControlTemplate>
                         </Setter.Value>
-                       
                     </Setter>
                 </Style>
                 

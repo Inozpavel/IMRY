@@ -21,11 +21,13 @@ namespace WorkReportCreator
         private readonly List<ToggleButton> _laboratoryWorksButtons = new List<ToggleButton>();
 
         private readonly MainWindow _mainWindow;
+
         public WorkAndStudentInfo(MainWindow mainWindow)
         {
             InitializeComponent();
             DataContext = _model;
             _mainWindow = mainWindow;
+
             foreach (int i in _permittedPracticalWorks)
             {
                 ToggleButton button = new ToggleButton { Content = i.ToString(), Style = SPWorks.Resources["NumberButton"] as Style };
@@ -39,38 +41,6 @@ namespace WorkReportCreator
                 _laboratoryWorksButtons.Add(button);
                 SPLaboratoryWorks.Children.Add(button);
             }
-        }
-
-        private void GenerateReport(object sender, RoutedEventArgs e)
-        {
-            if (_laboratoryWorksButtons.All(x => x.IsChecked == false) && _practicalWorksButtons.All(x => x.IsChecked == false))
-            {
-                MessageBox.Show("Выберите хотя бы одну работу!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            ReportsPage report = new ReportsPage(this);
-
-            foreach (var i in _laboratoryWorksButtons.Where(x => x.IsChecked ?? false))
-            {
-                TabItem tabItem = new TabItem() { Header = $"{i.Content} лаб. ", Content = new ReportView() };
-                report.tabControl.Items.Add(tabItem);
-                //if (Directory.Exists("./Reports") == false)
-                //    Directory.CreateDirectory("./Reports");
-
-                //string documentPath = "./Reports/Lab_" + i.Content + ".docx";
-
-                //DocX doc = DocX.Create(documentPath);
-                //doc.InsertParagraph("123");
-                //doc.SaveAs(new FileStream(documentPath, FileMode.Create));
-            }
-
-            foreach (var i in _practicalWorksButtons.Where(x => x.IsChecked ?? false))
-            {
-                report.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} пр. ", Content = new ReportView() });
-            }
-            Hide();
-            report.Show();
         }
 
         private void ShowMainWindow(object sender, RoutedEventArgs e)
@@ -96,6 +66,30 @@ namespace WorkReportCreator
                 _laboratoryWorksButtons.ForEach(x => x.IsChecked = _shouldCheckAllLaboratoryWork);
                 _shouldCheckAllLaboratoryWork = !_shouldCheckAllLaboratoryWork;
             }
+        }
+
+        private void GenerateReport(object sender, RoutedEventArgs e)
+        {
+            if (_laboratoryWorksButtons.All(x => x.IsChecked == false) && _practicalWorksButtons.All(x => x.IsChecked == false))
+            {
+                MessageBox.Show("Выберите хотя бы одну работу!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            ReportsPage report = new ReportsPage(this);
+
+            foreach (var i in _laboratoryWorksButtons.Where(x => x.IsChecked ?? false))
+            {
+                report.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} лаб. ", Content = new ReportView() });
+            }
+
+            foreach (var i in _practicalWorksButtons.Where(x => x.IsChecked ?? false))
+            {
+                report.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} пр. ", Content = new ReportView() });
+            }
+
+            Hide();
+            report.Show();
         }
     }
 }

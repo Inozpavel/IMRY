@@ -14,7 +14,7 @@ namespace WorkReportCreator
         {
             InitializeComponent();
             _informationPage = informationPage;
-            tabControl = Tabs;
+            tabsControl = tabControl;
         }
 
         private void ShowWorkAndStudentInformation(object sender, RoutedEventArgs e)

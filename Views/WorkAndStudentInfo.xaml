@@ -38,7 +38,7 @@
 
                     <Grid.Resources>
 
-                        <!--Дизайн полей ввода-->
+                        <!--Дизайн полей для ввода-->
                         <Style TargetType="TextBox">
                             <Setter Property="Margin" Value="10 3 10 3"/>
                             <Setter Property="Grid.Column" Value="1"/>
@@ -141,7 +141,7 @@
                                             
                                             <Trigger Property="IsMouseOver" Value="True">
 
-                                                <!--Анимация про заходе мышки на элемент-->
+                                                <!--Анимация при заходе мышки на элемент-->
                                                 <Trigger.EnterActions>
                                                     <BeginStoryboard>
                                                         <Storyboard>
@@ -151,7 +151,7 @@
                                                     </BeginStoryboard>
                                                 </Trigger.EnterActions>
                                                 
-                                                <!--Анимация про уходе мышки с элемента-->
+                                                <!--Анимация при выходе мышки с элемента-->
                                                 <Trigger.ExitActions>
                                                     <BeginStoryboard>
                                                         <Storyboard>
