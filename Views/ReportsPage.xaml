@@ -3,15 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WorkReportCreator.Views"
+        xmlns:local="clr-namespace:WorkReportCreator"
         mc:Ignorable="d"
-        Title="Report" Height="450" WindowStartupLocation="CenterScreen" Background="#FF333337">
+        Title="Report" WindowStartupLocation="CenterScreen" Background="#FF333337" SizeToContent="Height" >
     <TabControl x:Name="Tabs" Background="#FF1E1E1E">
         
-        <TabItem Header="Быстрые действия">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TabItem Header="Быстрые действия" Focusable="True">
+            <Grid Height="421">
                 
-                <StackPanel.Resources>
+                <Grid.Resources>
                     <Style TargetType="Button">
                         <Setter Property="HorizontalAlignment" Value="Center"/>
                         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -20,14 +20,19 @@
                         <Setter Property="FontSize" Value="14"/>
                         <Setter Property="Width" Value="200"/>
                     </Style>
-                </StackPanel.Resources>
-
-                <Button Content="Сохранить все данные"/>
-                <Button Content="Сгенерировать все отчеты" IsEnabled="False"/>
-                <Button Content="Вернуться назад" Click="ShowWorkAndStudentInformation"/>
-
-            </StackPanel>
+                </Grid.Resources>
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                
+                <Button Content="Сохранить все данные" Grid.Row="0"/>
+                <Button Content="Сгенерировать все отчеты" IsEnabled="False" Grid.Row="1"/>
+                <Button Content="Вернуться назад" Click="ShowWorkAndStudentInformation" Grid.Row="2"/>
+            </Grid>
         </TabItem>
-        
     </TabControl>
 </Window>
