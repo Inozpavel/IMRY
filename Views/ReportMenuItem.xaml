@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:WorkReportCreator.Views"
              mc:Ignorable="d" >
     <Grid Background="Transparent">
-        <Border CornerRadius="10" Background="#FF3E3E42">
+        <Border CornerRadius="15" Background="#FF3E3E42" BorderBrush="#FFA8B3B3" BorderThickness="1" Focusable="False">
             <StackPanel Orientation="Vertical">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -39,33 +39,39 @@
                             <Setter Property="VerticalAlignment" Value="Center"/>
                             <Setter Property="Padding" Value="5"/>
                             <Setter Property="Margin" Value="5"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
                             <Setter Property="FontSize" Value="14"/>
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="Button">
-                                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="20">
-                                            <Label Name="LBText" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Border x:Name="border" BorderBrush="Cyan" Background="Transparent" BorderThickness="2" CornerRadius="20">
+                                            <Label Name="label" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="15 2 15 2"/>
                                         </Border>
 
                                         <ControlTemplate.Triggers>
-                                            <DataTrigger Binding="{Binding IsMouseOver}" Value="True">
-                                                
-                                                <DataTrigger.EnterActions>
-                                                    <BeginStoryboard>
-                                                        <Storyboard>
-                                                            <ColorAnimation To="LightGreen" Duration="0:0:0.1" Storyboard.TargetName="LBText" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </DataTrigger.EnterActions>
-                                                
-                                                <DataTrigger.ExitActions>
-                                                    <BeginStoryboard>
-                                                        <Storyboard>
-                                                            <ColorAnimation To="White" Duration="0:0:0.1" Storyboard.TargetName="LBText" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </DataTrigger.ExitActions>
-                                            </DataTrigger>
+
+                                            <!--Анимация про заходе мышки на элемент-->
+                                            <EventTrigger RoutedEvent="MouseEnter">
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation To="Transparent" Duration="0:0:0.1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                        <ColorAnimation To="Black" Duration="0:0:0.3" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
+                                                        <ColorAnimation To="Cyan" Duration="0:0:0.3" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+
+                                            <!--Анимация про уходе мышки с элемента-->
+                                            <EventTrigger RoutedEvent="MouseLeave">
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation To="Cyan" Duration="0:0:0.3" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                        <ColorAnimation To="White" Duration="0:0:0.3" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
+                                                        <ColorAnimation To="Transparent" Duration="0:0:0.1" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                            
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
                                 </Setter.Value>
@@ -88,33 +94,38 @@
 
                     <Label Grid.Column="1" Content="Имя файла" Visibility="{Binding FileNameVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Label Grid.Column="2" Content="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding FileNameVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Grid.Column="3" Content="Выбрать файл" Click="ChooseFile" BorderBrush="BlanchedAlmond"/>
+                    <Button Grid.Column="3" Content="Выбрать файл" Click="ChooseFile" Focusable="False"/>
                 
                     <Grid Grid.Column="4">
                         <Label x:Name="TBFilePath" Content="{Binding CodeFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
                         <TextBlock Text="Полный путь до файла" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" Foreground="Gray">
                             <TextBlock.Style>
+                                
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Visibility" Value="Hidden"/>
                                     <Style.Triggers>
+                                        
                                         <DataTrigger Binding="{Binding ElementName=TBFilePath, Path=Text.Length}" Value="0">
                                             <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
+                                        
                                         <DataTrigger Binding="{Binding ElementName=TBFilePath, Path=IsMouseOver}" Value="True">
                                             <Setter Property="Visibility" Value="Hidden"/>
                                         </DataTrigger>
+                                        
                                     </Style.Triggers>
                                 </Style>
+                                
                             </TextBlock.Style>
                         </TextBlock>
                     </Grid>
                 </Grid>
-                <StackPanel Orientation="Vertical" Visibility="{Binding TextBoxVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                
+                <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Visibility="{Binding TextBoxVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <Label Content="Комментарий к коду" Foreground="White"/>
-                    <Border CornerRadius="5" BorderThickness="2"  BorderBrush="#FF17B0B0">
-                        <TextBox Text="{Binding CodeFileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="auto" MinHeight="40" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
-                    </Border>
+                    <TextBox Text="{Binding CodeFileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="auto" MinHeight="40" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="6 0 6 6"/>
                 </StackPanel>
+                
             </StackPanel>
         </Border>
     </Grid>
