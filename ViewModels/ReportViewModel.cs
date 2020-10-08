@@ -38,12 +38,10 @@ namespace WorkReportCreator
             set
             {
                 if (_selectedFileInfo != null)
-                    (_selectedFileInfo.Content as ReportMenuItem).IsSelected = false;
-
+                    (_selectedFileInfo.Content as ReportMenuItem).MarkAsSelected();
                 _selectedFileInfo = value;
-
                 if (_selectedFileInfo != null)
-                    (_selectedFileInfo.Content as ReportMenuItem).IsSelected = true;
+                    (_selectedFileInfo.Content as ReportMenuItem).MarkAsNotSelected();
             }
         }
 
@@ -57,10 +55,20 @@ namespace WorkReportCreator
             SwapUpFileInfo = new Command(SwapUpSelectedFileInfo, SwapUpSelectedFileInfoCanExecute);
             SwapDownFileInfo = new Command(SwapDownSelectedFileInfo, SwapDownSelectedFileInfoCanExecute);
         }
+
         public void AddNewFileInfo(object sender)
         {
-            Array.Add(new ListBoxItem() { Content = new ReportMenuItem() { Number = Array.Count + 1 }, HorizontalContentAlignment = HorizontalAlignment.Stretch });
-            SelectedFileInfoIndex = Array.Count - 1;
+            if (SelectedFileInfoIndex != null)
+            {
+                Array.Insert(SelectedFileInfoIndex + 1 ?? 0, new ListBoxItem() { Content = new ReportMenuItem() { Number = Array.Count + 1 }, HorizontalContentAlignment = HorizontalAlignment.Stretch });
+                SelectedFileInfoIndex += 1;
+                UpdateAllNumbers();
+            }
+            else
+            {
+                Array.Add(new ListBoxItem() { Content = new ReportMenuItem() { Number = Array.Count + 1 }, HorizontalContentAlignment = HorizontalAlignment.Stretch });
+                SelectedFileInfoIndex = Array.Count - 1;
+            }
         }
 
         public void RemoveSelectedFileInfo(object fileInfo)
@@ -73,9 +81,13 @@ namespace WorkReportCreator
                     return;
             }
 
+            int number = reportMenuItem.Number - 1;
+            
             Array.Remove(SelectedFileInfo);
-            for (int i = 0; i < Array.Count; i++)
-                (Array[i].Content as ReportMenuItem).Number = i + 1;
+            UpdateAllNumbers();
+
+            if (number > 0)
+                SelectedFileInfoIndex = number - 1;
         }
 
         public bool RemoveSelectedFileInfoCanExecute(object fileInfo) => SelectedFileInfo != null;
@@ -97,6 +109,7 @@ namespace WorkReportCreator
             SelectedFileInfoIndex = number + 1;
             OnPropertyChanged();
         }
+
         public bool SwapDownSelectedFileInfoCanExecute(object sender) => _selectedFileInfo != null && _selectedFileInfoIndex + 1 != Array.Count;
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "")
@@ -110,9 +123,13 @@ namespace WorkReportCreator
             Array[firstIndex].Content = Array[secondIndex].Content;
             Array[secondIndex].Content = temp;
 
-            int tempNumber = (Array[firstIndex].Content as ReportMenuItem).Number;
-            (Array[firstIndex].Content as ReportMenuItem).Number = (Array[secondIndex].Content as ReportMenuItem).Number;
-            (Array[secondIndex].Content as ReportMenuItem).Number = tempNumber;
+            UpdateAllNumbers();
+        }
+
+        private void UpdateAllNumbers()
+        {
+            for (int i = 0; i < Array.Count; i++)
+                (Array[i].Content as ReportMenuItem).Number = i + 1;
         }
     }
 }

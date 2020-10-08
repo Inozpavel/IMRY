@@ -138,5 +138,8 @@ namespace WorkReportCreator.Views
                 CodeFilePath = dialog.FileName;
             }
         }
+        public void MarkAsSelected() => IsSelected = true;
+
+        public void MarkAsNotSelected() => IsSelected = false;
     }
 }
