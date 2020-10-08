@@ -76,20 +76,20 @@ namespace WorkReportCreator
                 return;
             }
 
-            ReportsPage report = new ReportsPage(this);
+            ReportsPage reportsPage = new ReportsPage(this) { StudentInformation = _model.Student };
 
             foreach (var i in _laboratoryWorksButtons.Where(x => x.IsChecked ?? false))
             {
-                report.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} лаб. ", Content = new ReportView() });
+                reportsPage.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} лаб. ", Content = new ReportView(reportsPage) });
             }
 
             foreach (var i in _practicalWorksButtons.Where(x => x.IsChecked ?? false))
             {
-                report.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} пр. ", Content = new ReportView() });
+                reportsPage.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} пр. ", Content = new ReportView(reportsPage) });
             }
 
             Hide();
-            report.Show();
+            reportsPage.Show();
         }
     }
 }

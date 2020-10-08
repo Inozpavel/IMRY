@@ -9,7 +9,11 @@ namespace WorkReportCreator
     public partial class ReportsPage : Window
     {
         public TabControl tabControl;
+
+        public StudentInformation StudentInformation { get; set; }
+
         private WorkAndStudentInfo _informationPage;
+
         public ReportsPage(WorkAndStudentInfo informationPage)
         {
             InitializeComponent();
