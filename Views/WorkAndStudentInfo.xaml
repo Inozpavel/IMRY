@@ -145,8 +145,8 @@
                                                 <Trigger.EnterActions>
                                                     <BeginStoryboard>
                                                         <Storyboard>
-                                                            <ColorAnimation To="White" Duration="0:0:0.2" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
-                                                            <ColorAnimation To="Black" Duration="0:0:0.2" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
+                                                            <ColorAnimation To="#FF3B3B3B" Duration="0:0:0.4" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                                                            <ColorAnimation To="White" Duration="0:0:0.4" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
                                                         </Storyboard>
                                                     </BeginStoryboard>
                                                 </Trigger.EnterActions>
@@ -155,8 +155,8 @@
                                                 <Trigger.ExitActions>
                                                     <BeginStoryboard>
                                                         <Storyboard>
-                                                            <ColorAnimation To="#FF121212" Duration="0:0:0.2" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
-                                                            <ColorAnimation To="#FFA8B3B3" Duration="0:0:0.2" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
+                                                            <ColorAnimation To="#FF121212" Duration="0:0:0.4" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                                                            <ColorAnimation To="#FFA8B3B3" Duration="0:0:0.4" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
                                                         </Storyboard>
                                                     </BeginStoryboard>
                                                 </Trigger.ExitActions>
