@@ -9,7 +9,7 @@
                 <ControlTemplate TargetType="Button">
 
                     <Border Background="Transparent" BorderThickness="2" BorderBrush="White" CornerRadius="8">
-                        <Label Name="TB" Content="{TemplateBinding Content}" Foreground="White" Margin="5" FontSize="13"/>
+                        <Label Name="label" Content="{TemplateBinding Content}" Foreground="White" Margin="5" FontSize="13"/>
                     </Border>
 
                     <ControlTemplate.Triggers>
@@ -19,7 +19,7 @@
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation To="Orange" Duration="0:0:0.1" Storyboard.TargetName="TB" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
+                                        <ColorAnimation To="Orange" Duration="0:0:0.1" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
@@ -28,7 +28,7 @@
                             <Trigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation To="White" Duration="0:0:0.1" Storyboard.TargetName="TB" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
+                                        <ColorAnimation To="White" Duration="0:0:0.1" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
