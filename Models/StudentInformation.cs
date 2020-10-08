@@ -8,7 +8,7 @@ namespace WorkReportCreator
         private string _secondName;
         private string _firstName;
         private string _middleName;
-        private string _groupName;
+        private string _group;
 
         /// <summary>
         /// Фамилия студента
@@ -52,12 +52,12 @@ namespace WorkReportCreator
         /// <summary>
         /// Группа студента
         /// </summary>
-        public string GroupName
+        public string Group
         {
-            get => _groupName;
+            get => _group;
             set
             {
-                _groupName = value.ToUpper();
+                _group = value.ToUpper();
                 OnPropertyChanged();
             }
         }

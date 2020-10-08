@@ -71,7 +71,7 @@
 
                     <!--Номер группы студента-->
                     <TextBlock Text="Группа" Grid.Row="3"/>
-                    <TextBox Grid.Row="3" Text="{Binding Student.GroupName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <TextBox Grid.Row="3" Text="{Binding Student.Group, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 </Grid>
 
             </GroupBox>
