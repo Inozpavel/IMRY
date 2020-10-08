@@ -81,7 +81,7 @@
                         <Style TargetType="Label" x:Key="DigitIndexButton">
                             <Setter Property="VerticalAlignment" Value="Center"/>
                             <Setter Property="HorizontalAlignment" Value="Center"/>
-                            <Setter Property="Padding" Value="5"/>
+                            <Setter Property="FontSize" Value="20"/>
                             <Setter Property="Margin" Value="5"/>
                             <Setter Property="Foreground" Value="White"/>
                         </Style>
@@ -92,24 +92,24 @@
                         <Label FontSize="18" Content="{Binding Number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DigitIndexButton}"/>
                     </Grid>
 
-                    <Label Grid.Column="1" Content="Имя файла" Visibility="{Binding FileNameVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Label Grid.Column="1" Content="Имя файла" Visibility="{Binding FileNameVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="15 0 0 0"/>
                     <Label Grid.Column="2" Content="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding FileNameVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Grid.Column="3" Content="Выбрать файл" Click="ChooseFile" Focusable="False"/>
                 
                     <Grid Grid.Column="4">
-                        <Label x:Name="TBFilePath" Content="{Binding CodeFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                        <Label x:Name="labelFilePath" Content="{Binding CodeFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
                         <TextBlock Text="Полный путь до файла" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" Foreground="Gray">
                             <TextBlock.Style>
                                 
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Visibility" Value="Hidden"/>
                                     <Style.Triggers>
-                                        
-                                        <DataTrigger Binding="{Binding ElementName=TBFilePath, Path=Text.Length}" Value="0">
+
+                                        <DataTrigger Binding="{Binding ElementName=labelFilePath, Path=Text.Length}" Value="0">
                                             <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
-                                        
-                                        <DataTrigger Binding="{Binding ElementName=TBFilePath, Path=IsMouseOver}" Value="True">
+
+                                        <DataTrigger Binding="{Binding ElementName=labelFilePath, Path=IsMouseOver}" Value="True">
                                             <Setter Property="Visibility" Value="Hidden"/>
                                         </DataTrigger>
                                         
@@ -123,7 +123,7 @@
                 
                 <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Visibility="{Binding TextBoxVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <Label Content="Комментарий к коду" Foreground="White"/>
-                    <TextBox Text="{Binding CodeFileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="auto" MinHeight="40" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="6 0 6 6"/>
+                    <TextBox Text="{Binding CodeFileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="auto" MinHeight="40" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="6 0 6 6" FontFamily="Tahoma" FontSize="14"/>
                 </StackPanel>
                 
             </StackPanel>
