@@ -17,8 +17,58 @@
         <!--Рамка с информацией о файлах-->
         <Border>
             <StackPanel>
-                <ListBox x:Name="listBox" BorderBrush="Transparent" Height="317" Background="#FF1E1E1E" SelectedIndex="{Binding SelectedFileInfoIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Array, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFileInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Grid.Row="0"/>
+                <Grid>
+                    <ListBox AllowDrop="True" BorderThickness="5" BorderBrush="Transparent" x:Name="listBox" Height="317" Background="#FF1E1E1E" SelectedIndex="{Binding SelectedFileInfoIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Array, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFileInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Grid.Row="0" Drop="AddAllFiles">
+                    
+                        <ListBox.Style>
+                            <Style TargetType="ListBox">
+                                <Style.Triggers>
+                                    <EventTrigger RoutedEvent="DragEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation To="Yellow" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                
+                                    <EventTrigger RoutedEvent="DragLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation To="Transparent" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                
+                                    <EventTrigger RoutedEvent="Drop">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation To="Transparent" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.Style>
 
+                    </ListBox>
+                    
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HintVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <StackPanel.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontSize" Value="30"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </StackPanel.Resources>
+                        
+                        <TextBlock Text="Добавьте первый элемент сами "/>
+                        <TextBlock Text="или перетащите в эту область" />
+                        <TextBlock Text="файлы или папки"/>
+                        
+                    </StackPanel>
+                </Grid>
                 <DockPanel Grid.Row="1" Background="Transparent">
                     <!--Кнопки с управлением для файлов-->
                     <DockPanel.Resources>
@@ -36,7 +86,8 @@
                             <Setter Property="Margin" Value="5"/>
                             <Setter Property="Height" Value="30"/>
                             <Setter Property="Width" Value="30"/>
-                            
+                            <Setter Property="Focusable" Value="False"/>
+
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="Button">
@@ -88,7 +139,7 @@
                     </StackPanel.Resources>
                 
                     <Button Content="Сохранить данные" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource CommonAnimatedButton}"/>
-                    <Button Content="Сгенерировать отчет" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource CommonAnimatedButton}"/>
+                    <Button Content="Сгенерировать отчет" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource CommonAnimatedButton}" Click="GenerateReport"/>
                 </StackPanel>
             </Grid>
         </Border>

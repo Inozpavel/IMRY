@@ -9,26 +9,38 @@ namespace WorkReportCreator.Views
 {
     public partial class ReportMenuItem : UserControl, INotifyPropertyChanged
     {
-        private Visibility _textBoxVisiblity = Visibility.Visible;
+        private Visibility _textBoxVisibility = Visibility.Visible;
 
-        public Visibility TextBoxVisiblity
+        public Visibility TextBoxVisibility
         {
-            get => _textBoxVisiblity;
+            get => _textBoxVisibility;
             set
             {
-                _textBoxVisiblity = value;
+                _textBoxVisibility = value;
                 OnPropertyChanged();
             }
         }
 
-        private Visibility _fileNameVisiblity = Visibility.Collapsed;
+        private Visibility _fileNameVisibility = Visibility.Collapsed;
 
-        public Visibility FileNameVisiblity
+        public Visibility FileNameVisibility
         {
-            get => _fileNameVisiblity;
+            get => _fileNameVisibility;
             set
             {
-                _fileNameVisiblity = value;
+                _fileNameVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _hintVisibility;
+
+        public Visibility HintVisibility
+        {
+            get => _hintVisibility;
+            set
+            {
+                _hintVisibility = value;
                 OnPropertyChanged();
             }
         }
@@ -41,8 +53,8 @@ namespace WorkReportCreator.Views
             set
             {
                 _fileName = value;
-                TextBoxVisiblity = string.IsNullOrEmpty(_fileName) == false && IsSelected ? Visibility.Visible : Visibility.Collapsed;
-                FileNameVisiblity = string.IsNullOrEmpty(_fileName) == false ? Visibility.Visible : Visibility.Collapsed;
+                TextBoxVisibility = string.IsNullOrEmpty(_fileName) == false && IsSelected ? Visibility.Visible : Visibility.Collapsed;
+                FileNameVisibility = string.IsNullOrEmpty(_fileName) == false ? Visibility.Visible : Visibility.Collapsed;
                 OnPropertyChanged();
             }
         }
@@ -86,6 +98,7 @@ namespace WorkReportCreator.Views
             {
                 FileName = Regex.Match(value, @"(\w+\.[\w]+)+$").Value;
                 SetValue(CodeFilePathProperty, value);
+                HintVisibility = string.IsNullOrEmpty(CodeFilePath) == false ? Visibility.Hidden : Visibility.Visible;
                 OnPropertyChanged();
             }
         }
@@ -96,7 +109,7 @@ namespace WorkReportCreator.Views
             set
             {
                 SetValue(IsSelectedProperty, value);
-                TextBoxVisiblity = string.IsNullOrEmpty(_fileName) == false && IsSelected ? Visibility.Visible : Visibility.Collapsed;
+                TextBoxVisibility = string.IsNullOrEmpty(_fileName) == false && IsSelected ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
@@ -106,7 +119,7 @@ namespace WorkReportCreator.Views
         {
             InitializeComponent();
             DataContext = this;
-            TextBoxVisiblity = Visibility.Collapsed;
+            TextBoxVisibility = Visibility.Collapsed;
         }
 
         private static void CodeFileDescriptionPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
@@ -129,8 +142,7 @@ namespace WorkReportCreator.Views
             OpenFileDialog dialog = new OpenFileDialog()
             {
                 Title = "Сохранение инфорации о студенте",
-                Filter = "Xml файлы(*.xml)|*.xml|Все файлы (*.*)|*.*",
-                DefaultExt = "xml",
+                Filter = "Все файлы (*.*)|*.*",
             };
 
             if (dialog.ShowDialog() == true)

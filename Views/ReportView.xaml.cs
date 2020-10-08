@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Xceed.Words.NET;
@@ -55,6 +56,32 @@ namespace WorkReportCreator
                 doc.ReplaceText($"{{{{{key}}}}}", $"{titlePageParams[key]}");
             }
             return doc;
+        }
+
+        private void AddAllFiles(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            if (files.All(file => Directory.Exists(file) == false) == false && MessageBox.Show(
+                "Вы выбрали не только файлы, но и папки!\nХотите осуществить поиск файлов в них рекурсивно?", "Внимание!",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
+            {
+                foreach (var name in files)
+                {
+                    if (Directory.Exists(name))
+                    {
+                        foreach (var filename in Directory.GetFiles(name, "*.*", SearchOption.AllDirectories))
+                            _model.AddNewFileInfoWithFile(filename);
+                    }
+                    else
+                        _model.AddNewFileInfoWithFile(name);
+                }
+            }
+            else
+            {
+                foreach (var file in files)
+                    _model.AddNewFileInfoWithFile(file);
+            }
         }
     }
 }

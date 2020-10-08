@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using WorkReportCreator.Views;
@@ -28,6 +29,18 @@ namespace WorkReportCreator
             }
         }
 
+        private Visibility _hintVisibility;
+
+        public Visibility HintVisibility
+        {
+            get => _hintVisibility;
+            set
+            {
+                _hintVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ObservableCollection<ListBoxItem> Array { get; set; } = new ObservableCollection<ListBoxItem>();
 
         private ListBoxItem _selectedFileInfo;
@@ -49,24 +62,44 @@ namespace WorkReportCreator
 
         public ReportViewModel()
         {
-            Array.Add(new ListBoxItem() { Content = new ReportMenuItem() { Number = 1 }, HorizontalContentAlignment = HorizontalAlignment.Stretch });
+            Array.CollectionChanged += (sender, e) => HintVisibility = Array.Count != 0 ? Visibility.Hidden : Visibility.Visible;
             AddFileInfo = new Command(AddNewFileInfo, null);
             RemoveFileInfo = new Command(RemoveSelectedFileInfo, RemoveSelectedFileInfoCanExecute);
             SwapUpFileInfo = new Command(SwapUpSelectedFileInfo, SwapUpSelectedFileInfoCanExecute);
             SwapDownFileInfo = new Command(SwapDownSelectedFileInfo, SwapDownSelectedFileInfoCanExecute);
         }
 
+        public void AddNewFileInfoWithFile(string filePath)
+        {
+            if (Regex.IsMatch(filePath, @"(\w+\.[\w]+)+$"))
+            {
+                Array.Add(new ListBoxItem()
+                {
+                    Content = new ReportMenuItem() { Number = Array.Count + 1, CodeFilePath = filePath },
+                    HorizontalContentAlignment = HorizontalAlignment.Stretch
+                });
+            }
+        }
+
         public void AddNewFileInfo(object sender)
         {
             if (SelectedFileInfoIndex != null)
             {
-                Array.Insert(SelectedFileInfoIndex + 1 ?? 0, new ListBoxItem() { Content = new ReportMenuItem() { Number = Array.Count + 1 }, HorizontalContentAlignment = HorizontalAlignment.Stretch });
+                Array.Insert(SelectedFileInfoIndex + 1 ?? 0, new ListBoxItem()
+                {
+                    Content = new ReportMenuItem() { Number = Array.Count + 1 },
+                    HorizontalContentAlignment = HorizontalAlignment.Stretch
+                });
                 SelectedFileInfoIndex += 1;
                 UpdateAllNumbers();
             }
             else
             {
-                Array.Add(new ListBoxItem() { Content = new ReportMenuItem() { Number = Array.Count + 1 }, HorizontalContentAlignment = HorizontalAlignment.Stretch });
+                Array.Add(new ListBoxItem()
+                {
+                    Content = new ReportMenuItem() { Number = Array.Count + 1 },
+                    HorizontalContentAlignment = HorizontalAlignment.Stretch
+                });
                 SelectedFileInfoIndex = Array.Count - 1;
             }
         }
