@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Xml.Serialization;
+using System.Windows;
 
 namespace WorkReportCreator.ViewModels.Commands
 {
@@ -25,14 +25,14 @@ namespace WorkReportCreator.ViewModels.Commands
 
         public Command LoadStudentInfo { get; private set; }
 
-        private readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(StudentInformation));
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         public StudentInformationViewModel()
         {
             SaveStudentInfo = new Command(SaveStudent, null);
             LoadStudentInfo = new Command(LoadStudent, null);
+
+            LoadStudent("./StudentInformation.json");
         }
 
         private void SaveStudent(object sender)
@@ -55,6 +55,19 @@ namespace WorkReportCreator.ViewModels.Commands
             }
         }
 
+        private bool LoadStudent(string filePath)
+        {
+            if (File.Exists(filePath) == false)
+                return false;
+            using (var file = new StreamReader(filePath))
+            {
+                Student = JsonConvert.DeserializeObject<StudentInformation>(file.ReadToEnd());
+                if (_student.FirstName == null && _student.SecondName == null && _student.MiddleName == null && _student.Group == null)
+                    return false;
+            }
+            return true;
+        }
+
         private void LoadStudent(object sender)
         {
             OpenFileDialog dialog = new OpenFileDialog()
@@ -67,9 +80,9 @@ namespace WorkReportCreator.ViewModels.Commands
 
             if (dialog.ShowDialog() == true)
             {
-                using (var file = new StreamReader(dialog.FileName))
+                if (LoadStudent(dialog.FileName) == false)
                 {
-                    Student = JsonConvert.DeserializeObject<StudentInformation>(file.ReadToEnd());
+                    MessageBox.Show("Не получилось загрузить данные из файла", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
             }
         }
