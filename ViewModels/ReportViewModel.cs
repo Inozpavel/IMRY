@@ -38,10 +38,10 @@ namespace WorkReportCreator
             set
             {
                 if (_selectedFileInfo != null)
-                    (_selectedFileInfo.Content as ReportMenuItem).MarkAsSelected();
+                    (_selectedFileInfo.Content as ReportMenuItem).MarkAsNotSelected();
                 _selectedFileInfo = value;
                 if (_selectedFileInfo != null)
-                    (_selectedFileInfo.Content as ReportMenuItem).MarkAsNotSelected();
+                    (_selectedFileInfo.Content as ReportMenuItem).MarkAsSelected();
             }
         }
 
