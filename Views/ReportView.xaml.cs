@@ -12,6 +12,7 @@ namespace WorkReportCreator
         {
             InitializeComponent();
             DataContext = _model;
+            listBox.SelectionChanged += (sender, e) => listBox.ScrollIntoView(listBox.SelectedItem);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace WorkReportCreator
         public Command SwapDownFileInfo { get; private set; }
 
         private int? _selectedFileInfoIndex;
-        public int? FileInfoSelectedIndex
+        public int? SelectedFileInfoIndex
         {
             get => _selectedFileInfoIndex;
             set
@@ -57,7 +57,11 @@ namespace WorkReportCreator
             SwapUpFileInfo = new Command(SwapUpSelectedFileInfo, SwapUpSelectedFileInfoCanExecute);
             SwapDownFileInfo = new Command(SwapDownSelectedFileInfo, SwapDownSelectedFileInfoCanExecute);
         }
-        public void AddNewFileInfo(object sender) => Array.Add(new ListBoxItem() { Content = new ReportMenuItem() { Number = Array.Count + 1 }, HorizontalContentAlignment = HorizontalAlignment.Stretch });
+        public void AddNewFileInfo(object sender)
+        {
+            Array.Add(new ListBoxItem() { Content = new ReportMenuItem() { Number = Array.Count + 1 }, HorizontalContentAlignment = HorizontalAlignment.Stretch });
+            SelectedFileInfoIndex = Array.Count - 1;
+        }
 
         public void RemoveSelectedFileInfo(object fileInfo)
         {
@@ -80,7 +84,7 @@ namespace WorkReportCreator
         {
             int number = (_selectedFileInfo.Content as ReportMenuItem).Number - 1;
             SwapArrayItems(number, number - 1);
-            FileInfoSelectedIndex = number - 1;
+            SelectedFileInfoIndex = number - 1;
             OnPropertyChanged();
         }
 
@@ -90,7 +94,7 @@ namespace WorkReportCreator
         {
             int number = (_selectedFileInfo.Content as ReportMenuItem).Number - 1;
             SwapArrayItems(number, number + 1);
-            FileInfoSelectedIndex = number + 1;
+            SelectedFileInfoIndex = number + 1;
             OnPropertyChanged();
         }
         public bool SwapDownSelectedFileInfoCanExecute(object sender) => _selectedFileInfo != null && _selectedFileInfoIndex + 1 != Array.Count;
