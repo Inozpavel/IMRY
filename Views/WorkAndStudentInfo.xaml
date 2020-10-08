@@ -78,7 +78,7 @@
 
             <GroupBox Header="Выбор работ для генерации отчета">
                 <!--Выбор номеров работ-->
-                <StackPanel x:Name="SPWorks" Orientation="Vertical" >
+                <StackPanel x:Name="stackPanelWithWorks" Orientation="Vertical" >
                     <StackPanel.Resources>
 
                         <!--Дизайн кружков для выбора работ-->

@@ -30,14 +30,14 @@ namespace WorkReportCreator
 
             foreach (int i in _permittedPracticalWorks)
             {
-                ToggleButton button = new ToggleButton { Content = i.ToString(), Style = SPWorks.Resources["NumberButton"] as Style };
+                ToggleButton button = new ToggleButton { Content = i.ToString(), Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
                 _practicalWorksButtons.Add(button);
                 SPPracticalWorks.Children.Add(button);
             }
 
             foreach (int i in _permittedLaboratoryWorks)
             {
-                ToggleButton button = new ToggleButton { Content = i.ToString(), Style = SPWorks.Resources["NumberButton"] as Style };
+                ToggleButton button = new ToggleButton { Content = i.ToString(), Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
                 _laboratoryWorksButtons.Add(button);
                 SPLaboratoryWorks.Children.Add(button);
             }

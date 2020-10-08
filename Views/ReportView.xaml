@@ -46,12 +46,14 @@
                                             <VisualStateManager.VisualStateGroups>
                                                 <VisualStateGroup x:Name="CommonStates">
                                                     
+                                                    <!--Работающая кнопка-->
                                                     <VisualState x:Name="Normal">
                                                         <Storyboard>
                                                             <DoubleAnimation Duration="0:0:0.3" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="border"/>
                                                         </Storyboard>
                                                     </VisualState>
-                                                    
+
+                                                    <!--Выключенная кнопка-->
                                                     <VisualState x:Name="Disabled">
                                                         <Storyboard>
                                                             <DoubleAnimation Duration="0:0:0.3" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="border"/>
@@ -69,9 +71,9 @@
                     </DockPanel.Resources>
 
                     <Button Content="＋" Command="{Binding AddFileInfo}" Style="{StaticResource OneSymbolButton}"/>
-                    <Button x:Name="bRemove" Content="－" Command="{Binding RemoveFileInfo}" Style="{StaticResource OneSymbolButton}"/>
-                    <Button x:Name="bSwapUp" Content="⮝" Command="{Binding SwapUpFileInfo}" Style="{StaticResource OneSymbolButton}"/>
-                    <Button x:Name="bSwapDown" Content="⮟" Command="{Binding SwapDownFileInfo}" Style="{StaticResource OneSymbolButton}"/>
+                    <Button Content="－" Command="{Binding RemoveFileInfo}" Style="{StaticResource OneSymbolButton}"/>
+                    <Button Content="⮝" Command="{Binding SwapUpFileInfo}" Style="{StaticResource OneSymbolButton}"/>
+                    <Button Content="⮟" Command="{Binding SwapDownFileInfo}" Style="{StaticResource OneSymbolButton}"/>
                 </DockPanel>
             </StackPanel>
         </Border>

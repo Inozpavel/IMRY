@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WorkReportCreator"
         mc:Ignorable="d"
         Title="Report" WindowStartupLocation="CenterScreen" Background="#FF333337" SizeToContent="Height" >
-    <TabControl x:Name="tabsControl" Background="#FF1E1E1E">
+    <TabControl x:Name="reportTabControl" Background="#FF1E1E1E">
         
         <TabItem Header="Быстрые действия" Focusable="True">
             <Grid Height="421">
