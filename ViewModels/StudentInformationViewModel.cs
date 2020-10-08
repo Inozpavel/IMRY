@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -38,15 +39,19 @@ namespace WorkReportCreator.ViewModels.Commands
         {
             SaveFileDialog dialog = new SaveFileDialog()
             {
-                Title = "Загрузка информации о студенте",
-                Filter = "Xml файлы(*.xml)|*.xml|Все файлы (*.*)|*.*",
-                DefaultExt = "xml",
-                FileName = "StudentInformation"
+                Title = "Сохранение информации о студенте",
+                Filter = "JSON файлы (*.json)|*.json|Все файлы (*.*)|*.*",
+                DefaultExt = "json",
+                FileName = "StudentInformation",
+                AddExtension = true,
             };
 
             if (dialog.ShowDialog() == true)
             {
-                _xmlSerializer.Serialize(new FileStream(dialog.FileName, FileMode.Create), Student);
+                using (var file = new StreamWriter(dialog.FileName, append: false))
+                {
+                    file.Write(JsonConvert.SerializeObject(Student, Formatting.Indented));
+                }
             }
         }
 
@@ -54,14 +59,18 @@ namespace WorkReportCreator.ViewModels.Commands
         {
             OpenFileDialog dialog = new OpenFileDialog()
             {
-                Title = "Сохранение инфорации о студенте",
-                Filter = "Xml файлы(*.xml)|*.xml|Все файлы (*.*)|*.*",
-                DefaultExt = "xml",
+                Title = "Загрузка информации о студенте",
+                Filter = "JSON файлы (*.json)|*.json|Все файлы (*.*)|*.*",
+                DefaultExt = "json",
+                FileName = "StudentInformation.json",
             };
 
             if (dialog.ShowDialog() == true)
             {
-                Student = _xmlSerializer.Deserialize(new FileStream(dialog.FileName, FileMode.Open)) as StudentInformation ?? new StudentInformation();
+                using (var file = new StreamReader(dialog.FileName))
+                {
+                    Student = JsonConvert.DeserializeObject<StudentInformation>(file.ReadToEnd());
+                }
             }
         }
 
