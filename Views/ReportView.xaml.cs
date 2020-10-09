@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using WorkReportCreator.Views;
 using Xceed.Words.NET;
 
 namespace WorkReportCreator
 {
-    /// <summary>
-    /// Логика взаимодействия для ReportView.xaml
-    /// </summary>
     public partial class ReportView : UserControl
     {
         private readonly ReportViewModel _model = new ReportViewModel();
@@ -27,30 +26,28 @@ namespace WorkReportCreator
         {
             try
             {
+                var reportName = (Parent as TabItem).Header.ToString().Trim().TrimEnd(".".ToCharArray());
                 DocX document = GenerateTitlePage();
-                document.SaveAs("./Report.docx");
+                var globalParameters = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
+                document.SaveAs($"{globalParameters["AllReportsFilePath"]}/Отчет {reportName}.docx");
             }
             catch (IOException)
             {
-                MessageBox.Show("Не получилось сохранить отчет!\nВозможно вы не закрыли файл.", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Не получилось сохранить отчет!\nВозможно, вы не закрыли файл с титульником.\n", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private DocX GenerateTitlePage()
         {
-            Dictionary<string, string> titlePageParams;
-            using (var file = new StreamReader("./TitlePageParams.json"))
-            {
-                titlePageParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(file.ReadToEnd());
-            }
+            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
+            var titlePageParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(globalParams["TitlePageParametersPath"]));
 
             StudentInformation student = _page.StudentInformation;
 
             titlePageParams.Add("Group", student.Group);
             titlePageParams.Add("StudentFullName", string.Join(" ", student.SecondName, student.FirstName, student.MiddleName));
 
-            string titlePagePath = "./TitlePage.docx";
-            DocX doc = DocX.Load(titlePagePath);
+            DocX doc = DocX.Load(globalParams["TitlePagePath"]);
             foreach (string key in titlePageParams.Keys)
             {
                 doc.ReplaceText($"{{{{{key}}}}}", $"{titlePageParams[key]}");
@@ -61,27 +58,64 @@ namespace WorkReportCreator
         private void AddAllFiles(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
 
-            if (files.All(file => Directory.Exists(file) == false) == false && MessageBox.Show(
-                "Вы выбрали не только файлы, но и папки!\nХотите осуществить поиск файлов в них рекурсивно?", "Внимание!",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
+            var permittedWorksAndExtentions = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(
+                File.ReadAllText(globalParams["PermittedWorksAndExtentionsPath"]));
+
+            var permittedExtentions = permittedWorksAndExtentions["PermittedFilesExtentions"];
+            bool allFilesIsFilePath = files.All(path => Directory.Exists(path) == false);
+            bool allFilesIsDirectoryPath = files.All(path => Directory.Exists(path));
+
+            if (allFilesIsFilePath == false)
             {
-                foreach (var name in files)
+                if (allFilesIsDirectoryPath == false)
                 {
-                    if (Directory.Exists(name))
+                    if (MessageBox.Show(
+                "Вы выбрали не только файлы, но и папки!\nХотите осуществить поиск файлов в папках рекурсивно?", "Внимание!",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
                     {
-                        foreach (var filename in Directory.GetFiles(name, "*.*", SearchOption.AllDirectories))
-                            _model.AddNewFileInfoWithFile(filename);
+                        RecursiveAddFile(files.ToList(), permittedExtentions);
                     }
-                    else
-                        _model.AddNewFileInfoWithFile(name);
+                }
+                else
+                {
+                    RecursiveAddFile(files.ToList(), permittedExtentions);
                 }
             }
             else
             {
-                foreach (var file in files)
-                    _model.AddNewFileInfoWithFile(file);
+                AddFilePaths(files.ToList(), permittedExtentions);
             }
         }
+
+        private void AddFilePaths(List<string> filePaths, List<string> permittedExtentions)
+        {
+            foreach (string filePath in filePaths)
+            {
+                if (CheckFileExtentionIsPermitted(filePath, permittedExtentions) &&
+                    _model.Array.Select(x => x.Content as ReportMenuItem).Select(x => x.CodeFilePath).ToList().Contains(filePath) == false)
+                    _model.AddNewFileInfoWithFile(filePath);
+            }
+        }
+
+        private void RecursiveAddFile(List<string> paths, List<string> permittedExtentions)
+        {
+            foreach (var name in paths)
+            {
+                if (Directory.Exists(name))
+                {
+                    var internalNames = Directory.GetFiles(name, "*.*", SearchOption.AllDirectories)
+                         .Where(x => CheckFileExtentionIsPermitted(x, permittedExtentions)).ToList();
+                    AddFilePaths(internalNames, permittedExtentions);
+                }
+                else if (CheckFileExtentionIsPermitted(name, permittedExtentions))
+                {
+                    _model.AddNewFileInfoWithFile(name);
+                }
+            }
+        }
+
+        private bool CheckFileExtentionIsPermitted(string fileName, List<string> permittedExtentions) => permittedExtentions.Any(ext => Regex.IsMatch(fileName, $@"\.{ext}$"));
     }
 }

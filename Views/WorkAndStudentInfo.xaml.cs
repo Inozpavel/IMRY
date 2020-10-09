@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,9 +16,6 @@ namespace WorkReportCreator
         private bool _shouldCheckAllLaboratoryWork = true;
         private bool _shouldCheckAllPracticalWorks = true;
 
-        private readonly List<int> _permittedPracticalWorks = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 16 };
-        private readonly List<int> _permittedLaboratoryWorks = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, };
-
         private readonly List<ToggleButton> _practicalWorksButtons = new List<ToggleButton>();
         private readonly List<ToggleButton> _laboratoryWorksButtons = new List<ToggleButton>();
 
@@ -27,17 +26,18 @@ namespace WorkReportCreator
             InitializeComponent();
             DataContext = _model;
             _mainWindow = mainWindow;
-
-            foreach (int i in _permittedPracticalWorks)
+            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
+            var permittedWorks = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(File.ReadAllText(globalParams["PermittedWorksAndExtentionsPath"]));
+            foreach (string i in permittedWorks["PermittedPracticalWorks"])
             {
-                ToggleButton button = new ToggleButton { Content = i.ToString(), Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
+                ToggleButton button = new ToggleButton { Content = i, Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
                 _practicalWorksButtons.Add(button);
                 SPPracticalWorks.Children.Add(button);
             }
 
-            foreach (int i in _permittedLaboratoryWorks)
+            foreach (string i in permittedWorks["PermittedLaboratoryWorks"])
             {
-                ToggleButton button = new ToggleButton { Content = i.ToString(), Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
+                ToggleButton button = new ToggleButton { Content = i, Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
                 _laboratoryWorksButtons.Add(button);
                 SPLaboratoryWorks.Children.Add(button);
             }
@@ -80,12 +80,12 @@ namespace WorkReportCreator
 
             foreach (var i in _laboratoryWorksButtons.Where(x => x.IsChecked ?? false))
             {
-                reportsPage.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} лаб. ", Content = new ReportView(reportsPage) });
+                reportsPage.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} лаб.", Content = new ReportView(reportsPage) });
             }
 
             foreach (var i in _practicalWorksButtons.Where(x => x.IsChecked ?? false))
             {
-                reportsPage.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} пр. ", Content = new ReportView(reportsPage) });
+                reportsPage.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} пр.", Content = new ReportView(reportsPage) });
             }
 
             Hide();
