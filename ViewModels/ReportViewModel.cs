@@ -1,10 +1,13 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using WorkReportCreator.Views;
+using WorkReportCreator.Views.CustomConrols;
 
 namespace WorkReportCreator
 {
@@ -41,6 +44,20 @@ namespace WorkReportCreator
             }
         }
 
+        private string _dynamicTasksStatus;
+
+        public string DynamicTasksStatus
+        {
+            get => _dynamicTasksStatus;
+            set
+            {
+                _dynamicTasksStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<DynamicTaskItem> DynamicTasksArray { get; set; } = new ObservableCollection<DynamicTaskItem>();
+
         public ObservableCollection<ListBoxItem> Array { get; set; } = new ObservableCollection<ListBoxItem>();
 
         private ListBoxItem _selectedFileInfo;
@@ -67,6 +84,18 @@ namespace WorkReportCreator
             RemoveFileInfo = new Command(RemoveSelectedFileInfo, RemoveSelectedFileInfoCanExecute);
             SwapUpFileInfo = new Command(SwapUpSelectedFileInfo, SwapUpSelectedFileInfoCanExecute);
             SwapDownFileInfo = new Command(SwapDownSelectedFileInfo, SwapDownSelectedFileInfoCanExecute);
+            DynamicTasksStatus = "Выберите, пожалуйста, задание";
+
+            DynamicTasksArray.Add(new DynamicTaskItem() { Text = "первое задание", });
+            DynamicTasksArray.Add(new DynamicTaskItem() { Text = "второе задание" });
+            DynamicTasksArray.Add(new DynamicTaskItem() { Text = "третье задание" });
+            DynamicTasksArray.Add(new DynamicTaskItem() { Text = "четвертое задание" });
+
+            void UpdateTasksStatus(object sender) => DynamicTasksStatus = DynamicTasksArray
+                .Any(x => x.IsChecked ?? false) ? "Задание выбрано" : "Выберите, пожалуйста, задание";
+
+            foreach (var i in DynamicTasksArray)
+                i.CheckedChanged += UpdateTasksStatus;
         }
 
         public void AddNewFileInfoWithFile(string filePath)

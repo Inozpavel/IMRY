@@ -5,35 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WorkReportCreator"
         mc:Ignorable="d"
-        Title="Report" WindowStartupLocation="CenterScreen" Background="#FF333337" SizeToContent="Height" >
-    <TabControl x:Name="reportTabControl" Background="#FF1E1E1E">
-        
-        <TabItem Header="Быстрые действия" Focusable="True">
-            <Grid Height="421">
-                
-                <Grid.Resources>
-                    <Style TargetType="Button">
-                        <Setter Property="HorizontalAlignment" Value="Center"/>
-                        <Setter Property="VerticalAlignment" Value="Center"/>
-                        <Setter Property="Margin" Value="5"/>
-                        <Setter Property="Padding" Value="10"/>
-                        <Setter Property="FontSize" Value="14"/>
-                        <Setter Property="Width" Value="200"/>
-                        <Setter Property="Focusable" Value="False"/>
-                    </Style>
-                </Grid.Resources>
-                
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                
-                <Button Content="Сохранить все данные" Grid.Row="0"/>
-                <Button Content="Сгенерировать все отчеты" IsEnabled="False" Grid.Row="1"/>
-                <Button Content="Вернуться назад" Click="ShowWorkAndStudentInformation" Grid.Row="2"/>
-            </Grid>
-        </TabItem>
-    </TabControl>
+        Title="Report" WindowStartupLocation="CenterScreen" Background="#FF333337" SizeToContent="Height">
+    <TabControl x:Name="reportTabControl" Background="#FF1E1E1E" ItemsSource="{Binding TabItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 </Window>

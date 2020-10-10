@@ -172,13 +172,13 @@
                     </StackPanel.Resources>
 
                     <GroupBox Header="Практические работы" HorizontalAlignment="Stretch">
-                        <StackPanel x:Name="SPPracticalWorks" Orientation="Horizontal">
+                        <StackPanel x:Name="stackPanelPracticalWorks" Orientation="Horizontal">
                             <Button Content="Все работы" Click="CheckAllWorks" Margin="10"/>
                         </StackPanel>
                     </GroupBox>
 
                     <GroupBox Header="Лабораторные работы" HorizontalAlignment="Stretch">
-                        <StackPanel x:Name="SPLaboratoryWorks" Orientation="Horizontal">
+                        <StackPanel x:Name="stackPanelLaboratoryWorks" Orientation="Horizontal">
                             <Button Content="Все работы" Click="CheckAllWorks" Margin="10"/>
                         </StackPanel>
                     </GroupBox>

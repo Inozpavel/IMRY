@@ -26,20 +26,22 @@ namespace WorkReportCreator
             InitializeComponent();
             DataContext = _model;
             _mainWindow = mainWindow;
+
             var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
             var permittedWorks = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(File.ReadAllText(globalParams["PermittedWorksAndExtentionsPath"]));
+
             foreach (string i in permittedWorks["PermittedPracticalWorks"])
             {
                 ToggleButton button = new ToggleButton { Content = i, Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
                 _practicalWorksButtons.Add(button);
-                SPPracticalWorks.Children.Add(button);
+                stackPanelPracticalWorks.Children.Add(button);
             }
 
             foreach (string i in permittedWorks["PermittedLaboratoryWorks"])
             {
                 ToggleButton button = new ToggleButton { Content = i, Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
                 _laboratoryWorksButtons.Add(button);
-                SPLaboratoryWorks.Children.Add(button);
+                stackPanelLaboratoryWorks.Children.Add(button);
             }
         }
 
@@ -70,23 +72,9 @@ namespace WorkReportCreator
 
         private void GenerateReport(object sender, RoutedEventArgs e)
         {
-            if (_laboratoryWorksButtons.All(x => x.IsChecked == false) && _practicalWorksButtons.All(x => x.IsChecked == false))
-            {
-                MessageBox.Show("Выберите хотя бы одну работу!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            ReportsPage reportsPage = new ReportsPage(this) { StudentInformation = _model.Student };
-
-            foreach (var i in _laboratoryWorksButtons.Where(x => x.IsChecked ?? false))
-            {
-                reportsPage.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} лаб.", Content = new ReportView(reportsPage) });
-            }
-
-            foreach (var i in _practicalWorksButtons.Where(x => x.IsChecked ?? false))
-            {
-                reportsPage.tabControl.Items.Add(new TabItem() { Header = $"{i.Content} пр.", Content = new ReportView(reportsPage) });
-            }
+            List<string> selectedLaboratoryWorks = _laboratoryWorksButtons.Where(x => x.IsChecked ?? false).Select(x => x.Content as string).ToList();
+            List<string> selectedPracticalWorks = _practicalWorksButtons.Where(x => x.IsChecked ?? false).Select(x => x.Content as string).ToList();
+            ReportsPage reportsPage = new ReportsPage(this, selectedLaboratoryWorks, selectedPracticalWorks) { StudentInformation = _model.Student };
 
             Hide();
             reportsPage.Show();
