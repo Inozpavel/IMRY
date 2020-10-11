@@ -22,17 +22,18 @@ namespace WorkReportCreator
                 Application.Current.Shutdown();
                 return;
             }
+
             try
             {
                 List<string> requiredParams = new List<string>()
                 {
-                    "TitlePagePath",
-                    "TitlePageParametersPath",
+                    "TitlePageFilePath",
+                    "TitlePageParametersFilePath",
                     "DynamicTasksFilePath",
-                    "PermittedWorksAndExtentionsPath",
+                    "PermittedWorksAndExtentionsFilePath",
+                    "CurrentTemplateFilePath",
                     "StandartUserDataFileName",
-                    "AllReportsFilePath",
-                    "CurrentTemplatePath",
+                    "AllReportsPath"
                 };
 
                 var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
@@ -42,6 +43,17 @@ namespace WorkReportCreator
                     "Невозможно запустить приложение!", MessageBoxButton.OK, MessageBoxImage.Error);
                     Application.Current.Shutdown();
                     return;
+                }
+
+                foreach (var param in globalParams.Keys.Where(x => x.Contains("FilePath")))
+                {
+                    if (File.Exists(globalParams[param]) == false)
+                    {
+                        MessageBox.Show($"Ошибка в параметре {param},\nфайла {globalParams[param]} не существует!\nОн необходим для работы приложения!\nПроверьть его корректность",
+                            "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        Application.Current.Shutdown();
+                        return;
+                    }
                 }
             }
             catch (Exception)
