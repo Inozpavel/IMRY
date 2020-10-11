@@ -64,13 +64,13 @@ namespace WorkReportCreator
         private DocX GenerateTitlePage()
         {
             var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
-            var titlePageParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(globalParams["TitlePageParametersPath"]));
+            var titlePageParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(globalParams["TitlePageParametersFilePath"]));
 
             StudentInformation student = _page.Student;
             titlePageParams.Add("Group", student.Group);
             titlePageParams.Add("StudentFullName", string.Join(" ", student.SecondName, student.FirstName, student.MiddleName));
 
-            DocX doc = DocX.Load(globalParams["TitlePagePath"]);
+            DocX doc = DocX.Load(globalParams["TitlePageFilePath"]);
             foreach (string key in titlePageParams.Keys)
             {
                 doc.ReplaceText($"{{{{{key}}}}}", $"{titlePageParams[key]}");

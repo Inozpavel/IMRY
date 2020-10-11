@@ -42,7 +42,7 @@ namespace WorkReportCreator
             DataContext = _model;
 
             var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
-            var worksTemplatePath = globalParams["CurrentTemplatePath"];
+            var worksTemplatePath = globalParams["CurrentTemplateFilePath"];
 
             var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(File.ReadAllText(worksTemplatePath));
 
