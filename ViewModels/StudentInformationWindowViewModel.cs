@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -67,10 +68,16 @@ namespace WorkReportCreator.ViewModels.Commands
         {
             if (File.Exists(filePath) == false)
                 return false;
-
-            Student = JsonConvert.DeserializeObject<StudentInformation>(File.ReadAllText(filePath));
-            if (_student.FirstName == null && _student.SecondName == null && _student.MiddleName == null && _student.Group == null)
+            try
+            {
+                Student = JsonConvert.DeserializeObject<StudentInformation>(File.ReadAllText(filePath));
+                if (_student.FirstName == null && _student.SecondName == null && _student.MiddleName == null && _student.Group == null)
+                    return false;
+            }
+            catch (Exception)
+            {
                 return false;
+            }
 
             return true;
         }
