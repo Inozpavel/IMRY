@@ -9,23 +9,37 @@ using WorkReportCreator.ViewModels.Commands;
 
 namespace WorkReportCreator
 {
-    public partial class WorkAndStudentInfo : Window
+    public partial class WorkAndStudentInfoWindow : Window
     {
-        private readonly StudentInformationViewModel _model = new StudentInformationViewModel();
+        /// <summary>
+        /// Модель данных этого элемента
+        /// </summary>
+        private readonly StudentInformationWindowViewModel _model = new StudentInformationWindowViewModel();
 
-        private bool _shouldCheckAllLaboratoryWork = true;
+        /// <summary>
+        /// От значения зависит, все кнопки с практическими работами будут отмечены / не отмечены
+        /// </summary>
         private bool _shouldCheckAllPracticalWorks = true;
 
+        /// <summary>
+        /// От значения зависит, все кнопки с лабораторными работами будут отмечены / не отмечены
+        /// </summary>
+        private bool _shouldCheckAllLaboratoryWork = true;
+
+        /// <summary>
+        /// Список всех кнопок для выбора номеров практических работ
+        /// </summary>
         private readonly List<ToggleButton> _practicalWorksButtons = new List<ToggleButton>();
+
+        /// <summary>
+        /// Список всех кнопок для выбора номеров лабораторных работ
+        /// </summary>
         private readonly List<ToggleButton> _laboratoryWorksButtons = new List<ToggleButton>();
 
-        private readonly MainWindow _mainWindow;
-
-        public WorkAndStudentInfo(MainWindow mainWindow)
+        public WorkAndStudentInfoWindow()
         {
             InitializeComponent();
             DataContext = _model;
-            _mainWindow = mainWindow;
 
             var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
             var worksTemplatePath = globalParams["CurrentTemplatePath"];
@@ -51,16 +65,23 @@ namespace WorkReportCreator
             }
         }
 
-        private void ShowMainWindow(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Показывает форму стартового окна
+        /// </summary>
+        private void ShowFormMainWindow(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("Все несохраненные данные будут удалены!\nВы уверены?", "Внимание!",
                            MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
             {
+                MainWindow mainWindow = new MainWindow();
                 Hide();
-                _mainWindow.Show();
+                mainWindow.Show();
             }
         }
 
+        /// <summary>
+        /// Отмечает / снимает отметки со всех кнопок с практическими / лабораторными работами
+        /// </summary>
         private void CheckAllWorks(object sender, RoutedEventArgs e)
         {
             string parentName = ((sender as Button).Parent as StackPanel).Name;
@@ -76,14 +97,22 @@ namespace WorkReportCreator
             }
         }
 
-        private void GenerateReport(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Показывает форму с выбором заданий (при наличии) и файлов для отчета (при наличии)
+        /// </summary>
+        private void ShowFormReportsPage(object sender, RoutedEventArgs e)
         {
             List<string> selectedLaboratoryWorks = _laboratoryWorksButtons.Where(x => x.IsChecked ?? false).Select(x => x.Content as string).ToList();
             List<string> selectedPracticalWorks = _practicalWorksButtons.Where(x => x.IsChecked ?? false).Select(x => x.Content as string).ToList();
-            ReportsPage reportsPage = new ReportsPage(this, selectedLaboratoryWorks, selectedPracticalWorks) { StudentInformation = _model.Student };
+            ReportsWindow reportsPage = new ReportsWindow(this, selectedLaboratoryWorks, selectedPracticalWorks, _model.Student);
 
             Hide();
             reportsPage.Show();
         }
+
+        /// <summary>
+        /// Завершает работу приложения
+        /// </summary>
+        private void ExitApplication(object sender, System.ComponentModel.CancelEventArgs e) => Application.Current.Shutdown();
     }
 }

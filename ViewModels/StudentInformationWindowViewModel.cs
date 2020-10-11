@@ -8,8 +8,14 @@ using System.Windows;
 
 namespace WorkReportCreator.ViewModels.Commands
 {
-    class StudentInformationViewModel : INotifyPropertyChanged
+    class StudentInformationWindowViewModel : INotifyPropertyChanged
     {
+        public Command SaveStudentInfo { get; private set; }
+        public Command LoadStudentInfo { get; private set; }
+
+        /// <summary>
+        /// Вся информация о студенте
+        /// </summary>
         private StudentInformation _student = new StudentInformation();
 
         public StudentInformation Student
@@ -22,13 +28,9 @@ namespace WorkReportCreator.ViewModels.Commands
             }
         }
 
-        public Command SaveStudentInfo { get; private set; }
-
-        public Command LoadStudentInfo { get; private set; }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public StudentInformationViewModel()
+        public StudentInformationWindowViewModel()
         {
             SaveStudentInfo = new Command(SaveStudent, null);
             LoadStudentInfo = new Command(LoadStudent, null);
@@ -37,6 +39,9 @@ namespace WorkReportCreator.ViewModels.Commands
             LoadStudent("./" + globalParams["StandartUserDataFileName"] + ".json");
         }
 
+        /// <summary>
+        /// Сохраняет информацию о студенте в выбранном файле
+        /// </summary>
         private void SaveStudent(object sender)
         {
             var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
@@ -55,6 +60,9 @@ namespace WorkReportCreator.ViewModels.Commands
             }
         }
 
+        /// <summary>
+        /// Загружает информацию о студенте из указанного файла
+        /// </summary>
         private bool LoadStudent(string filePath)
         {
             if (File.Exists(filePath) == false)
@@ -67,6 +75,9 @@ namespace WorkReportCreator.ViewModels.Commands
             return true;
         }
 
+        /// <summary>
+        /// Загружает информацию о студенте из выбранного файла
+        /// </summary>
         private void LoadStudent(object sender)
         {
             var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
@@ -87,9 +98,6 @@ namespace WorkReportCreator.ViewModels.Commands
             }
         }
 
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

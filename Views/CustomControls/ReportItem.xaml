@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WorkReportCreator.ReportView"
+﻿<UserControl x:Class="WorkReportCreator.ReportItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -93,7 +93,7 @@
                         <TextBlock Text="файлы или папки"/>
 
                     </StackPanel>
-                    <ListBox AllowDrop="True" BorderThickness="5" BorderBrush="Transparent" x:Name="listBox" Height="317" Background="Transparent" SelectedIndex="{Binding SelectedFileInfoIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Array, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFileInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Grid.Row="0" Drop="AddAllFiles">
+                    <ListBox AllowDrop="True" BorderThickness="5" BorderBrush="Transparent" x:Name="listBox" Height="317" Background="Transparent" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding FilesArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Grid.Row="0" Drop="AddAllFiles">
                     
                         <ListBox.Style>
                             <Style TargetType="ListBox">

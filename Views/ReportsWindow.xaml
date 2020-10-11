@@ -1,0 +1,10 @@
+﻿<Window x:Class="WorkReportCreator.ReportsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WorkReportCreator"
+        mc:Ignorable="d"
+        Title="Report" WindowStartupLocation="CenterScreen" Background="#FF333337" SizeToContent="Height" Closing="ExitApplication">
+    <TabControl Background="#FF1E1E1E" ItemsSource="{Binding TabItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+</Window>

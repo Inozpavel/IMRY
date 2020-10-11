@@ -7,10 +7,18 @@ using System.Windows.Input;
 
 namespace WorkReportCreator.Views.CustomConrols
 {
+    /// <summary>
+    /// Элемент списка информации о заданиях
+    /// </summary>
     public partial class DynamicTaskItem : UserControl, INotifyPropertyChanged
     {
         private string _imagePath;
 
+        #region Properties
+
+        /// <summary>
+        /// Путь до текущего изображения
+        /// </summary>
         public string ImagePath
         {
             get => _imagePath;
@@ -21,9 +29,12 @@ namespace WorkReportCreator.Views.CustomConrols
             }
         }
 
-        public bool? IsChecked
+        /// <summary>
+        /// Является ли текущий элемент выбранным
+        /// </summary>
+        public bool IsChecked
         {
-            get => (bool?)GetValue(IsCheckedProperty);
+            get => (bool)GetValue(IsCheckedProperty);
             set
             {
                 SetValue(IsCheckedProperty, value);
@@ -31,9 +42,9 @@ namespace WorkReportCreator.Views.CustomConrols
             }
         }
 
-        public static readonly DependencyProperty IsCheckedProperty =
-            DependencyProperty.Register("IsChecked", typeof(bool?), typeof(DynamicTaskItem), new PropertyMetadata(false, IsCheckedPropertyChanged));
-
+        /// <summary>
+        /// Путь до изображения выбранного элемента
+        /// </summary>
         public string CheckedImage
         {
             get { return (string)GetValue(CheckedImageProperty); }
@@ -44,9 +55,9 @@ namespace WorkReportCreator.Views.CustomConrols
             }
         }
 
-        public static readonly DependencyProperty CheckedImageProperty =
-            DependencyProperty.Register("CheckedImage", typeof(string), typeof(DynamicTaskItem), new PropertyMetadata("../../Images/Checked.png", CheckedImagePropertyChanged));
-
+        /// <summary>
+        /// Путь до изображения невыбранного элемента
+        /// </summary>
         public string UncheckedImage
         {
             get { return (string)GetValue(UncheckedImageProperty); }
@@ -57,9 +68,9 @@ namespace WorkReportCreator.Views.CustomConrols
             }
         }
 
-        public static readonly DependencyProperty UncheckedImageProperty =
-            DependencyProperty.Register("UncheckedImage", typeof(string), typeof(DynamicTaskItem), new PropertyMetadata("../../Images/Transparent.png", UncheckedImagePropertyChanged));
-
+        /// <summary>
+        /// Описание задания
+        /// </summary>
         public string Text
         {
             get { return (string)GetValue(TextProperty); }
@@ -69,13 +80,27 @@ namespace WorkReportCreator.Views.CustomConrols
                 OnPropertyChanged();
             }
         }
+        #endregion
+
+        #region DependencyProperties
+
+        public static readonly DependencyProperty IsCheckedProperty =
+            DependencyProperty.Register("IsChecked", typeof(bool), typeof(DynamicTaskItem), new PropertyMetadata(false, IsCheckedPropertyChanged));
+
+        public static readonly DependencyProperty CheckedImageProperty =
+            DependencyProperty.Register("CheckedImage", typeof(string), typeof(DynamicTaskItem), new PropertyMetadata("../../Images/Checked.png", CheckedImagePropertyChanged));
+
+        public static readonly DependencyProperty UncheckedImageProperty =
+            DependencyProperty.Register("UncheckedImage", typeof(string), typeof(DynamicTaskItem), new PropertyMetadata("../../Images/Transparent.png", UncheckedImagePropertyChanged));
 
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register("Text", typeof(string), typeof(DynamicTaskItem), new PropertyMetadata("", TextPropertyChanged));
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
         public event Action<object> CheckedChanged;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public DynamicTaskItem()
         {
@@ -83,35 +108,27 @@ namespace WorkReportCreator.Views.CustomConrols
             DataContext = this;
         }
 
-        private static void IsCheckedPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            (sender as DynamicTaskItem).IsChecked = (bool?)e.NewValue;
-        }
+        private static void IsCheckedPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) => (sender as DynamicTaskItem)
+            .IsChecked = (bool)e.NewValue;
 
-        private static void CheckedImagePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            (sender as DynamicTaskItem).CheckedImage = e.NewValue as string;
-        }
+        private static void CheckedImagePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) => (sender as DynamicTaskItem)
+            .CheckedImage = e.NewValue as string;
 
-        private static void UncheckedImagePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            (sender as DynamicTaskItem).UncheckedImage = e.NewValue as string;
-        }
+        private static void UncheckedImagePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) => (sender as DynamicTaskItem)
+            .UncheckedImage = e.NewValue as string;
 
-        private static void TextPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            (sender as DynamicTaskItem).Text = e.NewValue as string;
-        }
+        private static void TextPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) => (sender as DynamicTaskItem)
+            .Text = e.NewValue as string;
 
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+        /// <summary>
+        /// Инвертирует значение свойства IsChecked
+        /// </summary>
         private void InvertIsChecked(object sender, MouseButtonEventArgs e)
         {
             IsChecked = !IsChecked;
-            ImagePath = IsChecked ?? false ? CheckedImage : UncheckedImage;
+            ImagePath = IsChecked ? CheckedImage : UncheckedImage;
             OnPropertyChanged();
             CheckedChanged?.Invoke(this);
         }

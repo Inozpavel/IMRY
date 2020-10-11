@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WorkReportCreator.Views.ReportMenuItem"
+﻿<UserControl x:Class="WorkReportCreator.Views.FileInformationItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -98,14 +98,14 @@
                     <Button Grid.Column="3" Content="Выбрать файл" Click="ChooseFile" Focusable="False"/>
                 
                     <Grid Grid.Column="4">
-                        <Label x:Name="labelFilePath" Content="{Binding CodeFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                        <Label x:Name="labelFilePath" Content="{Binding FilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
                         <TextBlock Text="Полный путь до файла" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" Foreground="Gray" Visibility="{Binding HintVisibility,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                 </Grid>
                 
                 <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Visibility="{Binding TextBoxVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <Label Content="Комментарий к коду" Foreground="White"/>
-                    <TextBox Text="{Binding CodeFileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="auto" MinHeight="40" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="6 0 6 6" FontFamily="Tahoma" FontSize="14"/>
+                    <Label Content="Описание файла" Foreground="White"/>
+                    <TextBox Text="{Binding FileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="auto" MinHeight="40" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="6 0 6 6" FontFamily="Tahoma" FontSize="14"/>
                 </StackPanel>
                 
             </StackPanel>

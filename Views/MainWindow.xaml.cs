@@ -13,13 +13,19 @@ namespace WorkReportCreator
             InitializeComponent();
         }
 
-        private void ShowDialogReportSelect(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Показывает окно с выбором заданий и вводом информации о студенте
+        /// </summary>
+        private void ShowFormReportsSelect(object sender, RoutedEventArgs e)
         {
-            WorkAndStudentInfo document = new WorkAndStudentInfo(this);
+            WorkAndStudentInfoWindow document = new WorkAndStudentInfoWindow();
             Hide();
             document.Show();
         }
 
+        /// <summary>
+        /// Показывает диалоговое окно для выбором файла с отчетом, чтобы редактировать его
+        /// </summary>
         private void LoadReport(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog()

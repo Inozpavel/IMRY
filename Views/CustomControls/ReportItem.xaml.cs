@@ -10,19 +10,35 @@ using Xceed.Words.NET;
 
 namespace WorkReportCreator
 {
-    public partial class ReportView : UserControl
+    /// <summary>
+    /// Вкладка для просмотра информации о работе
+    /// </summary>
+    public partial class ReportItem : UserControl
     {
+        /// <summary>
+        /// Модель данных этого элемента
+        /// </summary>
         private readonly ReportViewModel _model;
-        private readonly ReportsPage _page;
-        public ReportView(ReportsPage page, List<string> DynamicTasks)
+
+        /// <summary>
+        /// Окно, на котором расположен элемент
+        /// </summary>
+        private readonly ReportsWindow _page;
+
+        /// <param name="page">Окно, на котором расположен элемент</param>
+        /// <param name="DynamicTasks">Список заданий (при наличии)</param>
+        public ReportItem(ReportsWindow page, List<string> DynamicTasks)
         {
             InitializeComponent();
             _model = new ReportViewModel(DynamicTasks);
             DataContext = _model;
-            listBox.SelectionChanged += (sender, e) => listBox.ScrollIntoView(listBox.SelectedItem);
             _page = page;
+            listBox.SelectionChanged += (sender, e) => listBox.ScrollIntoView(listBox.SelectedItem);
         }
 
+        /// <summary>
+        /// Cоздает отчет для работы
+        /// </summary>
         public void GenerateReport(object sender, RoutedEventArgs e)
         {
             try
@@ -41,13 +57,16 @@ namespace WorkReportCreator
             }
         }
 
+        /// <summary>
+        /// Создает титульник для отчета
+        /// </summary>
+        /// <returns><see cref="DocX"/> - Титульник</returns>
         private DocX GenerateTitlePage()
         {
             var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
             var titlePageParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(globalParams["TitlePageParametersPath"]));
 
-            StudentInformation student = _page.StudentInformation;
-
+            StudentInformation student = _page.Student;
             titlePageParams.Add("Group", student.Group);
             titlePageParams.Add("StudentFullName", string.Join(" ", student.SecondName, student.FirstName, student.MiddleName));
 
@@ -59,15 +78,18 @@ namespace WorkReportCreator
             return doc;
         }
 
+        /// <summary>
+        /// При использовании Drag & Drop добавляет / дополняет информацию о выбранных файлах с список информации о файлах
+        /// </summary>
         private void AddAllFiles(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
 
-            var permittedWorksAndExtentions = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(
+            Dictionary<string, List<string>> permittedWorksAndExtentions = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(
                 File.ReadAllText(globalParams["PermittedWorksAndExtentionsPath"]));
 
-            var permittedExtentions = permittedWorksAndExtentions["PermittedFilesExtentions"];
+            List<string> permittedExtentions = permittedWorksAndExtentions["PermittedFilesExtentions"];
             bool allFilesIsFilePath = files.All(path => Directory.Exists(path) == false);
             bool allFilesIsDirectoryPath = files.All(path => Directory.Exists(path));
 
@@ -93,16 +115,26 @@ namespace WorkReportCreator
             }
         }
 
+        /// <summary>
+        /// Добавляет все файлы из списка <paramref name="filePaths"/> в список информации о файлах
+        /// </summary>
+        /// <param name="filePaths">Список путей файлов</param>
+        /// <param name="permittedExtentions">Список разрешенных расширений</param>
         private void AddFilePaths(List<string> filePaths, List<string> permittedExtentions)
         {
             foreach (string filePath in filePaths)
             {
                 if (CheckFileExtentionIsPermitted(filePath, permittedExtentions) &&
-                    _model.Array.Select(x => x.Content as ReportMenuItem).Select(x => x.CodeFilePath).ToList().Contains(filePath) == false)
-                    _model.AddNewFileInfoWithFile(filePath);
+                    _model.FilesArray.Select(x => x.Content as FileInformationItem).Select(x => x.FilePath).ToList().Contains(filePath) == false)
+                    _model.AddNewFileInfoWithFilePath(filePath);
             }
         }
 
+        /// <summary>
+        /// Добавляет все файлы из списка <paramref name="paths"/> в список информации о файлах, если в списке будет папке, будет искать в ней файлы рекурсивно
+        /// </summary>
+        /// <param name="filePaths">Список путей файлов</param>
+        /// <param name="permittedExtentions">Список разрешенных расширений</param>
         private void RecursiveAddFile(List<string> paths, List<string> permittedExtentions)
         {
             foreach (var name in paths)
@@ -115,11 +147,17 @@ namespace WorkReportCreator
                 }
                 else if (CheckFileExtentionIsPermitted(name, permittedExtentions))
                 {
-                    _model.AddNewFileInfoWithFile(name);
+                    _model.AddNewFileInfoWithFilePath(name);
                 }
             }
         }
 
+        /// <summary>
+        /// Проверяет, являет расширение файла допустимым
+        /// </summary>
+        /// <param name="fileName">Имя файла</param>
+        /// <param name="permittedExtentions">Список разрешенных расширений</param>
+        /// <returns><paramref name="True"/>, если разрешено, в противном случае <paramref name="false"/></returns>
         private bool CheckFileExtentionIsPermitted(string fileName, List<string> permittedExtentions) => permittedExtentions.Any(ext => Regex.IsMatch(fileName, $@"\.{ext}$"));
     }
 }
