@@ -12,24 +12,28 @@ namespace WorkReportCreator
 {
     public partial class ReportView : UserControl
     {
-        private readonly ReportViewModel _model = new ReportViewModel();
+        private readonly ReportViewModel _model;
         private readonly ReportsPage _page;
-        public ReportView(ReportsPage page)
+        public ReportView(ReportsPage page, List<string> DynamicTasks)
         {
             InitializeComponent();
+            _model = new ReportViewModel(DynamicTasks);
             DataContext = _model;
             listBox.SelectionChanged += (sender, e) => listBox.ScrollIntoView(listBox.SelectedItem);
             _page = page;
         }
 
-        private void GenerateReport(object sender, RoutedEventArgs e)
+        public void GenerateReport(object sender, RoutedEventArgs e)
         {
             try
             {
                 var reportName = (Parent as TabItem).Header.ToString().Trim().TrimEnd(".".ToCharArray());
                 DocX document = GenerateTitlePage();
                 var globalParameters = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
-                document.SaveAs($"{globalParameters["AllReportsFilePath"]}/Отчет {reportName}.docx");
+                var reportsFilesPath = globalParameters["AllReportsFilePath"];
+                if (Directory.Exists(reportsFilesPath) == false)
+                    Directory.CreateDirectory(reportsFilesPath);
+                document.SaveAs($"{reportsFilesPath}/Отчет {reportName}.docx");
             }
             catch (IOException)
             {

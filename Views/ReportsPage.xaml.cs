@@ -19,11 +19,12 @@ namespace WorkReportCreator
         {
             InitializeComponent();
             _model = new ReportsPageViewModel(laboratoryWorks, practicalWorks, this);
+            _model.ButtonBackClicked += ShowWorkAndStudentInformation;
             _informationPage = informationPage;
             DataContext = _model;
         }
 
-        private void ShowWorkAndStudentInformation(object sender, RoutedEventArgs e)
+        private void ShowWorkAndStudentInformation(object sender)
         {
             Hide();
             _informationPage.Show();

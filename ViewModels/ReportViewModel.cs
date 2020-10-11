@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -21,7 +21,12 @@ namespace WorkReportCreator
 
         public Command SwapDownFileInfo { get; private set; }
 
+        public Command HideDynamicTasks { get; private set; }
+
+        public Command ShowDynamicTasks { get; private set; }
+
         private int? _selectedFileInfoIndex;
+
         public int? SelectedFileInfoIndex
         {
             get => _selectedFileInfoIndex;
@@ -56,6 +61,17 @@ namespace WorkReportCreator
             }
         }
 
+        private Visibility _dynamicTasksVisiblity;
+
+        public Visibility DynamicTasksVisiblity
+        {
+            get => _dynamicTasksVisiblity;
+            set
+            {
+                _dynamicTasksVisiblity = value;
+                OnPropertyChanged();
+            }
+        }
         public ObservableCollection<DynamicTaskItem> DynamicTasksArray { get; set; } = new ObservableCollection<DynamicTaskItem>();
 
         public ObservableCollection<ListBoxItem> Array { get; set; } = new ObservableCollection<ListBoxItem>();
@@ -77,19 +93,23 @@ namespace WorkReportCreator
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ReportViewModel()
+        public ReportViewModel(List<string> DynamicTasks)
         {
             Array.CollectionChanged += (sender, e) => HintVisibility = Array.Count != 0 ? Visibility.Hidden : Visibility.Visible;
             AddFileInfo = new Command(AddNewFileInfo, null);
             RemoveFileInfo = new Command(RemoveSelectedFileInfo, RemoveSelectedFileInfoCanExecute);
             SwapUpFileInfo = new Command(SwapUpSelectedFileInfo, SwapUpSelectedFileInfoCanExecute);
             SwapDownFileInfo = new Command(SwapDownSelectedFileInfo, SwapDownSelectedFileInfoCanExecute);
+
+            ShowDynamicTasks = new Command((sender) => DynamicTasksVisiblity = Visibility.Visible, null);
+            HideDynamicTasks = new Command((sender) => DynamicTasksVisiblity = Visibility.Collapsed, null);
+
             DynamicTasksStatus = "Выберите, пожалуйста, задание";
 
-            DynamicTasksArray.Add(new DynamicTaskItem() { Text = "первое задание", });
-            DynamicTasksArray.Add(new DynamicTaskItem() { Text = "второе задание" });
-            DynamicTasksArray.Add(new DynamicTaskItem() { Text = "третье задание" });
-            DynamicTasksArray.Add(new DynamicTaskItem() { Text = "четвертое задание" });
+            foreach (string task in DynamicTasks)
+            {
+                DynamicTasksArray.Add(new DynamicTaskItem() { Text = task, });
+            }
 
             void UpdateTasksStatus(object sender) => DynamicTasksStatus = DynamicTasksArray
                 .Any(x => x.IsChecked ?? false) ? "Задание выбрано" : "Выберите, пожалуйста, задание";

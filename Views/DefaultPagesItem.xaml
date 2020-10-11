@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WorkReportCreator.Views.DafaultPagesItem"
+﻿<UserControl x:Class="WorkReportCreator.Views.DefaultPagesItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,34 +6,30 @@
              xmlns:local="clr-namespace:WorkReportCreator.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <!--<TabControl>-->
-        <!--<TabItem x:Name="tabItem" Header="Быстрые действия" Focusable="True">-->
+    <Grid Height="421">
 
-            <Grid Height="421">
+        <Grid.Resources>
+            <Style TargetType="Button">
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Padding" Value="10"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Width" Value="200"/>
+                <Setter Property="Focusable" Value="False"/>
+            </Style>
+        </Grid.Resources>
 
-                <Grid.Resources>
-                    <Style TargetType="Button">
-                        <Setter Property="HorizontalAlignment" Value="Center"/>
-                        <Setter Property="VerticalAlignment" Value="Center"/>
-                        <Setter Property="Margin" Value="5"/>
-                        <Setter Property="Padding" Value="10"/>
-                        <Setter Property="FontSize" Value="14"/>
-                        <Setter Property="Width" Value="200"/>
-                        <Setter Property="Focusable" Value="False"/>
-                    </Style>
-                </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-
-                <Button Content="Сохранить все данные" Grid.Row="0"/>
-                <Button Content="Сгенерировать все отчеты" IsEnabled="False" Grid.Row="1"/>
-                <Button Content="Вернуться назад" Grid.Row="2"/>
-            </Grid>
-        <!--</TabItem>-->
-    <!--</TabControl>-->
+        <Button Content="Сохранить все данные" IsEnabled="False" Grid.Row="0" Click="ButtonSaveAllClick"/>
+        <Button Content="Сгенерировать все отчеты" Grid.Row="1" Click="ButtonGenerateAllClick"/>
+        <Button Content="Вернуться назад" Grid.Row="2" Click="ButtonBackClick"/>
+        
+    </Grid>
 </UserControl>

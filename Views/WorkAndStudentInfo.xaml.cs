@@ -28,20 +28,26 @@ namespace WorkReportCreator
             _mainWindow = mainWindow;
 
             var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
-            var permittedWorks = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(File.ReadAllText(globalParams["PermittedWorksAndExtentionsPath"]));
+            var worksTemplatePath = globalParams["CurrentTemplatePath"];
 
-            foreach (string i in permittedWorks["PermittedPracticalWorks"])
-            {
-                ToggleButton button = new ToggleButton { Content = i, Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
-                _practicalWorksButtons.Add(button);
-                stackPanelPracticalWorks.Children.Add(button);
-            }
+            var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(File.ReadAllText(worksTemplatePath));
 
-            foreach (string i in permittedWorks["PermittedLaboratoryWorks"])
+            foreach (string type in template.Keys.Distinct())
             {
-                ToggleButton button = new ToggleButton { Content = i, Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
-                _laboratoryWorksButtons.Add(button);
-                stackPanelLaboratoryWorks.Children.Add(button);
+                foreach (string workNumber in template[type].Keys.Distinct())
+                {
+                    ToggleButton button = new ToggleButton() { Content = workNumber, Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
+                    if (type == "Practises")
+                    {
+                        _practicalWorksButtons.Add(button);
+                        stackPanelPracticalWorks.Children.Add(button);
+                    }
+                    else if (type == "Laboratories")
+                    {
+                        _laboratoryWorksButtons.Add(button);
+                        stackPanelLaboratoryWorks.Children.Add(button);
+                    }
+                }
             }
         }
 
