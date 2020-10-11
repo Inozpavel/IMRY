@@ -1,4 +1,9 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Windows;
 
 namespace WorkReportCreator
@@ -10,6 +15,42 @@ namespace WorkReportCreator
     {
         public MainWindow()
         {
+            if (File.Exists("./GlobalConfig.json") == false)
+            {
+                MessageBox.Show("У вас отсутствует главый конфигурационный файл!\nБез него нельзя использовать приложение!",
+                    "Невозможно запустить приложение!", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
+                return;
+            }
+            try
+            {
+                List<string> requiredParams = new List<string>()
+                {
+                    "TitlePagePath",
+                    "TitlePageParametersPath",
+                    "DynamicTasksFilePath",
+                    "PermittedWorksAndExtentionsPath",
+                    "StandartUserDataFileName",
+                    "AllReportsFilePath",
+                    "CurrentTemplatePath",
+                };
+
+                var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
+                if (requiredParams.All(param => globalParams.Keys.Contains(param)) == false)
+                {
+                    MessageBox.Show("В главном конфигурационном файле отсутствует обязательный параметры!\nБез него нельзя использовать приложение!",
+                    "Невозможно запустить приложение!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Application.Current.Shutdown();
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Не получилось проверить главый конфигурационный файл!\nБез него нельзя использовать приложение!",
+                    "Невозможно запустить приложение!", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
+                return;
+            }
             InitializeComponent();
         }
 
