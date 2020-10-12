@@ -87,7 +87,7 @@ namespace WorkReportCreator
             var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
 
             Dictionary<string, List<string>> permittedWorksAndExtentions = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(
-                File.ReadAllText(globalParams["PermittedWorksAndExtentionsPath"]));
+                File.ReadAllText(globalParams["PermittedWorksAndExtentionsFilePath"]));
 
             List<string> permittedExtentions = permittedWorksAndExtentions["PermittedFilesExtentions"];
             bool allFilesIsFilePath = files.All(path => Directory.Exists(path) == false);
