@@ -20,6 +20,17 @@
         </Grid.Resources>
 
         <StackPanel>
+            
+            <StackPanel.Resources>
+                
+                <!--Дизайн надписей-->
+                <Style TargetType="TextBlock">
+                    <Setter Property="Margin" Value="10 0 0 0"/>
+                    <Setter Property="Foreground" Value="#FFA8B3B3"/>
+                </Style>
+                
+            </StackPanel.Resources>
+            
             <GroupBox Header="Информация о студенте" Width="300">
                 <Grid>
 
@@ -36,42 +47,24 @@
                     </Grid.RowDefinitions>
 
                     <Grid.Resources>
-
-                        <!--Дизайн полей для ввода-->
-                        <Style TargetType="TextBox">
-                            <Setter Property="Margin" Value="10 3 10 3"/>
-                            <Setter Property="Grid.Column" Value="1"/>
-                            <Setter Property="Focusable" Value="True"/>
-                            <Setter Property="FontSize" Value="14"/>
-                            <Setter Property="VerticalContentAlignment" Value="Center"/>
-                            <Setter Property="Background" Value="#FF333337"/>
-                            <Setter Property="Foreground" Value="White"/>
-                            <Setter Property="FontFamily" Value="Tahoma"/>
-                        </Style>
-
-                        <!--Дизайн надписей-->
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Margin" Value="10 0 0 0"/>
-                            <Setter Property="Foreground" Value="#FFA8B3B3"/>
-                        </Style>
-                        
+                        <ResourceDictionary Source="/Views/Styles/CommonTextBox.xaml"/>
                     </Grid.Resources>
 
                     <!--Фамилия студента-->
                     <TextBlock Text="Фамилия" Grid.Row="0"/>
-                    <TextBox Grid.Row="0" Text="{Binding Student.SecondName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <TextBox Grid.Row="0" Text="{Binding Student.SecondName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Style="{StaticResource DarkTextBox}"/>
 
                     <!--Имя студента-->
                     <TextBlock Text="Имя" Grid.Row="1"/>
-                    <TextBox Grid.Row="1" Text="{Binding Student.FirstName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <TextBox Grid.Row="1" Text="{Binding Student.FirstName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Style="{StaticResource DarkTextBox}"/>
 
                     <!--Отчество студента-->
                     <TextBlock Text="Отчество" Grid.Row="2"/>
-                    <TextBox Grid.Row="2" Text="{Binding Student.MiddleName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <TextBox Grid.Row="2" Text="{Binding Student.MiddleName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Style="{StaticResource DarkTextBox}"/>
 
                     <!--Номер группы студента-->
                     <TextBlock Text="Группа" Grid.Row="3"/>
-                    <TextBox Grid.Row="3" Text="{Binding Student.Group, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <TextBox Grid.Row="3" Text="{Binding Student.Group, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Style="{StaticResource DarkTextBox}"/>
                 </Grid>
 
             </GroupBox>

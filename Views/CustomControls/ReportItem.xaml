@@ -9,47 +9,6 @@
               d:DesignWidth="800" Height="auto">
     <Grid Background="#FF181818" Height="auto" VerticalAlignment="Stretch">
         
-        <Grid.Resources>
-            <Style TargetType="Button" x:Key="OneSymbolButton">
-                <Setter Property="HorizontalAlignment" Value="Left"/>
-                <Setter Property="FontSize" Value="25"/>
-                <Setter Property="Margin" Value="5"/>
-                <Setter Property="Height" Value="30"/>
-                <Setter Property="Width" Value="30"/>
-                <Setter Property="Focusable" Value="False"/>
-
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="border" CornerRadius="10" BorderThickness="2" BorderBrush="White" Opacity="0">
-                                <TextBlock x:Name="textBox" Text="{TemplateBinding Content}" VerticalAlignment="Center" Foreground="White" TextAlignment="Center"/>
-
-                                <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup x:Name="CommonStates">
-
-                                        <!--Работающая кнопка-->
-                                        <VisualState x:Name="Normal">
-                                            <Storyboard>
-                                                <DoubleAnimation Duration="0:0:0.3" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="border"/>
-                                            </Storyboard>
-                                        </VisualState>
-
-                                        <!--Выключенная кнопка-->
-                                        <VisualState x:Name="Disabled">
-                                            <Storyboard>
-                                                <DoubleAnimation Duration="0:0:0.3" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="border"/>
-                                            </Storyboard>
-                                        </VisualState>
-                                    </VisualStateGroup>
-                                </VisualStateManager.VisualStateGroups>
-
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </Grid.Resources>
-        
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -62,11 +21,11 @@
                 <Grid>
                     <TextBlock Text="{Binding DynamicTasksStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="White" HorizontalAlignment="Center" FontSize="16" Margin="0 3 0 3"/>
                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                        
                         <StackPanel.Resources>
-                            <Style TargetType="Button">
-                                <Setter Property="Width" Value="100"/>
-                            </Style>
+                            <ResourceDictionary Source="/Views/Styles/OneSymbolButtonStyle.xaml"/>
                         </StackPanel.Resources>
+                        
                         <Button Content="🗕" Command="{Binding HideDynamicTasks}" Style="{StaticResource OneSymbolButton}"/>
                         <Button Content="🗖" Command="{Binding ShowDynamicTasks}" Style="{StaticResource OneSymbolButton}"/>
                     </StackPanel>
@@ -133,20 +92,13 @@
                 <DockPanel Grid.Row="1" Background="Transparent">
                     <!--Кнопки с управлением для файлов-->
                     <DockPanel.Resources>
-                        <Style TargetType="Button">
-                            <Setter Property="HorizontalAlignment" Value="Left"/>
-                            <Setter Property="DockPanel.Dock" Value="Left"/>
-                            <Setter Property="Margin" Value="2 2 2 2"/>
-                            <Setter Property="Padding" Value="2"/>
-                            <Setter Property="Focusable" Value="False"/>
-                        </Style>
-                                                                     
+                        <ResourceDictionary Source="/Views/Styles/OneSymbolButtonStyle.xaml"/>
                     </DockPanel.Resources>
-
+                    
                     <Button Content="＋" Command="{Binding AddFileInfo}" Style="{StaticResource OneSymbolButton}"/>
                     <Button Content="－" Command="{Binding RemoveFileInfo}" Style="{StaticResource OneSymbolButton}"/>
                     <Button Content="⮝" Command="{Binding SwapUpFileInfo}" Style="{StaticResource OneSymbolButton}"/>
-                    <Button Content="⮟" Command="{Binding SwapDownFileInfo}" Style="{StaticResource OneSymbolButton}"/>
+                    <Button Content="⮟" Command="{Binding SwapDownFileInfo}" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left"/>
                 </DockPanel>
             </StackPanel>
         </Border>
