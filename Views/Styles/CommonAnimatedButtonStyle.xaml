@@ -9,7 +9,7 @@
                 <ControlTemplate TargetType="Button">
 
                     <Border Background="Transparent" BorderThickness="2" BorderBrush="White" CornerRadius="8">
-                        <Label Name="label" Content="{TemplateBinding Content}" Foreground="White" Margin="5" FontSize="13"/>
+                        <Label Name="label" Content="{TemplateBinding Content}" Foreground="White" Margin="5" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
 
                     <ControlTemplate.Triggers>
