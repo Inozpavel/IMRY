@@ -69,7 +69,7 @@ namespace WorkReportCreator
         /// <summary>
         /// Показывает окно с выбором заданий и вводом информации о студенте
         /// </summary>
-        private void ShowFormReportsSelect(object sender, RoutedEventArgs e)
+        private void ShowWindowReportsSelect(object sender, RoutedEventArgs e)
         {
             WorkAndStudentInfoWindow document = new WorkAndStudentInfoWindow();
             Hide();
@@ -93,6 +93,13 @@ namespace WorkReportCreator
                 string filePath = dialog.FileName;
                 MessageBox.Show("В процессе разработки...", "Work in progress!", MessageBoxButton.OK, MessageBoxImage.Information);
             }
+        }
+
+        private void ShowWindowReportTemplate(object sender, RoutedEventArgs e)
+        {
+            ReportsTemplate reportsTemplate = new ReportsTemplate(this);
+            Hide();
+            reportsTemplate.Show();
         }
     }
 }

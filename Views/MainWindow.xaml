@@ -54,10 +54,10 @@
             </StackPanel.Resources>
             
             <Image Source="../ImageIcon.ico" VerticalAlignment="Center" HorizontalAlignment="Center" Height="150" Width="200"/>
-            <Button Content="Создать отчет" Click="ShowFormReportsSelect" Background="#FF5A82A7"/>
+            <Button Content="Создать отчет" Click="ShowWindowReportsSelect" Background="#FF5A82A7"/>
             <Button IsEnabled="False" Content="Открыть файл с отчетом" Click="LoadReport"/>
-            <Button IsEnabled="False" Content="Создать шаблон для отчета" Click="LoadReport"/>
-            <Button IsEnabled="False" Content="Изменить шаблон для отчета" Click="LoadReport"/>
+            <Button Content="Создать шаблон для отчета" Click="ShowWindowReportTemplate"/>
+            <Button IsEnabled="False" Content="Изменить шаблон для отчета"/>
         </StackPanel>
     </Grid>
 </Window>
