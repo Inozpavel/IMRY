@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace WorkReportCreator.Models
 {
-    class ReportInformation : INotifyPropertyChanged
+    public class ReportInformation : INotifyPropertyChanged
     {
         private string _name = "";
 

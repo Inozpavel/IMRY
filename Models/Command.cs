@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace WorkReportCreator
 {
-    class Command : ICommand
+    public class Command : ICommand
     {
         /// <summary>
         /// Метод, который выполнится, если команда может запуститься
