@@ -170,7 +170,7 @@ namespace WorkReportCreator.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ReportsTemplateWindowViewModel()
+        private void AddBaseFunctional()
         {
             AddWork = new Command(AddNewWork, (sender) => IsLaboratoriesChecked || IsPractisesChecked);
             RemoveWork = new Command(RemoveSelectedWork, RemoveSelectedWorkCanExecute);
@@ -184,6 +184,42 @@ namespace WorkReportCreator.ViewModels
             LaboratoriesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
 
             ReportInformationVisibility = Visibility.Collapsed;
+        }
+
+        public ReportsTemplateWindowViewModel() => AddBaseFunctional();
+
+        public ReportsTemplateWindowViewModel(Dictionary<string, Dictionary<string, ReportInformation>> template, string filePath)
+        {
+            AddBaseFunctional();
+            FilePath = filePath;
+            foreach (string number in template["Practices"].Keys)
+            {
+                if (number.All(x => char.IsDigit(x)))
+                {
+
+                    RadioButton radioButton = GenerateNewItem(int.Parse(number));
+                    ReportInformation reportInformation = template["Practices"][number];
+                    reportInformation.PropertyChanged += SaveAllInformation;
+                    PractisesWorks.Add(radioButton, reportInformation);
+                    PractisesWorksButtons.Add(radioButton);
+                }
+                else
+                    throw new Exception();
+            }
+            foreach (string number in template["Laboratories"].Keys)
+            {
+                if (number.All(x => char.IsDigit(x)))
+                {
+
+                    RadioButton radioButton = GenerateNewItem(int.Parse(number));
+                    ReportInformation reportInformation = template["Laboratories"][number];
+                    reportInformation.PropertyChanged += SaveAllInformation;
+                    LaboratoriesWorks.Add(radioButton, reportInformation);
+                    LaboratoriesWorksButtons.Add(radioButton);
+                }
+                else
+                    throw new Exception();
+            }
         }
 
         /// <summary>

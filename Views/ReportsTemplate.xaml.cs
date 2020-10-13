@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
+using WorkReportCreator.Models;
 using WorkReportCreator.ViewModels;
 
 namespace WorkReportCreator
@@ -15,10 +17,18 @@ namespace WorkReportCreator
         public ReportsTemplate(MainWindow mainWindow)
         {
             InitializeComponent();
+            _model = new ReportsTemplateWindowViewModel();
             DataContext = _model;
             _mainWindow = mainWindow;
         }
 
+        public ReportsTemplate(MainWindow mainWindow, Dictionary<string, Dictionary<string, ReportInformation>> template, string filePath)
+        {
+            InitializeComponent();
+            _model = new ReportsTemplateWindowViewModel(template, filePath);
+            DataContext = _model;
+            _mainWindow = mainWindow;
+        }
 
         private void ShowMainWindow(object sender, System.ComponentModel.CancelEventArgs e)
         {
