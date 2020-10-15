@@ -41,7 +41,7 @@ namespace WorkReportCreator
             InitializeComponent();
             DataContext = _model;
 
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
+            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
             var worksTemplatePath = globalParams["CurrentTemplateFilePath"];
 
             var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(File.ReadAllText(worksTemplatePath));
@@ -51,7 +51,7 @@ namespace WorkReportCreator
                 foreach (string workNumber in template[type].Keys.Distinct())
                 {
                     ToggleButton button = new ToggleButton() { Content = workNumber, Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
-                    if (type == "Practises")
+                    if (type == "Practices")
                     {
                         _practicalWorksButtons.Add(button);
                         stackPanelPracticalWorks.Children.Add(button);

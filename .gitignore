@@ -4,6 +4,9 @@ obj/
 packages/
 Properties/
 MigrationBackup/
+InstallationFiles/Installer/Installer-cache
+*.aip
+*.aiproj
 *.sln
 *.user
 *.csproj

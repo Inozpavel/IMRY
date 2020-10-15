@@ -36,7 +36,7 @@ namespace WorkReportCreator.ViewModels.Commands
             SaveStudentInfo = new Command(SaveStudent, null);
             LoadStudentInfo = new Command(LoadStudent, null);
 
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
+            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
             LoadStudent("./" + globalParams["StandartUserDataFileName"] + ".json");
         }
 
@@ -45,7 +45,7 @@ namespace WorkReportCreator.ViewModels.Commands
         /// </summary>
         private void SaveStudent(object sender)
         {
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
+            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
             SaveFileDialog dialog = new SaveFileDialog()
             {
                 Title = "Сохранение информации о студенте",
@@ -87,7 +87,7 @@ namespace WorkReportCreator.ViewModels.Commands
         /// </summary>
         private void LoadStudent(object sender)
         {
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
+            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
             OpenFileDialog dialog = new OpenFileDialog()
             {
                 Title = "Загрузка информации о студенте",

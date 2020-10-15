@@ -52,7 +52,7 @@ namespace WorkReportCreator.ViewModels
 
             TabItems.Add(new TabItem() { Header = "Быстрые действия", Content = defaultPagesItem });
 
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
+            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
             var dynamicTasks = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, List<string>>>>(File.ReadAllText(globalParams["DynamicTasksFilePath"]));
 
             foreach (var i in laboratoryWorks)

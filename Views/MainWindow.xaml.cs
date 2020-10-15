@@ -5,17 +5,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using WorkReportCreator.Models;
 
 namespace WorkReportCreator
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
-            if (File.Exists("./GlobalConfig.json") == false)
+            InitializeComponent();
+            if (File.Exists("./MainConfig.json") == false)
             {
                 MessageBox.Show("У вас отсутствует главый конфигурационный файл!\nБез него нельзя использовать приложение!",
                     "Невозможно запустить приложение!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -36,7 +35,7 @@ namespace WorkReportCreator
                     "AllReportsPath"
                 };
 
-                var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
+                var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
                 if (requiredParams.All(param => globalParams.Keys.Contains(param)) == false)
                 {
                     MessageBox.Show("В главном конфигурационном файле отсутствует обязательный параметры!\nБез него нельзя использовать приложение!",
@@ -63,7 +62,6 @@ namespace WorkReportCreator
                 Application.Current.Shutdown();
                 return;
             }
-            InitializeComponent();
         }
 
         /// <summary>
@@ -101,5 +99,31 @@ namespace WorkReportCreator
             Hide();
             reportsTemplate.Show();
         }
+
+        private void LoadWindowReportTemplate(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog dialog = new OpenFileDialog()
+                {
+                    Title = "Выберите файл с шаблоном",
+                    Filter = "JSON файлы (*.json)|*.json|Все файлы (*.*)|*.*",
+                    DefaultExt = "json",
+                };
+                if (dialog.ShowDialog() == true)
+                {
+                    var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, ReportInformation>>>(File.ReadAllText(dialog.FileName));
+                    ReportsTemplate reportsTemplate = new ReportsTemplate(this, template, dialog.FileName);
+                    Hide();
+                    reportsTemplate.Show();
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Не получилось загрузить шаблон!", "Ошибка при загрузке шаблона", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void CloseApplication(object sender, EventArgs e) => Application.Current.Shutdown();
     }
 }
