@@ -91,7 +91,7 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Показывает, выбран ли пункт "Практические работы"
         /// </summary>
-        public bool IsPractisesChecked { get; set; }
+        public bool IsPracticesChecked { get; set; }
 
         /// <summary>
         /// Текущее выбранное описание работы
@@ -117,7 +117,7 @@ namespace WorkReportCreator.ViewModels
             set
             {
                 _practisesCurrentInformation = value;
-                if (IsPractisesChecked)
+                if (IsPracticesChecked)
                     CurrentInformation = PractisesCurrentInformation;
                 else if (IsLaboratoriesChecked)
                     CurrentInformation = LaboratoriesCurrentInformation;
@@ -133,7 +133,7 @@ namespace WorkReportCreator.ViewModels
             set
             {
                 _laboratoriesCurrentInformation = value;
-                if (IsPractisesChecked)
+                if (IsPracticesChecked)
                     CurrentInformation = PractisesCurrentInformation;
                 else if (IsLaboratoriesChecked)
                     CurrentInformation = LaboratoriesCurrentInformation;
@@ -172,7 +172,7 @@ namespace WorkReportCreator.ViewModels
 
         private void AddBaseFunctional()
         {
-            AddWork = new Command(AddNewWork, (sender) => IsLaboratoriesChecked || IsPractisesChecked);
+            AddWork = new Command(AddNewWork, (sender) => IsLaboratoriesChecked || IsPracticesChecked);
             RemoveWork = new Command(RemoveSelectedWork, RemoveSelectedWorkCanExecute);
             ChangeWorkType = new Command(ChangeWorksList, null);
             ChooseFile = new Command(ChooseFilePath, null);
@@ -180,13 +180,15 @@ namespace WorkReportCreator.ViewModels
             SwapDownElement = new Command(SwapDownSelectedItem, SwapDownCanExecute);
             WorksButtons.CollectionChanged += (sender, e) => ReportInformationVisibility = WorksButtons.Any(x => x.IsChecked ?? false) ? Visibility.Visible : Visibility.Collapsed;
 
-            PractisesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
-            LaboratoriesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
-
             ReportInformationVisibility = Visibility.Collapsed;
         }
 
-        public ReportsTemplateWindowViewModel() => AddBaseFunctional();
+        public ReportsTemplateWindowViewModel()
+        {
+            AddBaseFunctional();
+            PractisesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
+            LaboratoriesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
+        }
 
         public ReportsTemplateWindowViewModel(Dictionary<string, Dictionary<string, ReportInformation>> template, string filePath)
         {
@@ -196,7 +198,6 @@ namespace WorkReportCreator.ViewModels
             {
                 if (number.All(x => char.IsDigit(x)))
                 {
-
                     RadioButton radioButton = GenerateNewItem(int.Parse(number));
                     ReportInformation reportInformation = template["Practices"][number];
                     reportInformation.PropertyChanged += SaveAllInformation;
@@ -220,6 +221,8 @@ namespace WorkReportCreator.ViewModels
                 else
                     throw new Exception();
             }
+            PractisesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
+            LaboratoriesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
         }
 
         /// <summary>
@@ -227,7 +230,7 @@ namespace WorkReportCreator.ViewModels
         /// </summary>
         private void ChangeWorksList(object sender)
         {
-            if (IsPractisesChecked)
+            if (IsPracticesChecked)
             {
                 CurrentInformation = PractisesCurrentInformation;
                 ReportInformationVisibility = CurrentInformation != null && PractisesWorksButtons.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
@@ -285,7 +288,7 @@ namespace WorkReportCreator.ViewModels
             else if (index == 0) //При удалении самого верхнего элемента
             {
                 ReportInformationVisibility = Visibility.Collapsed;
-                if (IsPractisesChecked)
+                if (IsPracticesChecked)
                 {
                     CurrentInformation = PractisesCurrentInformation = null;
                 }
@@ -309,7 +312,7 @@ namespace WorkReportCreator.ViewModels
             radioButton.Checked += (sender, e) =>
             {
                 ReportInformationVisibility = Visibility.Visible;
-                if (IsPractisesChecked)
+                if (IsPracticesChecked)
                     PractisesCurrentInformation = Works[sender as RadioButton];
                 else if (IsLaboratoriesChecked)
                     LaboratoriesCurrentInformation = Works[sender as RadioButton];
