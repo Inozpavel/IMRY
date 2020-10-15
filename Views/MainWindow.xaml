@@ -56,8 +56,8 @@
             <Image Source="../ImageIcon.ico" VerticalAlignment="Center" HorizontalAlignment="Center" Height="150" Width="200"/>
             <Button Content="Создать отчет" Click="ShowWindowReportsSelect" Background="#FF5A82A7"/>
             <Button IsEnabled="False" Content="Открыть файл с отчетом" Click="LoadReport"/>
-            <Button Content="Создать шаблон для отчета" Click="ShowWindowReportTemplate"/>
-            <Button IsEnabled="False" Content="Изменить шаблон для отчета"/>
+            <Button Content="Создать шаблон" Click="ShowWindowReportTemplate"/>
+            <Button Content="Изменить шаблон" Click="LoadWindowReportTemplate"/>
         </StackPanel>
     </Grid>
 </Window>

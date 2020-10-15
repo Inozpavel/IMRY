@@ -45,8 +45,8 @@ namespace WorkReportCreator
             {
                 var reportName = (Parent as TabItem).Header.ToString().Trim().TrimEnd(".".ToCharArray());
                 DocX document = GenerateTitlePage();
-                var globalParameters = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
-                var reportsFilesPath = globalParameters["AllReportsFilePath"];
+                var globalParameters = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
+                var reportsFilesPath = globalParameters["AllReportsPath"];
                 if (Directory.Exists(reportsFilesPath) == false)
                     Directory.CreateDirectory(reportsFilesPath);
                 document.SaveAs($"{reportsFilesPath}/Отчет {reportName}.docx");
@@ -63,7 +63,7 @@ namespace WorkReportCreator
         /// <returns><see cref="DocX"/> - Титульник</returns>
         private DocX GenerateTitlePage()
         {
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
+            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
             var titlePageParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(globalParams["TitlePageParametersFilePath"]));
 
             StudentInformation student = _page.Student;
@@ -84,7 +84,7 @@ namespace WorkReportCreator
         private void AddAllFiles(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./GlobalConfig.json"));
+            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
 
             Dictionary<string, List<string>> permittedWorksAndExtentions = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(
                 File.ReadAllText(globalParams["PermittedWorksAndExtentionsFilePath"]));
