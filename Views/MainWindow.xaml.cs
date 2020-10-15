@@ -38,7 +38,7 @@ namespace WorkReportCreator
                 var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
                 if (requiredParams.All(param => globalParams.Keys.Contains(param)) == false)
                 {
-                    MessageBox.Show("В главном конфигурационном файле отсутствует обязательный параметры!\nБез него нельзя использовать приложение!",
+                    MessageBox.Show("В главном конфигурационном файле отсутствует обязательный параметр!\nБез него нельзя использовать приложение!",
                     "Невозможно запустить приложение!", MessageBoxButton.OK, MessageBoxImage.Error);
                     Application.Current.Shutdown();
                     return;
@@ -79,20 +79,15 @@ namespace WorkReportCreator
         /// </summary>
         private void LoadReport(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog()
-            {
-                Title = "Выборите отчета для редактирования",
-                Filter = "Xml файлы (*.xml)|*.xml|Все файлы (*.*)|*.*",
-                DefaultExt = "xml",
-            };
+            MessageBox.Show("В процессе разработки...", "Work in progress!", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
 
-            if (dialog.ShowDialog() == true)
-            {
-                string filePath = dialog.FileName;
-                MessageBox.Show("В процессе разработки...", "Work in progress!", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            
         }
 
+        /// <summary>
+        /// Показывает окно для редактирования шаблона
+        /// </summary>
         private void ShowWindowReportTemplate(object sender, RoutedEventArgs e)
         {
             ReportsTemplate reportsTemplate = new ReportsTemplate(this);
@@ -100,6 +95,9 @@ namespace WorkReportCreator
             reportsTemplate.Show();
         }
 
+        /// <summary>
+        /// Загружает шаблон работы и показывает окно для редактирования шаблона
+        /// </summary>
         private void LoadWindowReportTemplate(object sender, RoutedEventArgs e)
         {
             try
