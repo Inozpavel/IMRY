@@ -27,7 +27,7 @@
                         <ControlTemplate TargetType="Button">
                                 
                             <Border CornerRadius="10" BorderBrush="White" BorderThickness="2" Background="Transparent" Padding="5" Height="50">
-                                <TextBlock x:Name="textBlock" Text="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFBAC3C3" Margin="0 3 0 3"/>
+                                <Label x:Name="label" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFBAC3C3" FontSize="15"/>
                             </Border>
                                 
                             <ControlTemplate.Triggers>
@@ -37,7 +37,8 @@
                                     <Trigger.EnterActions>
                                         <BeginStoryboard>
                                             <Storyboard>
-                                                <DoubleAnimation Duration="0:0:0.2" To="18" Storyboard.TargetProperty="FontSize" Storyboard.TargetName="textBlock"/>
+                                                <DoubleAnimation Duration="0:0:0.2" To="18" Storyboard.TargetName="label" Storyboard.TargetProperty="FontSize"/>
+                                                <ColorAnimation Duration="0:0:0.2" To="White" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </Trigger.EnterActions>
@@ -46,7 +47,8 @@
                                     <Trigger.ExitActions>
                                         <BeginStoryboard>
                                             <Storyboard>
-                                                <DoubleAnimation Duration="0:0:0.2" To="14" Storyboard.TargetProperty="FontSize" Storyboard.TargetName="textBlock"/>
+                                                <DoubleAnimation Duration="0:0:0.2" To="15" Storyboard.TargetName="label" Storyboard.TargetProperty="FontSize"/>
+                                                <ColorAnimation Duration="0:0:0.2" To="#FFBAC3C3" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </Trigger.ExitActions>
@@ -62,7 +64,7 @@
 
         <Image Grid.Row="0" Source="../ImageIcon.ico" VerticalAlignment="Center" HorizontalAlignment="Center" Height="160" Margin="0 10 0 0"/>
         <Button Grid.Row="1" Content="Создать отчет" Click="ShowWindowReportsSelect" Background="#FF5A82A7" Margin="10 10 10 5"/>
-        <Button Grid.Row="2" IsEnabled="False" Content="Открыть файл с отчетом" Click="LoadReport" Margin="10 5 10 5"/>
+        <Button Grid.Row="2" Content="Открыть файл с отчетом" Click="LoadReport" Margin="10 5 10 5"/>
         <Button Grid.Row="3" Content="Создать шаблон" Click="ShowWindowReportTemplate" Margin="10 5 10 5"/>
         <Button Grid.Row="4" Content="Изменить шаблон" Click="LoadWindowReportTemplate" Margin="10 5 10 10"/>
     </Grid>
