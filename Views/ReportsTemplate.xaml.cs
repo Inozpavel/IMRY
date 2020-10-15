@@ -47,6 +47,8 @@ namespace WorkReportCreator
                     return;
                 }
             }
+            Hide();
+            _mainWindow.Show();
         }
     }
 }
