@@ -29,7 +29,7 @@ namespace WorkReportCreator
                     "TitlePageFilePath",
                     "TitlePageParametersFilePath",
                     "DynamicTasksFilePath",
-                    "PermittedWorksAndExtentionsFilePath",
+                    "PermittedDragAndDropExtentionsFilePath",
                     "CurrentTemplateFilePath",
                     "StandartUserDataFileName",
                     "AllReportsPath"
@@ -123,7 +123,5 @@ namespace WorkReportCreator
                 MessageBox.Show("Не получилось загрузить шаблон!", "Ошибка при загрузке шаблона", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-
-        private void CloseApplication(object sender, EventArgs e) => Application.Current.Shutdown();
     }
 }

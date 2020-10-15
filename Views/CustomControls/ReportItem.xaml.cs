@@ -86,10 +86,8 @@ namespace WorkReportCreator
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
 
-            Dictionary<string, List<string>> permittedWorksAndExtentions = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(
-                File.ReadAllText(globalParams["PermittedWorksAndExtentionsFilePath"]));
-
-            List<string> permittedExtentions = permittedWorksAndExtentions["PermittedFilesExtentions"];
+            List<string> permittedExtentions = JsonConvert.DeserializeObject<List<string>>(
+                File.ReadAllText(globalParams["PermittedDragAndDropExtentionsFilePath"]));
             bool allFilesIsFilePath = files.All(path => Directory.Exists(path) == false);
             bool allFilesIsDirectoryPath = files.All(path => Directory.Exists(path));
 
