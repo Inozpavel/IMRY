@@ -38,6 +38,11 @@ namespace WorkReportCreator.Views
         {
             string text = textBox.Text;
 
+            if (string.IsNullOrEmpty(text))
+            {
+                MessageBox.Show("Значение не может быть пустым!", "Недопустимое значение!", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
             if (text.Trim().All(x => char.IsDigit(x)) == false)
             {
                 MessageBox.Show("Для ввода разрешены только цифры!\nПроверьте данные.", "Недопустимое значение!", MessageBoxButton.OK, MessageBoxImage.Information);
