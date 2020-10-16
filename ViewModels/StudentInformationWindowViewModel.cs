@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using WorkReportCreator.Models;
 
 namespace WorkReportCreator.ViewModels.Commands
 {
@@ -36,8 +37,8 @@ namespace WorkReportCreator.ViewModels.Commands
             SaveStudentInfo = new Command(SaveStudent, null);
             LoadStudentInfo = new Command(LoadStudent, null);
 
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
-            LoadStudent("./" + globalParams["StandartUserDataFileName"] + ".json");
+            MainParams mainParams = new MainParams();
+            LoadStudent(mainParams.UserDataFileName);
         }
 
         /// <summary>
@@ -45,19 +46,19 @@ namespace WorkReportCreator.ViewModels.Commands
         /// </summary>
         private void SaveStudent(object sender)
         {
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
+            MainParams mainParams = new MainParams();
             SaveFileDialog dialog = new SaveFileDialog()
             {
                 Title = "Сохранение информации о студенте",
                 Filter = "JSON файлы (*.json)|*.json|Все файлы (*.*)|*.*",
                 DefaultExt = "json",
-                FileName = globalParams["StandartUserDataFileName"],
                 AddExtension = true,
             };
 
             if (dialog.ShowDialog() == true)
             {
                 File.WriteAllText(dialog.FileName, JsonConvert.SerializeObject(Student, Formatting.Indented));
+                mainParams.UserDataFileName = dialog.FileName;
             }
         }
 
@@ -87,13 +88,13 @@ namespace WorkReportCreator.ViewModels.Commands
         /// </summary>
         private void LoadStudent(object sender)
         {
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
+            MainParams mainParams = new MainParams();
             OpenFileDialog dialog = new OpenFileDialog()
             {
                 Title = "Загрузка информации о студенте",
                 Filter = "JSON файлы (*.json)|*.json|Все файлы (*.*)|*.*",
                 DefaultExt = "json",
-                FileName = globalParams["StandartUserDataFileName"],
+                FileName = mainParams.UserDataFileName
             };
 
             if (dialog.ShowDialog() == true)

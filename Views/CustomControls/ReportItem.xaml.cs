@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using WorkReportCreator.Models;
 using WorkReportCreator.Views;
 using Xceed.Words.NET;
 
@@ -45,11 +46,10 @@ namespace WorkReportCreator
             {
                 var reportName = (Parent as TabItem).Header.ToString().Trim().TrimEnd(".".ToCharArray());
                 DocX document = GenerateTitlePage();
-                var globalParameters = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
-                var reportsFilesPath = globalParameters["AllReportsPath"];
-                if (Directory.Exists(reportsFilesPath) == false)
-                    Directory.CreateDirectory(reportsFilesPath);
-                document.SaveAs($"{reportsFilesPath}/Отчет {reportName}.docx");
+                MainParams mainParams = new MainParams();
+                if (Directory.Exists(mainParams.AllReportsPath) == false)
+                    Directory.CreateDirectory(mainParams.AllReportsPath);
+                document.SaveAs($"{mainParams.AllReportsPath}/Отчет {reportName}.docx");
             }
             catch (IOException)
             {
@@ -63,14 +63,15 @@ namespace WorkReportCreator
         /// <returns><see cref="DocX"/> - Титульник</returns>
         private DocX GenerateTitlePage()
         {
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
-            var titlePageParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(globalParams["TitlePageParametersFilePath"]));
+            MainParams mainParams = new MainParams();
+
+            var titlePageParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(mainParams.TitlePageParametersFilePath));
 
             StudentInformation student = _page.Student;
             titlePageParams.Add("Group", student.Group);
             titlePageParams.Add("StudentFullName", string.Join(" ", student.SecondName, student.FirstName, student.MiddleName));
 
-            DocX doc = DocX.Load(globalParams["TitlePageFilePath"]);
+            DocX doc = DocX.Load(mainParams.TitlePageFilePath);
             foreach (string key in titlePageParams.Keys)
             {
                 doc.ReplaceText($"{{{{{key}}}}}", $"{titlePageParams[key]}");
@@ -84,10 +85,10 @@ namespace WorkReportCreator
         private void AddAllFiles(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
+            MainParams mainParams = new MainParams();
 
             List<string> permittedExtentions = JsonConvert.DeserializeObject<List<string>>(
-                File.ReadAllText(globalParams["PermittedDragAndDropExtentionsFilePath"]));
+                File.ReadAllText(mainParams.PermittedDragAndDropExtentionsFilePath));
             bool allFilesIsFilePath = files.All(path => Directory.Exists(path) == false);
             bool allFilesIsDirectoryPath = files.All(path => Directory.Exists(path));
 

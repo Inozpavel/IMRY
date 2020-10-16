@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
+using WorkReportCreator.Models;
 using WorkReportCreator.Views;
 
 namespace WorkReportCreator.ViewModels
@@ -52,8 +53,8 @@ namespace WorkReportCreator.ViewModels
 
             TabItems.Add(new TabItem() { Header = "Быстрые действия", Content = defaultPagesItem });
 
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
-            var dynamicTasks = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, List<string>>>>(File.ReadAllText(globalParams["DynamicTasksFilePath"]));
+            MainParams mainParams = new MainParams();
+            var dynamicTasks = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, List<string>>>>(File.ReadAllText(mainParams.DynamicTasksFilePath));
 
             foreach (var i in laboratoryWorks)
             {

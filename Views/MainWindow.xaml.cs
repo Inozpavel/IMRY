@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using WorkReportCreator.Models;
 
@@ -21,47 +20,8 @@ namespace WorkReportCreator
                 Application.Current.Shutdown();
                 return;
             }
-
-            try
-            {
-                List<string> requiredParams = new List<string>()
-                {
-                    "TitlePageFilePath",
-                    "TitlePageParametersFilePath",
-                    "DynamicTasksFilePath",
-                    "PermittedDragAndDropExtentionsFilePath",
-                    "CurrentTemplateFilePath",
-                    "StandartUserDataFileName",
-                    "AllReportsPath"
-                };
-
-                var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
-                if (requiredParams.All(param => globalParams.Keys.Contains(param)) == false)
-                {
-                    MessageBox.Show("В главном конфигурационном файле отсутствует обязательный параметр!\nБез него нельзя использовать приложение!",
-                    "Невозможно запустить приложение!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Application.Current.Shutdown();
-                    return;
-                }
-
-                foreach (var param in globalParams.Keys.Where(x => x.Contains("FilePath")))
-                {
-                    if (File.Exists(globalParams[param]) == false)
-                    {
-                        MessageBox.Show($"Ошибка в параметре {param},\nфайла {globalParams[param]} не существует!\nОн необходим для работы приложения!\nПроверьть его корректность",
-                            "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                        Application.Current.Shutdown();
-                        return;
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Не получилось проверить главый конфигурационный файл!\nБез него нельзя использовать приложение!",
-                    "Невозможно запустить приложение!", MessageBoxButton.OK, MessageBoxImage.Error);
-                Application.Current.Shutdown();
-                return;
-            }
+            MainParams mainParams = new MainParams();
+            mainParams.ValidateAllParams();
         }
 
         /// <summary>
@@ -81,8 +41,6 @@ namespace WorkReportCreator
         {
             MessageBox.Show("В процессе разработки...", "Work in progress!", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
-
-
         }
 
         /// <summary>

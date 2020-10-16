@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using WorkReportCreator.Models;
 using WorkReportCreator.ViewModels.Commands;
 
 namespace WorkReportCreator
@@ -44,11 +45,9 @@ namespace WorkReportCreator
             InitializeComponent();
             DataContext = _model;
 
-            var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
-            var worksTemplatePath = globalParams["CurrentTemplateFilePath"];
+            MainParams mainParams = new MainParams();
 
-            var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(File.ReadAllText(worksTemplatePath));
-
+            var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(File.ReadAllText(mainParams.CurrentTemplateFilePath));
             foreach (string type in template.Keys.Distinct())
             {
                 foreach (string workNumber in template[type].Keys.Distinct())
