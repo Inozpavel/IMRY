@@ -9,7 +9,10 @@ using WorkReportCreator.ViewModels.Commands;
 
 namespace WorkReportCreator
 {
-    public partial class WorkAndStudentInfoWindow : Window
+    /// <summary>
+    /// Окно с вводом информации о студенте и выбором работ
+    /// </summary>
+    public partial class WorksAndStudentInfoWindow : Window
     {
         /// <summary>
         /// Модель данных этого элемента
@@ -36,7 +39,7 @@ namespace WorkReportCreator
         /// </summary>
         private readonly List<ToggleButton> _laboratoryWorksButtons = new List<ToggleButton>();
 
-        public WorkAndStudentInfoWindow()
+        public WorksAndStudentInfoWindow()
         {
             InitializeComponent();
             DataContext = _model;

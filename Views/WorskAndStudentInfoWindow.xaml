@@ -1,4 +1,4 @@
-﻿<Window x:Class="WorkReportCreator.WorkAndStudentInfoWindow"
+﻿<Window x:Class="WorkReportCreator.WorksAndStudentInfoWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -166,33 +166,48 @@
                     </StackPanel.Resources>
 
                     <GroupBox Header="Практические работы" HorizontalAlignment="Stretch">
-                        <StackPanel x:Name="stackPanelPracticalWorks" Orientation="Horizontal">
-                            <Button Content="Все работы" Click="CheckAllWorks" Margin="10" Style="{StaticResource ButtonCheckAllWorks}"/>
-                        </StackPanel>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
+                            <StackPanel x:Name="stackPanelPracticalWorks" Orientation="Horizontal">
+
+                                <Button Content="Все работы" Click="CheckAllWorks" Margin="10" Style="{StaticResource ButtonCheckAllWorks}"/>
+                            </StackPanel>
+                        </ScrollViewer>
                     </GroupBox>
 
                     <GroupBox Header="Лабораторные работы" HorizontalAlignment="Stretch">
-                        <StackPanel x:Name="stackPanelLaboratoryWorks" Orientation="Horizontal">
-                            <Button Content="Все работы" Click="CheckAllWorks" Margin="10" Style="{StaticResource ButtonCheckAllWorks}"/>
-                        </StackPanel>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
+                            <StackPanel x:Name="stackPanelLaboratoryWorks" Orientation="Horizontal">
+                                <Button Content="Все работы" Click="CheckAllWorks" Margin="10" Style="{StaticResource ButtonCheckAllWorks}"/>
+                            </StackPanel>
+                        </ScrollViewer>
                     </GroupBox>
 
                 </StackPanel>
             </GroupBox>
 
             <!--Длинная панель с кнопками-->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10 0 10">
-                
-                <StackPanel.Resources>
-                    <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
-                </StackPanel.Resources>
+            <Grid HorizontalAlignment="Stretch" Margin="0 10 0 10">
+                <Grid.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.MergedDictionaries>
+                            <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
+                            <ResourceDictionary Source="/Views/Styles/OneSymbolButtonStyle.xaml"/>
+                        </ResourceDictionary.MergedDictionaries>
+                    </ResourceDictionary>
+                </Grid.Resources>
 
-                <Button Content="Вернуться назад" Click="ShowFormMainWindow" Style="{StaticResource CommonAnimatedButton}" />
-                <Button Content="Сохранить информацию о студенте" Command="{Binding SaveStudentInfo}" Style="{StaticResource CommonAnimatedButton}" Margin="25 0 5 0"/>
-                <Button Content="Загрузить информацию о студенте" Command="{Binding LoadStudentInfo}" Style="{StaticResource CommonAnimatedButton}" Margin="5 0 25 0"/>
-                <Button Content="Перейти к отчетам" Click="ShowFormReportsPage" Style="{StaticResource CommonAnimatedButton}"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="&lt;" Click="ShowFormMainWindow" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Margin="10 0 0 0"/>
+                <Button Grid.Column="1" Content="Сохранить информацию о студенте" Command="{Binding SaveStudentInfo}" Style="{StaticResource CommonAnimatedButton}" Margin="25 0 5 0"/>
+                <Button Grid.Column="2" Content="Загрузить информацию о студенте" Command="{Binding LoadStudentInfo}" Style="{StaticResource CommonAnimatedButton}" Margin="5 0 25 0"/>
+                <Button Grid.Column="3" Content="&gt;" Click="ShowFormReportsPage" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Right" Margin="0 0 10 0"/>
                 
-            </StackPanel>
+            </Grid>
         </StackPanel>
     </Grid>
 </Window>
