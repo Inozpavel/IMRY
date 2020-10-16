@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace WorkReportCreator.ViewModels.Commands
 {
-    class StudentInformationWindowViewModel : INotifyPropertyChanged
+    internal class StudentInformationWindowViewModel : INotifyPropertyChanged
     {
         public Command SaveStudentInfo { get; private set; }
         public Command LoadStudentInfo { get; private set; }

@@ -11,7 +11,7 @@ using WorkReportCreator.Views;
 
 namespace WorkReportCreator.ViewModels
 {
-    class ReportsWindowViewModel : INotifyPropertyChanged
+    internal class ReportsWindowViewModel : INotifyPropertyChanged
     {
         private int? _selectedIndex;
 

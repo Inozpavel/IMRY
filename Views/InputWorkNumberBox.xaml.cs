@@ -5,7 +5,7 @@ using System.Windows;
 namespace WorkReportCreator.Views
 {
     /// <summary>
-    /// Логика взаимодействия для InputWorkNumberBox.xaml
+    /// Окно с вводом номера работы
     /// </summary>
     public partial class InputWorkNumberBox : Window
     {
@@ -43,14 +43,14 @@ namespace WorkReportCreator.Views
                 MessageBox.Show("Для ввода разрешены только цифры!\nПроверьте данные.", "Недопустимое значение!", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            else if (_existingWorks.Contains(int.Parse(text.Trim()).ToString()))
-            {
-                MessageBox.Show("Введенное значение уже есть в списке!\nОдинаковых значений быть не должно!", "Недопустимое значение!", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
             else if (text.Trim().Length > 3)
             {
                 MessageBox.Show("Введенное значение слишком большое!", "Недопустимое значение!", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            else if (_existingWorks.Contains(int.Parse(text.Trim()).ToString()))
+            {
+                MessageBox.Show("Введенное значение уже есть в списке!\nОдинаковых значений быть не должно!", "Недопустимое значение!", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             ResultNumber = int.Parse(text.Trim());

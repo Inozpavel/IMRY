@@ -15,7 +15,7 @@ using WorkReportCreator.Views;
 
 namespace WorkReportCreator.ViewModels
 {
-    class ReportsTemplateWindowViewModel : INotifyPropertyChanged
+    internal class ReportsTemplateWindowViewModel : INotifyPropertyChanged
     {
         public Command AddWork { get; private set; }
 
@@ -170,6 +170,46 @@ namespace WorkReportCreator.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public ReportsTemplateWindowViewModel()
+        {
+            AddBaseFunctional();
+            AddAutoSaveForCollections();
+        }
+
+        /// <param name="template">Шаблон</param>
+        /// <param name="filePath">Путь до файла с шаблоном</param>
+        public ReportsTemplateWindowViewModel(Dictionary<string, Dictionary<string, ReportInformation>> template, string filePath)
+        {
+            AddBaseFunctional();
+            foreach (string workType in template.Keys)
+            {
+                if (workType != "Practices" && workType != "Laboratories")
+                    throw new ArgumentException("Некорректный ключ!");
+
+                foreach (string number in template[workType].Keys)
+                {
+                    RadioButton radioButton = GenerateNewItem(int.Parse(number));
+                    ReportInformation reportInformation = template[workType][number];
+                    reportInformation.PropertyChanged += SaveAllInformation;
+                    if (workType == "Practices")
+                    {
+                        PractisesWorks.Add(radioButton, reportInformation);
+                        PractisesWorksButtons.Add(radioButton);
+                    }
+                    else
+                    {
+                        LaboratoriesWorks.Add(radioButton, reportInformation);
+                        LaboratoriesWorksButtons.Add(radioButton);
+                    }
+                }
+            }
+            FilePath = filePath;
+            AddAutoSaveForCollections();
+        }
+
+        /// <summary>
+        /// Создает команды, подписывет коллекцию WorksButtons на обновление видимости описания работы при ее изменении
+        /// </summary>
         private void AddBaseFunctional()
         {
             AddWork = new Command(AddNewWork, (sender) => IsLaboratoriesChecked || IsPracticesChecked);
@@ -183,44 +223,11 @@ namespace WorkReportCreator.ViewModels
             ReportInformationVisibility = Visibility.Collapsed;
         }
 
-        public ReportsTemplateWindowViewModel()
+        /// <summary>
+        /// Подписывает коллекции PractisesWorksButtons и LaboratoriesWorksButtons на автосохранении информации при изменении
+        /// </summary>
+        private void AddAutoSaveForCollections()
         {
-            AddBaseFunctional();
-            PractisesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
-            LaboratoriesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
-        }
-
-        public ReportsTemplateWindowViewModel(Dictionary<string, Dictionary<string, ReportInformation>> template, string filePath)
-        {
-            AddBaseFunctional();
-            FilePath = filePath;
-            foreach (string number in template["Practices"].Keys)
-            {
-                if (number.All(x => char.IsDigit(x)))
-                {
-                    RadioButton radioButton = GenerateNewItem(int.Parse(number));
-                    ReportInformation reportInformation = template["Practices"][number];
-                    reportInformation.PropertyChanged += SaveAllInformation;
-                    PractisesWorks.Add(radioButton, reportInformation);
-                    PractisesWorksButtons.Add(radioButton);
-                }
-                else
-                    throw new Exception();
-            }
-            foreach (string number in template["Laboratories"].Keys)
-            {
-                if (number.All(x => char.IsDigit(x)))
-                {
-
-                    RadioButton radioButton = GenerateNewItem(int.Parse(number));
-                    ReportInformation reportInformation = template["Laboratories"][number];
-                    reportInformation.PropertyChanged += SaveAllInformation;
-                    LaboratoriesWorks.Add(radioButton, reportInformation);
-                    LaboratoriesWorksButtons.Add(radioButton);
-                }
-                else
-                    throw new Exception();
-            }
             PractisesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
             LaboratoriesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
         }
@@ -383,15 +390,11 @@ namespace WorkReportCreator.ViewModels
 
             Dictionary<string, ReportInformation> practisesinfo = new Dictionary<string, ReportInformation>();
             foreach (var button in PractisesWorksButtons)
-            {
                 practisesinfo[button.Content.ToString()] = PractisesWorks[button];
-            }
 
             Dictionary<string, ReportInformation> laboratoriesInfo = new Dictionary<string, ReportInformation>();
             foreach (var button in LaboratoriesWorksButtons)
-            {
                 laboratoriesInfo[button.Content.ToString()] = LaboratoriesWorks[button];
-            }
 
             template["Practices"] = practisesinfo;
             template["Laboratories"] = laboratoriesInfo;

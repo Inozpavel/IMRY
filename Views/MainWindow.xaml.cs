@@ -69,7 +69,7 @@ namespace WorkReportCreator
         /// </summary>
         private void ShowWindowReportsSelect(object sender, RoutedEventArgs e)
         {
-            WorkAndStudentInfoWindow document = new WorkAndStudentInfoWindow();
+            WorksAndStudentInfoWindow document = new WorksAndStudentInfoWindow();
             Hide();
             document.Show();
         }
@@ -82,7 +82,7 @@ namespace WorkReportCreator
             MessageBox.Show("В процессе разработки...", "Work in progress!", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
 
-            
+
         }
 
         /// <summary>

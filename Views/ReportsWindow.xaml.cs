@@ -5,14 +5,14 @@ using WorkReportCreator.ViewModels;
 namespace WorkReportCreator
 {
     /// <summary>
-    /// Логика взаимодействия для Report.xaml
+    /// Окно с владками для каждой работы
     /// </summary>
     public partial class ReportsWindow : Window
     {
         /// <summary>
         /// Модель данных этого элемента
         /// </summary>
-        private ReportsWindowViewModel _model;
+        private readonly ReportsWindowViewModel _model;
 
         /// <summary>
         /// Данные студента
@@ -22,12 +22,12 @@ namespace WorkReportCreator
         /// <summary>
         /// Окно с информацией о студенте
         /// </summary>
-        private WorkAndStudentInfoWindow _informationPage;
+        private readonly WorksAndStudentInfoWindow _informationPage;
 
         /// <param name="informationPage">Окно с выбором работ и информацией о студенте</param>
         /// <param name="laboratoryWorks">Список номеров лабораторных работ</param>
         /// <param name="practicalWorks">Список номеров практических работ</param>
-        public ReportsWindow(WorkAndStudentInfoWindow informationPage, List<string> laboratoryWorks, List<string> practicalWorks, StudentInformation student)
+        public ReportsWindow(WorksAndStudentInfoWindow informationPage, List<string> laboratoryWorks, List<string> practicalWorks, StudentInformation student)
         {
             InitializeComponent();
             Student = student;

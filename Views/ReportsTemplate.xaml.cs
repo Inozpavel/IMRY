@@ -6,49 +6,44 @@ using WorkReportCreator.ViewModels;
 namespace WorkReportCreator
 {
     /// <summary>
-    /// Логика взаимодействия для ReportsTemplate.xaml
+    /// Окно с редактированием информации в шаблоне
     /// </summary>
     public partial class ReportsTemplate : Window
     {
         private readonly ReportsTemplateWindowViewModel _model = new ReportsTemplateWindowViewModel();
 
-        private MainWindow _mainWindow;
+        private readonly MainWindow _mainWindow;
 
         public ReportsTemplate(MainWindow mainWindow)
         {
             InitializeComponent();
-            _model = new ReportsTemplateWindowViewModel();
-            DataContext = _model;
+            DataContext = _model = new ReportsTemplateWindowViewModel();
             _mainWindow = mainWindow;
         }
 
         public ReportsTemplate(MainWindow mainWindow, Dictionary<string, Dictionary<string, ReportInformation>> template, string filePath)
         {
             InitializeComponent();
-            _model = new ReportsTemplateWindowViewModel(template, filePath);
-            DataContext = _model;
+            DataContext = _model = new ReportsTemplateWindowViewModel(template, filePath);
             _mainWindow = mainWindow;
         }
 
         private void ShowMainWindow(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            bool shouldClose = false;
             if (string.IsNullOrEmpty(_model.FilePath))
             {
-                if (MessageBox.Show("Данные не сохранены!\nПри выходе они будет уничножены!\nВы уверены?", "Внимание!",
-                           MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
-                {
-                    Hide();
-                    _mainWindow.Show();
-
-                }
-                else
-                {
-                    e.Cancel = true;
-                    return;
-                }
+                shouldClose = MessageBox.Show("Данные не сохранены!\nПри выходе они будет уничножены!\nВы уверены?", "Внимание!",
+                           MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes;
             }
-            Hide();
-            _mainWindow.Show();
+
+            if (shouldClose)
+                _mainWindow.Show();
+            else
+            {
+                e.Cancel = true;
+                return;
+            }
         }
     }
 }

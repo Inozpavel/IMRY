@@ -11,7 +11,7 @@ using WorkReportCreator.Views.CustomConrols;
 
 namespace WorkReportCreator
 {
-    class ReportViewModel : INotifyPropertyChanged
+    internal class ReportViewModel : INotifyPropertyChanged
     {
         #region Commands
 
