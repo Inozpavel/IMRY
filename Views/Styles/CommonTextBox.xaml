@@ -3,8 +3,7 @@
     <Style TargetType="TextBox" x:Key="DarkTextBox">
         <Setter Property="Margin" Value="10 3 10 3"/>
         <Setter Property="Focusable" Value="True"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="15"/>
         <Setter Property="Background" Value="#FF333337"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontFamily" Value="Tahoma"/>
