@@ -30,8 +30,8 @@ namespace WorkReportCreator
 
         private void ShowMainWindow(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            bool shouldClose = false;
-            if (string.IsNullOrEmpty(_model.FilePath))
+            bool shouldClose = true;
+            if (string.IsNullOrEmpty(_model.FilePath) && (_model.LaboratoriesWorksButtons.Count > 0 || _model.PractisesWorksButtons.Count > 0))
             {
                 shouldClose = MessageBox.Show("Данные не сохранены!\nПри выходе они будет уничножены!\nВы уверены?", "Внимание!",
                            MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes;
