@@ -79,21 +79,14 @@
                             </Setter>
                         </Style>
 
-                        <Style TargetType="Label" x:Key="DigitIndexButton">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                            <Setter Property="FontSize" Value="20"/>
-                            <Setter Property="Margin" Value="5"/>
-                            <Setter Property="Foreground" Value="White"/>
-                        </Style>
                     </Grid.Resources>
 
-                    <Grid Margin="2" Grid.Column="0">
+                    <Grid Grid.Column="0" Margin="10 5 5 5">
                         <Ellipse Width="40" Height="40" StrokeThickness="3" Stroke="#FF14E7AE"/>
-                        <Label FontSize="18" Content="{Binding Number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DigitIndexButton}"/>
+                        <TextBlock Text="{Binding Number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="20" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
 
-                    <Label Grid.Column="1" Content="Имя файла" Visibility="{Binding FileNameVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="15 0 0 0"/>
+                    <Label Grid.Column="1" Content="Имя файла" Visibility="{Binding FileNameVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Label Grid.Column="2" Content="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding FileNameVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Grid.Column="3" Content="Выбрать файл" Click="ChooseFile" Focusable="False"/>
                 
@@ -104,8 +97,13 @@
                 </Grid>
                 
                 <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Visibility="{Binding TextBoxVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <StackPanel.Resources>
+                        <ResourceDictionary Source="../Styles/CommonTextBox.xaml"/>
+                    </StackPanel.Resources>
+                    
                     <Label Content="Описание файла" Foreground="White"/>
-                    <TextBox Text="{Binding FileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="auto" MinHeight="40" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="6 0 6 6" FontFamily="Tahoma" FontSize="14"/>
+                    <TextBox Text="{Binding FileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="auto" MinHeight="50" TextWrapping="Wrap" Margin="6 0 6 6" Style="{StaticResource DarkTextBox}"/>
+               
                 </StackPanel>
                 
             </StackPanel>
