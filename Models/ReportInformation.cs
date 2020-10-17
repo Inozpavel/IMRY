@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace WorkReportCreator.Models
@@ -14,6 +15,8 @@ namespace WorkReportCreator.Models
         private string _commonTask = "";
 
         private bool _hasDynamicTask;
+
+        private ObservableCollection<DynamicTask> _dynamicTasks = new ObservableCollection<DynamicTask>();
 
         #region Properties
 
@@ -82,6 +85,18 @@ namespace WorkReportCreator.Models
             }
         }
 
+        /// <summary>
+        /// Список заданий для выбора
+        /// </summary>
+        public ObservableCollection<DynamicTask> DynamicTasks
+        {
+            get => _dynamicTasks;
+            set
+            {
+                _dynamicTasks = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;

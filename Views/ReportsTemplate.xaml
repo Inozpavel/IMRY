@@ -112,57 +112,107 @@
 
             <Border Grid.Row="1" VerticalAlignment="Bottom" BorderThickness="2" BorderBrush="White">
                 <Grid>
-                    <Button Content="＋" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Command="{Binding AddWork}"/>
+                    <Button Content="+" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Command="{Binding AddWork}" Margin="5 2 0 2"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Content="⮝" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapUpElement}"/>
-                        <Button Content="⮟" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapDownElement}"/>
-                    </StackPanel> 
-                    <Button Content="－" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Right" Command="{Binding RemoveWork}"/>
+                        <Button Content="⮝" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapUpElement}" Margin="0 2 2 2"/>
+                        <Button Content="⮟" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapDownElement}" Margin="2 2 0 2"/>
+                    </StackPanel>
+                    <Button Content="-" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Right" Command="{Binding RemoveWork}" Margin="0 2 5 2"/>
                 </Grid>
             </Border>
         </Grid>
 
         <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" Margin="10 0 0 0" Visibility="{Binding ReportInformationVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            
+            <ScrollViewer.Resources>
+                <ResourceDictionary Source="/Views/Styles/TemplateTextBox.xaml"/>
+            </ScrollViewer.Resources>
+            
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
 
-            <StackPanel>
-
-                <StackPanel.Resources>
-
+                <Grid.Resources>
                     <Style TargetType="Label">
                         <Setter Property="Foreground" Value="White"/>
                         <Setter Property="FontSize" Value="14"/>
                         <Setter Property="FontFamily" Value="MyriadPro"/>
                     </Style>
+                    
+                </Grid.Resources>
 
-                    <Style TargetType="TextBox">
-                        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
-                        <Setter Property="TextWrapping" Value="Wrap"/>
-                        <Setter Property="Background" Value="#FF333337"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Foreground" Value="White"/>
-                    </Style>
+                <Label Grid.Row="0" Content="Название работы"/>
+                <TextBox Grid.Row="1" Text="{Binding CurrentInformation.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextBox}"/>
 
-                </StackPanel.Resources>
+                <Label Grid.Row="2" Content="Цель работы"/>
+                <TextBox Grid.Row="3" Text="{Binding CurrentInformation.WorkTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextBox}"/>
 
-                <Label Content="Название работы"/>
-                <TextBox Text="{Binding CurrentInformation.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Grid.Row="4" Content="Теоритическая часть"/>
+                <TextBox Grid.Row="5" Text="{Binding CurrentInformation.TheoryPart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextBox}"/>
 
-                <Label Content="Цель работы"/>
-                <TextBox Text="{Binding CurrentInformation.WorkTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Grid.Row="6" Content="Общее задание"/>
+                <TextBox Grid.Row="7" Text="{Binding CurrentInformation.CommonTask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextBox}"/>
 
-                <Label Content="Теоритическая часть"/>
-                <TextBox Text="{Binding CurrentInformation.TheoryPart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <GroupBox Grid.Row="10" Header="Задания на выбор" Foreground="White" FontSize="14" Margin="5" MinHeight="100" BorderThickness="1">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        
+                        <Grid>
 
-                <Label Content="Общее задание"/>
-                <TextBox Text="{Binding CurrentInformation.CommonTask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Grid.Resources>
+                                <ResourceDictionary>
+                                    <ResourceDictionary.MergedDictionaries>
+                                        <ResourceDictionary Source="/Views/Styles/OneSymbolButtonStyle.xaml"/>
+                                        <ResourceDictionary Source="/Views/Styles/CommonTextBox.xaml"/>
+                                    </ResourceDictionary.MergedDictionaries>
+                                </ResourceDictionary>
+                            </Grid.Resources>
+                        
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                                
+                            <!--Список заданий-->
+                            <ListBox ItemsSource="{Binding CurrentInformation.DynamicTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedDescriptionIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBox TextWrapping="Wrap" Margin="2" HorizontalAlignment="Stretch" Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextBox}"/>
+                                    </DataTemplate>
+                                
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            
+                            <!--Панель с кнопками для управлением заданиями-->
+                            <Border BorderBrush="White" BorderThickness="2" Grid.Row="1">
+                                <Grid>
+                                    <Button Content="+" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Command="{Binding AddDescription}" Margin="5 2 0 2"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="⮝" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapUpDescription}" Margin="0 2 2 2"/>
+                                        <Button Content="⮟" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapDownDescription}" Margin="2 2 0 2"/>
+                                    </StackPanel>
+                                    <Button Content="-" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Right" Command="{Binding RemoveDescription}" Margin="0 2 5 2"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        
+                    </ScrollViewer>
 
-                <Label Content="Индивидуальные задания"/>
-                <StackPanel Orientation="Horizontal">
-                    <RadioButton Content="Имеются" Width="100" IsChecked="{Binding CurrentInformation.HasDynamicTask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <RadioButton x:Name="radioButtonNoDynamicTesk" Content="Не имеются" Width="100" IsChecked="{Binding HasNotDynamictask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>
-
-            </StackPanel>
+                </GroupBox>
+                
+            </Grid>
         </ScrollViewer>
     </Grid>
 </Window>
+

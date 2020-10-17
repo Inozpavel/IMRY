@@ -29,6 +29,14 @@ namespace WorkReportCreator.ViewModels
 
         public Command SwapDownElement { get; private set; }
 
+        public Command AddDescription { get; private set; }
+
+        public Command SwapUpDescription { get; private set; }
+
+        public Command SwapDownDescription { get; private set; }
+
+        public Command RemoveDescription { get; private set; }
+
         private ReportInformation _currentInformation;
 
         private ReportInformation _practisesCurrentInformation;
@@ -41,7 +49,7 @@ namespace WorkReportCreator.ViewModels
 
         private ObservableCollection<RadioButton> _worksButtons = new ObservableCollection<RadioButton>();
 
-        private bool _hasNotDynamictask = true;
+        private int? _selecteDescriptionIndex = null;
 
         #region Properties
 
@@ -154,18 +162,17 @@ namespace WorkReportCreator.ViewModels
         }
 
         /// <summary>
-        /// Отмечена ли кнопка "Не имеются"
+        /// Индекс текущего выбранного задания для выбора
         /// </summary>
-        public bool HasNotDynamictask
+        public int? SelectedDescriptionIndex
         {
-            get { return _hasNotDynamictask; }
+            get => _selecteDescriptionIndex;
             set
             {
-                _hasNotDynamictask = value;
+                _selecteDescriptionIndex = value;
                 OnPropertyChanged();
             }
         }
-
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -218,6 +225,15 @@ namespace WorkReportCreator.ViewModels
             ChooseFile = new Command(ChooseFilePath, null);
             SwapUpElement = new Command(SwapUpSelectedItem, SwapUpCanExecute);
             SwapDownElement = new Command(SwapDownSelectedItem, SwapDownCanExecute);
+            AddDescription = new Command((sender) => CurrentInformation.DynamicTasks.Add(new DynamicTask()), null);
+            RemoveDescription = new Command(RemoveSelectedDescription, (sender) => SelectedDescriptionIndex != null);
+
+            SwapUpDescription = new Command((sender) => CurrentInformation.DynamicTasks.Move(SelectedDescriptionIndex ?? 0, SelectedDescriptionIndex - 1 ?? 0),
+                (sender) => SelectedDescriptionIndex != null && SelectedDescriptionIndex > 0);
+
+            SwapDownDescription = new Command((sender) => CurrentInformation.DynamicTasks.Move(SelectedDescriptionIndex ?? 0, SelectedDescriptionIndex + 1 ?? 0),
+                (sender) => SelectedDescriptionIndex != null && SelectedDescriptionIndex < CurrentInformation.DynamicTasks.Count - 1);
+
             WorksButtons.CollectionChanged += (sender, e) => ReportInformationVisibility = WorksButtons.Any(x => x.IsChecked ?? false) ? Visibility.Visible : Visibility.Collapsed;
 
             ReportInformationVisibility = Visibility.Collapsed;
@@ -279,7 +295,9 @@ namespace WorkReportCreator.ViewModels
         {
             int index = GetSelectedIndex();
             RadioButton selectedButton = WorksButtons[index];
-            if ((string.IsNullOrEmpty(CurrentInformation.Name) && string.IsNullOrEmpty(CurrentInformation.WorkTarget) && string.IsNullOrEmpty(CurrentInformation.CommonTask) && string.IsNullOrEmpty(CurrentInformation.TheoryPart)) == false)
+            if (Keyboard.IsKeyDown(Key.LeftShift) == false && Keyboard.IsKeyDown(Key.RightShift) == false &&
+                (string.IsNullOrEmpty(CurrentInformation.Name) && string.IsNullOrEmpty(CurrentInformation.WorkTarget) &&
+                string.IsNullOrEmpty(CurrentInformation.CommonTask) && string.IsNullOrEmpty(CurrentInformation.TheoryPart)) == false)
             {
                 if (MessageBox.Show("В выбранно элементу имеются введенные данные!\nПри удалении вы потеряет их БЕЗВОЗВРАТНО!\nВы уверены?", "Подтвердите действие",
                     MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No)
@@ -417,6 +435,28 @@ namespace WorkReportCreator.ViewModels
                 }
             }
             return index;
+        }
+
+        /// <summary>
+        /// Удаляет выбранное задание из работы из списка
+        /// </summary>
+        private void RemoveSelectedDescription(object sender)
+        {
+            int index = SelectedDescriptionIndex ?? 0;
+            string text = CurrentInformation.DynamicTasks[index].Description;
+            if (string.IsNullOrEmpty(text) == false && Keyboard.IsKeyDown(Key.LeftShift) == false && Keyboard.IsKeyDown(Key.RightShift) == false)
+            {
+                if (MessageBox.Show("В выбранно элементу имеются введенные данные!\nПри удалении вы потеряет их БЕЗВОЗВРАТНО!\nВы уверены?", "Подтвердите действие",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No)
+                {
+                    return;
+                }
+            }
+            CurrentInformation.DynamicTasks.RemoveAt(index);
+            if (index > 0)
+                SelectedDescriptionIndex = index - 1;
+            else 
+                SelectedDescriptionIndex = null;
         }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
