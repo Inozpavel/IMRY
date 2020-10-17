@@ -38,7 +38,7 @@ namespace WorkReportCreator.Views
         {
             string text = textBox.Text;
 
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text.Trim()))
             {
                 MessageBox.Show("Значение не может быть пустым!", "Недопустимое значение!", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
