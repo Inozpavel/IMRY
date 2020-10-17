@@ -65,7 +65,7 @@ namespace WorkReportCreator.ViewModels
                 throw new Exception("Не получилось загрузить данные из шаблона!");
             }
 
-            if (template.Keys.Contains("Laboratories") == false && template.Keys.Contains("Practises") == false)
+            if (template.Keys.Contains("Laboratories") == false && template.Keys.Contains("Practices") == false)
             {
                 throw new Exception("В файле с шаблоном отсутствуют и практические и лабораторные работы!");
             }
