@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -103,6 +102,7 @@ namespace WorkReportCreator.ViewModels.Commands
                 {
                     MessageBox.Show("Не получилось загрузить данные из файла", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
+                mainParams.UserDataFileName = dialog.FileName;
             }
         }
 
