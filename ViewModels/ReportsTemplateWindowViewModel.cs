@@ -198,6 +198,8 @@ namespace WorkReportCreator.ViewModels
                     RadioButton radioButton = GenerateNewItem(int.Parse(number));
                     ReportInformation reportInformation = template[workType][number];
                     reportInformation.PropertyChanged += SaveAllInformation;
+                    foreach (DynamicTask task in reportInformation.DynamicTasks)
+                        task.DescriptionChanged += (sender) => SaveAllInformation(this, null);
                     if (workType == "Practices")
                     {
                         PractisesWorks.Add(radioButton, reportInformation);
@@ -225,7 +227,10 @@ namespace WorkReportCreator.ViewModels
             ChooseFile = new Command(ChooseFilePath, null);
             SwapUpElement = new Command(SwapUpSelectedItem, SwapUpCanExecute);
             SwapDownElement = new Command(SwapDownSelectedItem, SwapDownCanExecute);
-            AddDescription = new Command((sender) => CurrentInformation.DynamicTasks.Add(new DynamicTask()), null);
+
+            
+                
+            AddDescription = new Command(AddNewDescription, null);
             RemoveDescription = new Command(RemoveSelectedDescription, (sender) => SelectedDescriptionIndex != null);
 
             SwapUpDescription = new Command((sender) => CurrentInformation.DynamicTasks.Move(SelectedDescriptionIndex ?? 0, SelectedDescriptionIndex - 1 ?? 0),
@@ -420,6 +425,16 @@ namespace WorkReportCreator.ViewModels
         }
 
         /// <summary>
+        /// Добавляет новое описание работы в список, подписывает его на автообновление
+        /// </summary>
+        private void AddNewDescription(object sender)
+        {
+            DynamicTask task = new DynamicTask();
+            task.DescriptionChanged += (s) => SaveAllInformation(this, null);
+            CurrentInformation.DynamicTasks.Add(task);
+        }
+
+        /// <summary>
         /// Ищет индекс выбранного элемента
         /// </summary>
         /// <returns>Индекс элемента</returns>
@@ -455,7 +470,7 @@ namespace WorkReportCreator.ViewModels
             CurrentInformation.DynamicTasks.RemoveAt(index);
             if (index > 0)
                 SelectedDescriptionIndex = index - 1;
-            else 
+            else
                 SelectedDescriptionIndex = null;
         }
 
