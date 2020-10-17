@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -13,8 +14,6 @@ namespace WorkReportCreator.Models
         private string _theoryPart = "";
 
         private string _commonTask = "";
-
-        private bool _hasDynamicTask;
 
         private ObservableCollection<DynamicTask> _dynamicTasks = new ObservableCollection<DynamicTask>();
 
@@ -73,19 +72,6 @@ namespace WorkReportCreator.Models
         }
 
         /// <summary>
-        /// Есть ли задание для выбора
-        /// </summary>
-        public bool HasDynamicTask
-        {
-            get { return _hasDynamicTask; }
-            set
-            {
-                _hasDynamicTask = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
         /// Список заданий для выбора
         /// </summary>
         public ObservableCollection<DynamicTask> DynamicTasks
@@ -103,7 +89,7 @@ namespace WorkReportCreator.Models
 
         public ReportInformation()
         {
-            HasDynamicTask = false;
+            _dynamicTasks.CollectionChanged += (sender, e) => OnPropertyChanged();
         }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
