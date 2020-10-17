@@ -29,9 +29,15 @@ namespace WorkReportCreator
         /// </summary>
         private void ShowWindowReportsSelect(object sender, RoutedEventArgs e)
         {
-            WorksAndStudentInfoWindow document = new WorksAndStudentInfoWindow();
-            Hide();
-            document.Show();
+            try
+            {
+                WorksAndStudentInfoWindow document = new WorksAndStudentInfoWindow();
+                Hide();
+                document.Show();
+            }
+            catch(Exception)
+            {
+            }
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -47,23 +48,31 @@ namespace WorkReportCreator
 
             MainParams mainParams = new MainParams();
 
-            var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(File.ReadAllText(mainParams.CurrentTemplateFilePath));
-            foreach (string type in template.Keys.Distinct())
+            try
             {
-                foreach (string workNumber in template[type].Keys.Distinct())
+                var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, ReportInformation>>>(File.ReadAllText(mainParams.CurrentTemplateFilePath));
+                foreach (string type in template.Keys.Distinct())
                 {
-                    ToggleButton button = new ToggleButton() { Content = workNumber, Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
-                    if (type == "Practices")
+                    foreach (string workNumber in template[type].Keys.Distinct())
                     {
-                        _practicalWorksButtons.Add(button);
-                        stackPanelPracticalWorks.Children.Add(button);
-                    }
-                    else if (type == "Laboratories")
-                    {
-                        _laboratoryWorksButtons.Add(button);
-                        stackPanelLaboratoryWorks.Children.Add(button);
+                        ToggleButton button = new ToggleButton() { Content = workNumber, Style = stackPanelWithWorks.Resources["NumberButton"] as Style };
+                        if (type == "Practices")
+                        {
+                            _practicalWorksButtons.Add(button);
+                            stackPanelPracticalWorks.Children.Add(button);
+                        }
+                        else if (type == "Laboratories")
+                        {
+                            _laboratoryWorksButtons.Add(button);
+                            stackPanelLaboratoryWorks.Children.Add(button);
+                        }
                     }
                 }
+            }
+            catch(Exception)
+            {
+                MessageBox.Show("Не удалось загрузить номера работ из шаблона!\nПроверьте коррекность пути!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new Exception();
             }
         }
 
@@ -106,10 +115,15 @@ namespace WorkReportCreator
         {
             List<string> selectedLaboratoryWorks = _laboratoryWorksButtons.Where(x => x.IsChecked ?? false).Select(x => x.Content as string).ToList();
             List<string> selectedPracticalWorks = _practicalWorksButtons.Where(x => x.IsChecked ?? false).Select(x => x.Content as string).ToList();
-            ReportsWindow reportsPage = new ReportsWindow(this, selectedLaboratoryWorks, selectedPracticalWorks, _model.Student);
-
-            Hide();
-            reportsPage.Show();
+            try
+            {
+                ReportsWindow reportsPage = new ReportsWindow(this, selectedLaboratoryWorks, selectedPracticalWorks, _model.Student);
+                Hide();
+                reportsPage.Show();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         /// <summary>

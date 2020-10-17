@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Controls;
 using WorkReportCreator.Models;
 using WorkReportCreator.Views;
@@ -46,27 +47,58 @@ namespace WorkReportCreator.ViewModels
         /// <param name="reportsWindow">Окно, на котором расположен элемент</param>
         public ReportsWindowViewModel(List<string> laboratoryWorks, List<string> practicalWorks, ReportsWindow reportsWindow)
         {
-            FastActionsItem defaultPagesItem = new FastActionsItem();
-            defaultPagesItem.ButtonBackClicked += (sender) => ButtonBackClicked?.Invoke(sender);
-            defaultPagesItem.ButtonGenerateAllClicked += (sender) => TabItems.Where(item => item.Content is ReportItem)
+            FastActionsItem fastActionsItem = new FastActionsItem();
+            fastActionsItem.ButtonBackClicked += (sender) => ButtonBackClicked?.Invoke(sender);
+            fastActionsItem.ButtonGenerateAllClicked += (sender) => TabItems.Where(item => item.Content is ReportItem)
             .Select(x => x.Content as ReportItem).ToList().ForEach(item => item.GenerateReport(item, null));
 
-            TabItems.Add(new TabItem() { Header = "Быстрые действия", Content = defaultPagesItem });
+            TabItems.Add(new TabItem() { Header = "Быстрые действия", Content = fastActionsItem });
 
+            Dictionary<string, Dictionary<string, ReportInformation>> template;
             MainParams mainParams = new MainParams();
-            var dynamicTasks = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, List<string>>>>(File.ReadAllText(mainParams.DynamicTasksFilePath));
-
-            foreach (var i in laboratoryWorks)
+            try
             {
-                TabItems.Add(new TabItem() { Header = $"{i} лаб.", Content = new ReportItem(reportsWindow, dynamicTasks["Laboratories"][i]) });
+                template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, ReportInformation>>>(File.ReadAllText(mainParams.CurrentTemplateFilePath));
+            }
+            catch (Exception)
+            {
+                throw new Exception("Не получилось загрузить данные из шаблона!");
             }
 
-            foreach (var i in practicalWorks)
+            if (template.Keys.Contains("Laboratories") == false && template.Keys.Contains("Practises") == false)
             {
-                TabItems.Add(new TabItem() { Header = $"{i} пр.", Content = new ReportItem(reportsWindow, dynamicTasks["Practises"][i]) });
+                throw new Exception("В файле с шаблоном отсутствуют и практические и лабораторные работы!");
             }
+
+            LoadTemplateInfoFromKey(template, reportsWindow, "Practices", "пр.", practicalWorks);
+            LoadTemplateInfoFromKey(template, reportsWindow, "Laboratories", "лаб.", laboratoryWorks);
+
             SelectedIndex = 0;
             OnPropertyChanged();
+        }
+
+        private void LoadTemplateInfoFromKey(Dictionary<string, Dictionary<string, ReportInformation>> template, ReportsWindow window, string key, string shortDescription, List<string> selectedWorks)
+        {
+            if (template.Keys.Contains(key) == false)
+                return;
+
+
+            foreach (string number in template[key].Keys.Where(x=>selectedWorks.Contains(x)))
+            {
+                try
+                {
+                    TabItems.Add(new TabItem()
+                    {
+                        Header = $"{number} {shortDescription}",
+                        Content = new ReportItem(window, template[key][number].DynamicTasks.Select(x => x.Description).ToList())
+                    });
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show($"Не получилось загрузить {number} {shortDescription} работу,\nвозможно, ошибка в ключах.",
+                        $"Ошибка при загрузке работы!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

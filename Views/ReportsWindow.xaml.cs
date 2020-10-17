@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using WorkReportCreator.ViewModels;
 
@@ -31,7 +32,15 @@ namespace WorkReportCreator
         {
             InitializeComponent();
             Student = student;
-            _model = new ReportsWindowViewModel(laboratoryWorks, practicalWorks, this);
+            try
+            {
+                _model = new ReportsWindowViewModel(laboratoryWorks, practicalWorks, this);
+            }
+            catch(Exception e) 
+            {
+                MessageBox.Show(e.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new Exception();
+            }
             _model.ButtonBackClicked += ShowWorkAndStudentInformation;
             _informationPage = informationPage;
             DataContext = _model;

@@ -13,8 +13,6 @@ namespace WorkReportCreator.Models
 
         private string _titlePageParametersFilePath = "./Configs/TitlePageParams.json";
 
-        private string _dynamicTasksFilePath = "./Configs/DynamicTasks.json";
-
         private string _permittedDragAndDropExtentionsFilePath = "./Configs/PermittedDragAndDropExtentions.json";
 
         private string _currentTemplateFilePath = "./Configs/JavaTasks.json";
@@ -39,16 +37,6 @@ namespace WorkReportCreator.Models
             set
             {
                 _titlePageParametersFilePath = value;
-                TrySave();
-            }
-        }
-
-        public string DynamicTasksFilePath
-        {
-            get => _dynamicTasksFilePath;
-            set
-            {
-                _dynamicTasksFilePath = value;
                 TrySave();
             }
         }
@@ -100,8 +88,6 @@ namespace WorkReportCreator.Models
 
             _titlePageParametersFilePath = parameters["TitlePageParametersFilePath"];
 
-            _dynamicTasksFilePath = parameters["DynamicTasksFilePath"];
-
             _permittedDragAndDropExtentionsFilePath = parameters["PermittedDragAndDropExtentionsFilePath"];
 
             _currentTemplateFilePath = parameters["CurrentTemplateFilePath"];
@@ -119,7 +105,6 @@ namespace WorkReportCreator.Models
                 {
                     "TitlePageFilePath",
                     "TitlePageParametersFilePath",
-                    "DynamicTasksFilePath",
                     "PermittedDragAndDropExtentionsFilePath",
                     "CurrentTemplateFilePath",
                     "AllReportsPath"

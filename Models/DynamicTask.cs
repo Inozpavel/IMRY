@@ -5,9 +5,9 @@ namespace WorkReportCreator.Models
     public class DynamicTask
     {
         public event Action<object> DescriptionChanged;
-        
-        private string _description = " ";
-        
+
+        private string _description = "";
+
         /// <summary>
         /// Описание работы
         /// </summary>
