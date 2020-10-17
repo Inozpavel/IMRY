@@ -46,7 +46,7 @@ namespace WorkReportCreator.ViewModels
         /// <param name="reportsWindow">Окно, на котором расположен элемент</param>
         public ReportsWindowViewModel(List<string> laboratoryWorks, List<string> practicalWorks, ReportsWindow reportsWindow)
         {
-            FastActions defaultPagesItem = new FastActions();
+            FastActionsItem defaultPagesItem = new FastActionsItem();
             defaultPagesItem.ButtonBackClicked += (sender) => ButtonBackClicked?.Invoke(sender);
             defaultPagesItem.ButtonGenerateAllClicked += (sender) => TabItems.Where(item => item.Content is ReportItem)
             .Select(x => x.Content as ReportItem).ToList().ForEach(item => item.GenerateReport(item, null));

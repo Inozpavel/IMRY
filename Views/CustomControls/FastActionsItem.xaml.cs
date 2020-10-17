@@ -6,7 +6,7 @@ namespace WorkReportCreator.Views
     /// <summary>
     /// Вкладка с быстрыми действиями
     /// </summary>
-    public partial class FastActions : UserControl
+    public partial class FastActionsItem : UserControl
     {
         /// <summary>
         /// Происходит, при нажатии на кнопку назад
@@ -23,7 +23,7 @@ namespace WorkReportCreator.Views
         /// </summary>
         public event Action<object> ButtonGenerateAllClicked;
 
-        public FastActions()
+        public FastActionsItem()
         {
             InitializeComponent();
         }
