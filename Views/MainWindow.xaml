@@ -66,6 +66,7 @@
         <Button Grid.Row="1" Content="Создать отчет" Click="ShowWindowReportsSelect" Background="#FF5A82A7" Margin="10 10 10 5"/>
         <Button Grid.Row="2" Content="Открыть файл с отчетом" Click="LoadReport" Margin="10 5 10 5"/>
         <Button Grid.Row="3" Content="Создать шаблон" Click="ShowWindowReportTemplate" Margin="10 5 10 5"/>
-        <Button Grid.Row="4" Content="Изменить шаблон" Click="LoadWindowReportTemplate" Margin="10 5 10 10"/>
+        <Button Grid.Row="4" Content="Изменить шаблон" Click="LoadWindowReportTemplate" Margin="10 5 10 20"/>
+        <TextBox x:Name="textBoxVersion" Text="версия 0.3.0" Foreground="White" Grid.Row="4" FontSize="10" Background="Transparent" BorderThickness="0"  HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

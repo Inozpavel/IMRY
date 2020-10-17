@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using WorkReportCreator.Models;
 
@@ -22,6 +23,7 @@ namespace WorkReportCreator
             }
             MainParams mainParams = new MainParams();
             mainParams.ValidateAllParams();
+            textBoxVersion.Text = "версия " + Assembly.GetExecutingAssembly().GetName().Version.ToString().Substring(2);
         }
 
         /// <summary>
