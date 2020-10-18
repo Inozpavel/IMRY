@@ -507,7 +507,21 @@ namespace WorkReportCreator.ViewModels
 
             template["Practices"] = practisesinfo;
             template["Laboratories"] = laboratoriesInfo;
-            File.WriteAllText(FilePath, Regex.Replace(JsonConvert.SerializeObject(template, Formatting.Indented), "\\r", ""));
+            try
+            {
+                File.WriteAllText(FilePath, Regex.Replace(JsonConvert.SerializeObject(template, Formatting.Indented), "\\r", ""));
+            }
+            catch (UnauthorizedAccessException)
+            {
+                if (MessageBox.Show("У файла с конфигурацией установлен атрибут \"Только чтение\"\nНе получилось перезаписать его!\nСнять с него этот режим?",
+                    "Ошибка", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.Yes)
+                {
+                    File.SetAttributes(FilePath, FileAttributes.Normal);
+                    File.WriteAllText(FilePath, Regex.Replace(JsonConvert.SerializeObject(template, Formatting.Indented), "\\r", ""));
+                }
+                else
+                    FilePath = "";
+            }
         }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

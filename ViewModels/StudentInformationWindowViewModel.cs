@@ -96,7 +96,7 @@ namespace WorkReportCreator.ViewModels.Commands
         /// Вся информация о студенте
         /// </summary>
         private StudentInformation _student = new StudentInformation();
-        
+
         /// <summary>
         /// Текущая информация о студенте
         /// </summary>
@@ -206,8 +206,23 @@ namespace WorkReportCreator.ViewModels.Commands
 
             if (dialog.ShowDialog() == true)
             {
-                File.WriteAllText(dialog.FileName, JsonConvert.SerializeObject(Student, Formatting.Indented));
-                mainParams.UserDataFileName = dialog.FileName;
+                try
+                {
+                    File.WriteAllText(dialog.FileName, JsonConvert.SerializeObject(Student, Formatting.Indented));
+                    mainParams.UserDataFileName = dialog.FileName;
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    if (MessageBox.Show("У файла установлен атрибут \"Только чтение\"\nНе получилось перезаписать его!\nСнять с него этот атрибут?",
+                        "Ошибка", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.Yes)
+                    {
+                        File.SetAttributes(dialog.FileName, FileAttributes.Normal);
+                        File.WriteAllText(dialog.FileName, JsonConvert.SerializeObject(Student, Formatting.Indented));
+                        mainParams.UserDataFileName = dialog.FileName;
+                    }
+                    else
+                        MessageBox.Show("Не получилось сохранить информацию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
