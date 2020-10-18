@@ -220,13 +220,7 @@ namespace WorkReportCreator
         /// <summary>
         /// Перемещает выбранный элемент выше
         /// </summary>
-        public void SwapUpSelectedFileInfo(object sender)
-        {
-            int number = (_selectedItem.Content as FileInformationItem).Number - 1;
-            SwapArrayItems(number, number - 1);
-            SelectedItemIndex = number - 1;
-            OnPropertyChanged();
-        }
+        public void SwapUpSelectedFileInfo(object sender) => SwapAdjacentItemWithSelected(-1);
 
         /// <summary>
         /// Проверяет, можно ли переместить выше выбраннный элемент
@@ -237,14 +231,18 @@ namespace WorkReportCreator
         /// <summary>
         /// Перемещает выбранный элемент ниже
         /// </summary>
-        public void SwapDownSelectedFileInfo(object sender)
+        public void SwapDownSelectedFileInfo(object sender) => SwapAdjacentItemWithSelected(+1);
+
+        /// <summary>
+        /// Обменивает ближайший элемент с выбранным
+        /// </summary>
+        /// <param name="i">1 - элемент снизу, -1 - элемент снизу</param>
+        private void SwapAdjacentItemWithSelected(int i)
         {
             int number = (_selectedItem.Content as FileInformationItem).Number - 1;
-            SwapArrayItems(number, number + 1);
-            SelectedItemIndex = number + 1;
-            OnPropertyChanged();
+            SwapArrayItems(number, number + i);
+            SelectedItemIndex = number + i;
         }
-
         /// <summary>
         /// Проверяет, можно ли переместить ниже выбранный элемент
         /// </summary>

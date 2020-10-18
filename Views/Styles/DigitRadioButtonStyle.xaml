@@ -4,6 +4,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
+                    
                     <Border x:Name="border" Background="#FF121212" CornerRadius="10" Margin="1" BorderThickness="2" BorderBrush="Transparent">
                         <Label Content="{TemplateBinding Content}" Foreground="White" HorizontalAlignment="Center" FontSize="16"/>
 
@@ -26,6 +27,7 @@
                         </VisualStateManager.VisualStateGroups>
 
                     </Border>
+                    
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -4,13 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" ResizeMode="NoResize"
-        WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight">
+        WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" Background="#FF191A1B">
     <Window.InputBindings>
         <KeyBinding Gesture="ESC" Command="{Binding CloseWindow}"/>
         <KeyBinding Gesture="Enter" Command="{Binding EnterValue}"/>
     </Window.InputBindings>
     
-    <Grid Background="#FF1E1E1E">
+    <Grid>
         
         <Grid.Resources>
             <ResourceDictionary>

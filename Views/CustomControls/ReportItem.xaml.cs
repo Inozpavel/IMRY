@@ -45,10 +45,17 @@ namespace WorkReportCreator
             try
             {
                 var reportName = (Parent as TabItem).Header.ToString().Trim().TrimEnd(".".ToCharArray());
-                DocX document = GenerateTitlePage();
                 MainParams mainParams = new MainParams();
+
+                DocX document;
+                if (mainParams.WorkHasTitlePage)
+                    document = GenerateTitlePage();
+                else
+                    document = DocX.Create("./Configs/EmptyDocument.docs");
+
                 if (Directory.Exists(mainParams.AllReportsPath) == false)
                     Directory.CreateDirectory(mainParams.AllReportsPath);
+
                 document.SaveAs($"{mainParams.AllReportsPath}/Отчет {reportName}.docx");
             }
             catch (IOException)
@@ -65,13 +72,13 @@ namespace WorkReportCreator
         {
             MainParams mainParams = new MainParams();
 
-            var titlePageParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(mainParams.TitlePageParametersFilePath));
+            var titlePageParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(mainParams.WorkTitlePageParamsFilePath));
 
             StudentInformation student = _page.Student;
             titlePageParams.Add("Group", student.Group);
             titlePageParams.Add("StudentFullName", string.Join(" ", student.SecondName, student.FirstName, student.MiddleName));
 
-            DocX doc = DocX.Load(mainParams.TitlePageFilePath);
+            DocX doc = DocX.Load(mainParams.WorkTitlePageFilePath);
             foreach (string key in titlePageParams.Keys)
             {
                 doc.ReplaceText($"{{{{{key}}}}}", $"{titlePageParams[key]}");

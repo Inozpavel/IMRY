@@ -18,6 +18,8 @@ namespace WorkReportCreator.ViewModels
 {
     internal class ReportsTemplateWindowViewModel : INotifyPropertyChanged
     {
+        #region Commands
+
         public Command AddWork { get; private set; }
 
         public Command RemoveWork { get; private set; }
@@ -37,6 +39,8 @@ namespace WorkReportCreator.ViewModels
         public Command SwapDownDescription { get; private set; }
 
         public Command RemoveDescription { get; private set; }
+
+        #endregion
 
         private ReportInformation _currentInformation;
 
@@ -216,6 +220,7 @@ namespace WorkReportCreator.ViewModels
 
         /// <param name="template">Шаблон</param>
         /// <param name="filePath">Путь до файла с шаблоном</param>
+        /// <exception cref="ArgumentException"/>
         public ReportsTemplateWindowViewModel(Dictionary<string, Dictionary<string, ReportInformation>> template, string filePath)
         {
             AddBaseFunctional();
@@ -409,21 +414,22 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Перемещает выбранны элемент вверх
         /// </summary>
-        private void SwapUpSelectedItem(object sender)
-        {
-            int index = GetSelectedIndex();
-            WorksButtons.Move(index, index - 1);
-            WorksButtons[index - 1].IsChecked = true;
-        }
+        private void SwapUpSelectedItem(object sender) => SwapAdjacentItemWithSelected(-1);
 
         /// <summary>
         /// Перемещает выбранны элемент вниз
         /// </summary>
-        private void SwapDownSelectedItem(object sender)
+        private void SwapDownSelectedItem(object sender) => SwapAdjacentItemWithSelected(+1);
+
+        /// <summary>
+        /// Обменивает ближайший элемент с выбранным
+        /// </summary>
+        /// <param name="i">1 - элемент снизу, -1 - элемент снизу</param>
+        private void SwapAdjacentItemWithSelected(int i)
         {
             int index = GetSelectedIndex();
-            WorksButtons.Move(index, index + 1);
-            WorksButtons[index + 1].IsChecked = true;
+            WorksButtons.Move(index, index + i);
+            WorksButtons[index + i].IsChecked = true;
         }
 
         /// <summary>
@@ -513,7 +519,7 @@ namespace WorkReportCreator.ViewModels
             }
             catch (UnauthorizedAccessException)
             {
-                if (MessageBox.Show("У файла с конфигурацией установлен атрибут \"Только чтение\"\nНе получилось перезаписать его!\nСнять с него этот режим?",
+                if (MessageBox.Show("У файла установлен атрибут \"Только чтение\"\nНе получилось перезаписать его!\nСнять с него этот атрибут?",
                     "Ошибка", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.Yes)
                 {
                     File.SetAttributes(FilePath, FileAttributes.Normal);

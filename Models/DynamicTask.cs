@@ -25,6 +25,7 @@ namespace WorkReportCreator.Models
         {
         }
 
+        /// <param name="description">Описание работы</param>
         public DynamicTask(string description) => Description = description;
     }
 }

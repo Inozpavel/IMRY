@@ -45,6 +45,7 @@ namespace WorkReportCreator.ViewModels
         /// <param name="laboratoryWorks">Список доступный для выбора лабораторных работ</param>
         /// <param name="practicalWorks">Список доступный для выбора приктических работ</param>
         /// <param name="reportsWindow">Окно, на котором расположен элемент</param>
+        /// <exception cref="Exception"/>
         public ReportsWindowViewModel(List<string> laboratoryWorks, List<string> practicalWorks, ReportsWindow reportsWindow)
         {
             FastActionsItem fastActionsItem = new FastActionsItem
@@ -69,9 +70,7 @@ namespace WorkReportCreator.ViewModels
             }
 
             if (template.Keys.Contains("Laboratories") == false && template.Keys.Contains("Practices") == false)
-            {
                 throw new Exception("В файле с шаблоном отсутствуют и практические и лабораторные работы!");
-            }
 
             LoadTemplateInfoFromKey(template, reportsWindow, "Practices", "пр.", practicalWorks);
             LoadTemplateInfoFromKey(template, reportsWindow, "Laboratories", "лаб.", laboratoryWorks);

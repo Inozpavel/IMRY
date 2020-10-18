@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using WorkReportCreator.ViewModels.Commands;
 
 namespace WorkReportCreator
@@ -8,12 +9,17 @@ namespace WorkReportCreator
     /// </summary>
     public partial class WorksAndStudentInfoWindow : Window
     {
+        /// <summary>
+        /// Главное меню
+        /// </summary>
         private readonly MainWindow _mainWindow;
+        
         /// <summary>
         /// Модель данных этого элемента
         /// </summary>
         private readonly StudentInformationWindowViewModel _model;
 
+        /// <exception cref="Exception"/>
         public WorksAndStudentInfoWindow(MainWindow mainWindow)
         {
             InitializeComponent();

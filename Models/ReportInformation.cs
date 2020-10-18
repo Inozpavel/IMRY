@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -83,6 +82,7 @@ namespace WorkReportCreator.Models
                 OnPropertyChanged();
             }
         }
+
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;

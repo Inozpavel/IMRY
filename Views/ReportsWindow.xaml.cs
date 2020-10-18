@@ -36,7 +36,7 @@ namespace WorkReportCreator
             {
                 _model = new ReportsWindowViewModel(laboratoryWorks, practicalWorks, this);
             }
-            catch(Exception e) 
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 throw new Exception();

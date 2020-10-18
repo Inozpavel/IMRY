@@ -12,12 +12,12 @@ namespace WorkReportCreator.Views
         public Command CloseWindow { get; private set; }
         public Command EnterValue { get; private set; }
 
+        private readonly List<string> _existingWorks;
+
         /// <summary>
         /// Результат работы окна
         /// </summary>
         public int? ResultNumber { get; private set; } = null;
-
-        private readonly List<string> _existingWorks;
 
         public InputWorkNumberBox(List<string> existingWorks)
         {

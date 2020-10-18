@@ -21,6 +21,8 @@ namespace WorkReportCreator.ViewModels.Commands
         private Visibility _practicesVisibility;
 
         private Visibility _worksSelectVisibility;
+        
+        private StudentInformation _student = new StudentInformation();
 
         /// <summary>
         /// От значения зависит, все кнопки с практическими работами будут отмечены / не отмечены
@@ -32,6 +34,8 @@ namespace WorkReportCreator.ViewModels.Commands
         /// </summary>
         private bool _shouldCheckAllLaboratoryWork = false;
 
+        #region Commands
+
         public Command SaveStudentInfo { get; private set; }
 
         public Command LoadStudentInfo { get; private set; }
@@ -41,6 +45,10 @@ namespace WorkReportCreator.ViewModels.Commands
         public Command CheckAllLaboratoryButtons { get; private set; }
 
         public Command ShowReportsPage { get; private set; }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Видимость блока с выбором практических работ
@@ -91,12 +99,6 @@ namespace WorkReportCreator.ViewModels.Commands
         /// </summary>
         public List<ToggleButton> LaboratoryWorksButtons { get; set; } = new List<ToggleButton>();
 
-
-        /// <summary>
-        /// Вся информация о студенте
-        /// </summary>
-        private StudentInformation _student = new StudentInformation();
-
         /// <summary>
         /// Текущая информация о студенте
         /// </summary>
@@ -110,8 +112,12 @@ namespace WorkReportCreator.ViewModels.Commands
             }
         }
 
+        #endregion
+
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <param name="window">Окно с вводом информации о студенте и выбором работ</param>
+        /// <exception cref="Exception"/>
         public StudentInformationWindowViewModel(WorksAndStudentInfoWindow window)
         {
             _worksAndStudentInfoWindow = window;

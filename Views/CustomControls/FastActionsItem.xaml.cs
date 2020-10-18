@@ -28,6 +28,10 @@ namespace WorkReportCreator.Views
         public event PropertyChangedEventHandler PropertyChanged;
 
         private bool _isButtonEnabled = false;
+
+        /// <summary>
+        /// Включены ли кнопки "Сохранить всю информацию" и "Сгенерировать все отчеты"
+        /// </summary>
         public bool IsButtonEnabled
         {
             get => _isButtonEnabled;
