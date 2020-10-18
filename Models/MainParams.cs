@@ -12,7 +12,7 @@ namespace WorkReportCreator.Models
         private bool _workHasTitlePage = false;
 
         private string _workTitlePageFilePath = "./Configs/TitlePage.docx";
-        
+
         private bool _workHasTitlePageParams = false;
 
         private string _workTitlePageParamsFilePath = "./Configs/TitlePageParams.json";
@@ -21,7 +21,7 @@ namespace WorkReportCreator.Models
 
         private string _currentTemplateFilePath = "./Configs/JavaTasks.json";
 
-        private string _standartUserDataFileName = "StudentInformation";
+        private string _userDataFileName = "";
 
         private string _allReportsPath = "./Reports/";
 
@@ -39,7 +39,7 @@ namespace WorkReportCreator.Models
                 TrySave();
             }
         }
-       
+
         /// <summary>
         /// Путь до страницы с титульником
         /// </summary>
@@ -110,10 +110,10 @@ namespace WorkReportCreator.Models
         /// </summary>
         public string UserDataFileName
         {
-            get => _standartUserDataFileName;
+            get => _userDataFileName;
             set
             {
-                _standartUserDataFileName = value;
+                _userDataFileName = value;
                 TrySave();
             }
         }
@@ -140,13 +140,14 @@ namespace WorkReportCreator.Models
             if (_workHasTitlePage)
             {
                 _workTitlePageFilePath = parameters["WorkTitlePageFilePath"];
-                _workHasTitlePageParams= bool.Parse(parameters["WorkHasTitlePageParams"]);
+                _workHasTitlePageParams = bool.Parse(parameters["WorkHasTitlePageParams"]);
                 if (_workHasTitlePageParams)
                     _workTitlePageParamsFilePath = parameters["WorkTitlePageParamsFilePath"];
             }
             _permittedDragAndDropExtentionsFilePath = parameters["PermittedDragAndDropExtentionsFilePath"];
             _currentTemplateFilePath = parameters["CurrentTemplateFilePath"];
-            _standartUserDataFileName = parameters["UserDataFileName"];
+            if (parameters.Keys.Contains(UserDataFileName));
+            _userDataFileName = parameters["UserDataFileName"];
             _allReportsPath = parameters["AllReportsPath"];
         }
 

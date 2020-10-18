@@ -13,7 +13,7 @@ namespace WorkReportCreator
         /// Главное меню
         /// </summary>
         private readonly MainWindow _mainWindow;
-        
+
         /// <summary>
         /// Модель данных этого элемента
         /// </summary>
