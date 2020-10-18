@@ -23,7 +23,7 @@ namespace WorkReportCreator
             }
             MainParams mainParams = new MainParams();
             mainParams.ValidateAllParams();
-            textBoxVersion.Text = "версия " + Assembly.GetExecutingAssembly().GetName().Version.ToString().Substring(2);
+            textBoxVersion.Text = "Версия " + Assembly.GetExecutingAssembly().GetName().Version.ToString().Substring(2);
         }
 
         /// <summary>
@@ -37,8 +37,9 @@ namespace WorkReportCreator
                 Hide();
                 document.Show();
             }
-            catch(Exception)
+            catch (Exception exception)
             {
+                MessageBox.Show(exception.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
