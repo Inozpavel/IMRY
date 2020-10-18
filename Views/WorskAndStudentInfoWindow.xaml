@@ -78,7 +78,7 @@
 
                     <GroupBox Background="#FF252526" Header="Практические работы" Visibility="{Binding PracticesVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
-                            <ItemsControl ItemsSource="{Binding PracticalWorksButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ItemsControl ItemsSource="{Binding PracticalWorksButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Focusable="False">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal"/>
@@ -90,7 +90,7 @@
 
                     <GroupBox Background="#FF252526" Header="Лабораторные работы" Visibility="{Binding LaboratoriesVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
-                            <ItemsControl ItemsSource="{Binding LaboratoryWorksButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ItemsControl ItemsSource="{Binding LaboratoryWorksButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Focusable="False">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal"/>
