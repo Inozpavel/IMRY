@@ -1,37 +1,40 @@
 ﻿<Window x:Class="WorkReportCreator.WorksAndStudentInfoWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        Title="Информация для титульника" Width="800" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" Closing="ExitApplication">
-    <Grid Background="#FF1E1E1E">
-
+        Title="WorksReportCreator" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" Closing="ExitApplication" Background="#FF191A1B" MinWidth="950" MinHeight="490">
+    <Grid>
+       
         <Grid.Resources>
-
             <!--Дизайн групповых контейнеров-->
             <Style TargetType="GroupBox">
                 <Setter Property="HorizontalAlignment" Value="Center"/>
                 <Setter Property="Foreground" Value="White"/>
                 <Setter Property="FontSize" Value="16"/>
                 <Setter Property="Margin" Value="10 5 10 5"/>
+                <Setter Property="BorderThickness" Value="0"/>
             </Style>
 
         </Grid.Resources>
 
-        <StackPanel>
-            
-            <StackPanel.Resources>
-                
+        <Grid Grid.ColumnSpan="2">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid.Resources>
                 <!--Дизайн надписей-->
                 <Style TargetType="TextBlock">
                     <Setter Property="Margin" Value="10 0 0 0"/>
                     <Setter Property="Foreground" Value="#FFA8B3B3"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 </Style>
-                
-            </StackPanel.Resources>
-            
-            <GroupBox Header="Информация о студенте" Width="300">
+
+            </Grid.Resources>
+
+            <GroupBox Grid.Row="0" Header="Информация о студенте" Width="300" Background="#FF252526" FontFamily="Verdana">
                 <Grid>
 
                     <Grid.ColumnDefinitions>
@@ -69,11 +72,11 @@
 
             </GroupBox>
 
-            <GroupBox Header="Выбор работ для генерации отчета" Visibility="{Binding WorksSelectVisibility}">
+            <GroupBox Grid.Row="1" Header="Выбор работ для генерации отчета" Visibility="{Binding WorksSelectVisibility}" MaxWidth="900" FontFamily="Verdana">
                 <!--Выбор номеров работ-->
                 <StackPanel x:Name="stackPanelWithWorks" Orientation="Vertical" >
 
-                    <GroupBox Header="Практические работы" HorizontalAlignment="Stretch" Visibility="{Binding PracticesVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <GroupBox Background="#FF252526" Header="Практические работы" Visibility="{Binding PracticesVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
                             <ItemsControl ItemsSource="{Binding PracticalWorksButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <ItemsControl.ItemsPanel>
@@ -85,7 +88,7 @@
                         </ScrollViewer>
                     </GroupBox>
 
-                    <GroupBox Header="Лабораторные работы" HorizontalAlignment="Stretch" Visibility="{Binding LaboratoriesVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <GroupBox Background="#FF252526" Header="Лабораторные работы" Visibility="{Binding LaboratoriesVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
                             <ItemsControl ItemsSource="{Binding LaboratoryWorksButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <ItemsControl.ItemsPanel>
@@ -101,29 +104,24 @@
             </GroupBox>
 
             <!--Длинная панель с кнопками-->
-            <Grid HorizontalAlignment="Stretch" Margin="0 10 0 10">
+            <Grid Grid.Row="2" HorizontalAlignment="Stretch" Margin="0 10 0 10" VerticalAlignment="Bottom">
                 <Grid.Resources>
-                    <ResourceDictionary>
-                        <ResourceDictionary.MergedDictionaries>
-                            <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
-                            <ResourceDictionary Source="/Views/Styles/OneSymbolButtonStyle.xaml"/>
-                        </ResourceDictionary.MergedDictionaries>
-                    </ResourceDictionary>
+                    <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
                 </Grid.Resources>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="105"/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="105"/>
                 </Grid.ColumnDefinitions>
-                
-                <Button Grid.Column="0" Content="В меню" Click="ShowFormMainWindow" Style="{StaticResource CommonAnimatedButton}" HorizontalAlignment="Left" Margin="10 0 0 0"/>
-                <Button Grid.Column="1" Content="Сохранить информацию о студенте" Command="{Binding SaveStudentInfo}" Style="{StaticResource CommonAnimatedButton}" Margin="25 0 5 0"/>
-                <Button Grid.Column="2" Content="Загрузить информацию о студенте" Command="{Binding LoadStudentInfo}" Style="{StaticResource CommonAnimatedButton}" Margin="5 0 25 0"/>
-                <Button Grid.Column="3" Content="К отчетам" Command ="{Binding ShowReportsPage}" Style="{StaticResource CommonAnimatedButton}" HorizontalAlignment="Right" Margin="0 0 10 0"/>
-                
+
+                <Button Grid.Column="0" Content="В меню" Click="ShowFormMainWindow" Style="{StaticResource CommonAnimatedButton}" Margin="5 0 0 0"/>
+                <Button Grid.Column="1" Width="340" Content="Сохранить информацию о студенте" Command="{Binding SaveStudentInfo}" Style="{StaticResource CommonAnimatedButton}" HorizontalAlignment="Right" Margin="5 0 2 0"/>
+                <Button Grid.Column="2" Width="340" Content="Загрузить информацию о студенте" Command="{Binding LoadStudentInfo}" Style="{StaticResource CommonAnimatedButton}" HorizontalAlignment="Left" Margin="2 0 5 0"/>
+                <Button Grid.Column="3" Content="К отчетам" Command ="{Binding ShowReportsPage}" Style="{StaticResource CommonAnimatedButton}" Margin="0 0 5 0"/>
+
             </Grid>
-        </StackPanel>
+        </Grid>
     </Grid>
 </Window>

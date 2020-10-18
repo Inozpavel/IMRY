@@ -7,7 +7,7 @@
              xmlns:item="clr-namespace:WorkReportCreator.Views"
              mc:Ignorable="d" 
               d:DesignWidth="800" Height="auto">
-    <Grid Background="#FF181818" Height="auto" VerticalAlignment="Stretch">
+    <Grid Background="#FF191A1B" Height="auto" VerticalAlignment="Stretch">
         
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -35,8 +35,8 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="167" HorizontalScrollBarVisibility="Auto" Visibility="{Binding DynamicTasksVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl Name="listBoxTasks" Background="#FF333337" BorderThickness="0" ItemsSource="{Binding DynamicTasksArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding DynamicTasksVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </ScrollViewer>
-                
-                <Grid Background="#FF1E1E1E">
+
+                <Grid Background="#FF252526">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HintVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <StackPanel.Resources>
                             <Style TargetType="TextBlock">
@@ -95,10 +95,10 @@
                         <ResourceDictionary Source="/Views/Styles/OneSymbolButtonStyle.xaml"/>
                     </DockPanel.Resources>
                     
-                    <Button Content="＋" Command="{Binding AddFileInfo}" Style="{StaticResource OneSymbolButton}"/>
-                    <Button Content="－" Command="{Binding RemoveFileInfo}" Style="{StaticResource OneSymbolButton}"/>
-                    <Button Content="⮝" Command="{Binding SwapUpFileInfo}" Style="{StaticResource OneSymbolButton}"/>
-                    <Button Content="⮟" Command="{Binding SwapDownFileInfo}" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left"/>
+                    <Button Content="+" Command="{Binding AddFileInfo}" Style="{StaticResource OneSymbolButton}" Margin="5 2 5 2"/>
+                    <Button Content="-" Command="{Binding RemoveFileInfo}" Style="{StaticResource OneSymbolButton}" Margin="5 2 5 2"/>
+                    <Button Content="⮝" Command="{Binding SwapUpFileInfo}" Style="{StaticResource OneSymbolButton}" Margin="5 2 5 2"/>
+                    <Button Content="⮟" Command="{Binding SwapDownFileInfo}" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Margin="5 2 5 2"/>
                 </DockPanel>
             </StackPanel>
         </Border>
@@ -111,8 +111,8 @@
                     <StackPanel.Resources>
                         <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
                     </StackPanel.Resources>
-                
-                    <Button Content="Сохранить данные" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource CommonAnimatedButton}"/>
+
+                    <Button IsEnabled="False" Content="Сохранить данные" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource CommonAnimatedButton}"/>
                     <Button Content="Сгенерировать отчет" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource CommonAnimatedButton}" Click="GenerateReport"/>
                 </StackPanel>
             </Grid>

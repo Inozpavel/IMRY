@@ -3,12 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:WorkReportCreator.Views"
-             mc:Ignorable="d" >
+             mc:Ignorable="d" Background="#FF252526">
     <Grid Background="Transparent">
-        <Border CornerRadius="15" Background="#FF3E3E42" BorderBrush="#FFA8B3B3" BorderThickness="1" Focusable="False">
+        <Border CornerRadius="15" BorderBrush="#FFA8B3B3" BorderThickness="1" Focusable="False">
             <StackPanel Orientation="Vertical">
                 <Grid>
+                    
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
@@ -98,11 +98,11 @@
                 
                 <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Visibility="{Binding TextBoxVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <StackPanel.Resources>
-                        <ResourceDictionary Source="../Styles/CommonTextBox.xaml"/>
+                        <ResourceDictionary Source="../Styles/CommonTextBoxStyle.xaml"/>
                     </StackPanel.Resources>
                     
                     <Label Content="Описание файла" Foreground="White"/>
-                    <TextBox Text="{Binding FileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="auto" MinHeight="50" TextWrapping="Wrap" Margin="6 0 6 6" Style="{StaticResource DarkTextBox}"/>
+                    <TextBox Text="{Binding FileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="auto" MinHeight="50" TextWrapping="Wrap" Margin="6 0 6 6" Style="{StaticResource CommonTextBox}"/>
                
                 </StackPanel>
                 

@@ -14,7 +14,7 @@
                 <Trigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation To="White" Duration="0:0:0.1" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
+                            <ColorAnimation To="White" Duration="0:0:0.2" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.EnterActions>
@@ -22,7 +22,7 @@
                 <Trigger.ExitActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation To="#FFBAC3C3" Duration="0:0:0.1" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
+                            <ColorAnimation To="#FFBAC3C3" Duration="0:0:0.2" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
                         </Storyboard> 
                     </BeginStoryboard>
                 </Trigger.ExitActions>

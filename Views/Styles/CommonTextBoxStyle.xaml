@@ -7,5 +7,6 @@
         <Setter Property="Background" Value="#FF333337"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontFamily" Value="Tahoma"/>
+        <Setter Property="BorderThickness" Value="0"/>
     </Style>
 </ResourceDictionary>

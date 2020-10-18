@@ -7,7 +7,7 @@
                 
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="border" CornerRadius="10" BorderThickness="2" BorderBrush="White" Opacity="0.3" Width="32" Height="32">
-                        <TextBlock x:Name="textBox" Text="{TemplateBinding Content}" VerticalAlignment="Center" Foreground="White" TextAlignment="Center" FontSize="25"/>
+                        <TextBlock x:Name="textBox" Text="{TemplateBinding Content}" VerticalAlignment="Center" Foreground="White" TextAlignment="Center" FontSize="25" Margin="0 0 0 4."/>
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -15,14 +15,14 @@
                                 <!--Работающая кнопка-->
                                 <VisualState x:Name="Normal">
                                     <Storyboard>
-                                        <DoubleAnimation Duration="0:0:0.3" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="border"/>
+                                        <DoubleAnimation Duration="0:0:0.2" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="border"/>
                                     </Storyboard>
                                 </VisualState>
 
                                 <!--Выключенная кнопка-->
                                 <VisualState x:Name="Disabled">
                                     <Storyboard>
-                                        <DoubleAnimation Duration="0:0:0.3" To="0.3" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="border"/>
+                                        <DoubleAnimation Duration="0:0:0.2" To="0.3" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="border"/>
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
