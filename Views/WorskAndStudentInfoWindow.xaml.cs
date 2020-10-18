@@ -8,16 +8,18 @@ namespace WorkReportCreator
     /// </summary>
     public partial class WorksAndStudentInfoWindow : Window
     {
+        private readonly MainWindow _mainWindow;
         /// <summary>
         /// Модель данных этого элемента
         /// </summary>
         private readonly StudentInformationWindowViewModel _model;
 
-        public WorksAndStudentInfoWindow()
+        public WorksAndStudentInfoWindow(MainWindow mainWindow)
         {
             InitializeComponent();
             _model = new StudentInformationWindowViewModel(this);
             DataContext = _model;
+            _mainWindow = mainWindow;
         }
 
         /// <summary>
@@ -25,22 +27,8 @@ namespace WorkReportCreator
         /// </summary>
         private void ShowFormMainWindow(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Все несохраненные данные будут удалены!\nВы уверены?", "Внимание!",
-                           MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
-            {
-                MainWindow mainWindow = new MainWindow();
-                Hide();
-                mainWindow.Show();
-            }
-        }
-
-
-        /// <summary>
-        /// Показывает форму с выбором заданий (при наличии) и файлов для отчета (при наличии)
-        /// </summary>
-        private void ShowFormReportsPage(object sender, RoutedEventArgs e)
-        {
-
+            Hide();
+            _mainWindow.Show();
         }
 
         /// <summary>

@@ -4,69 +4,52 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="WorkReportCreator" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize">
-    <Grid Background="#FF1E1E1E" Width="280">
+        Title="WorkReportCreator" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Background="#FF191A1B">
+    <Grid Width="280">
 
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
+                    <ResourceDictionary Source="/Views/Styles/ImageButtonStyle.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Grid.Resources>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Grid.Resources>
-                
-            <Style TargetType="Button">
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="Margin" Value="5"/>
-                <Setter Property="Padding" Value="2 5 2 5"/>
-                <Setter Property="Width" Value="250"/>
-                <Setter Property="FontSize"  Value="14"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                                
-                            <Border CornerRadius="10" BorderBrush="White" BorderThickness="2" Background="Transparent" Padding="5" Height="50">
-                                <Label x:Name="label" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFBAC3C3" FontSize="15"/>
-                            </Border>
-                                
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-
-                                    <!--Анимация про заходе мышки на элемент-->
-                                    <Trigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation Duration="0:0:0.2" To="18" Storyboard.TargetName="label" Storyboard.TargetProperty="FontSize"/>
-                                                <ColorAnimation Duration="0:0:0.2" To="White" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </Trigger.EnterActions>
-
-                                    <!--Анимация про уходе мышки с элемента-->
-                                    <Trigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation Duration="0:0:0.2" To="15" Storyboard.TargetName="label" Storyboard.TargetProperty="FontSize"/>
-                                                <ColorAnimation Duration="0:0:0.2" To="#FFBAC3C3" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </Trigger.ExitActions>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                                
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-                
-        </Grid.Resources>
 
         <Image Grid.Row="0" Source="../ImageIcon.ico" VerticalAlignment="Center" HorizontalAlignment="Center" Height="160" Margin="0 10 0 0"/>
-        <Button Grid.Row="1" Content="Создать отчет" Click="ShowWindowReportsSelect" Background="#FF5A82A7" Margin="10 10 10 5"/>
-        <Button Grid.Row="2" Content="Открыть файл с отчетом" Click="LoadReport" Margin="10 5 10 5"/>
-        <Button Grid.Row="3" Content="Создать шаблон" Click="ShowWindowReportTemplate" Margin="10 5 10 5"/>
-        <Button Grid.Row="4" Content="Изменить шаблон" Click="LoadWindowReportTemplate" Margin="10 5 10 20"/>
-        <TextBox x:Name="textBoxVersion" Text="Версия x.x.x" Foreground="White" Grid.Row="4" FontSize="10" Background="Transparent" BorderThickness="0"  HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <Button Grid.Row="1" Content="Создать отчет" Click="ShowWindowReportsSelect" Margin="10 10 10 5" Style="{StaticResource CommonAnimatedButton}"/>
+        <Button Grid.Row="2" Content="Открыть файл с отчетом" Click="LoadReport" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
+        <Button Grid.Row="3" Content="Создать шаблон" Click="ShowWindowReportTemplate" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
+        <Button Grid.Row="4" Content="Изменить шаблон" Click="LoadWindowReportTemplate" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
+        <Grid Grid.Row="5" Height="40">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBox Grid.Column="0" x:Name="textBoxVersion" Text="Версия x.x.x" Foreground="White" FontSize="10" Background="Transparent" BorderThickness="0"  HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+
+            <Button Grid.Column="2" HorizontalAlignment="Right" Click="OpenApplicationFolder" Margin="0 0 2 2" Style="{StaticResource ImageButtonStyle}">
+                <Image Source="/Images/Folder.png" Margin="3" VerticalAlignment="Center"/>
+            </Button>
+
+            <Button Grid.Column="3" HorizontalAlignment="Right" IsEnabled="False" Opacity="0.2" Margin="0 0 2 2" Style="{StaticResource ImageButtonStyle}">
+                <Image Source="/Images/Settings.png" Margin="3" VerticalAlignment="Center"/>
+            </Button>
+            
+        </Grid>
+        
     </Grid>
 </Window>

@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows;
@@ -33,7 +34,7 @@ namespace WorkReportCreator
         {
             try
             {
-                WorksAndStudentInfoWindow document = new WorksAndStudentInfoWindow();
+                WorksAndStudentInfoWindow document = new WorksAndStudentInfoWindow(this);
                 Hide();
                 document.Show();
             }
@@ -88,5 +89,10 @@ namespace WorkReportCreator
                 MessageBox.Show("Не получилось загрузить шаблон!", "Ошибка при загрузке шаблона", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+
+        /// <summary>
+        /// Открывает папки с приложением
+        /// </summary>
+        private void OpenApplicationFolder(object sender, RoutedEventArgs e) => Process.Start(Directory.GetCurrentDirectory());
     }
 }
