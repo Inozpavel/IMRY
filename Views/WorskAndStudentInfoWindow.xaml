@@ -47,138 +47,53 @@
                     </Grid.RowDefinitions>
 
                     <Grid.Resources>
-                        <ResourceDictionary Source="/Views/Styles/CommonTextBox.xaml"/>
+                        <ResourceDictionary Source="/Views/Styles/CommonTextBoxStyle.xaml"/>
                     </Grid.Resources>
 
                     <!--Фамилия студента-->
                     <TextBlock Text="Фамилия" Grid.Row="0"/>
-                    <TextBox Grid.Row="0" Text="{Binding Student.SecondName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Style="{StaticResource DarkTextBox}"/>
+                    <TextBox Grid.Row="0" Text="{Binding Student.SecondName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Style="{StaticResource CommonTextBox}"/>
 
                     <!--Имя студента-->
                     <TextBlock Text="Имя" Grid.Row="1"/>
-                    <TextBox Grid.Row="1" Text="{Binding Student.FirstName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Style="{StaticResource DarkTextBox}"/>
+                    <TextBox Grid.Row="1" Text="{Binding Student.FirstName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Style="{StaticResource CommonTextBox}"/>
 
                     <!--Отчество студента-->
                     <TextBlock Text="Отчество" Grid.Row="2"/>
-                    <TextBox Grid.Row="2" Text="{Binding Student.MiddleName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Style="{StaticResource DarkTextBox}"/>
+                    <TextBox Grid.Row="2" Text="{Binding Student.MiddleName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Style="{StaticResource CommonTextBox}"/>
 
                     <!--Номер группы студента-->
                     <TextBlock Text="Группа" Grid.Row="3"/>
-                    <TextBox Grid.Row="3" Text="{Binding Student.Group, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Style="{StaticResource DarkTextBox}"/>
+                    <TextBox Grid.Row="3" Text="{Binding Student.Group, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Style="{StaticResource CommonTextBox}"/>
                 </Grid>
 
             </GroupBox>
 
-            <GroupBox Header="Выбор работ для генерации отчета">
+            <GroupBox Header="Выбор работ для генерации отчета" Visibility="{Binding WorksSelectVisibility}">
                 <!--Выбор номеров работ-->
                 <StackPanel x:Name="stackPanelWithWorks" Orientation="Vertical" >
-                    <StackPanel.Resources>
 
-                        <!--Дизайн кружков для выбора работ-->
-                        <Style x:Key="NumberButton" TargetType="ToggleButton">
-                            <Setter Property="Margin" Value="5"/>
-                            <Setter Property="Focusable" Value="False"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ToggleButton">
-                                        
-                                        <Grid>
-                                            <Ellipse x:Name="ellipse" Width="40" Height="40" Fill="#FF121212" StrokeThickness="2" Stroke="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            <Label x:Name="label" Content="{TemplateBinding Content}" Foreground="#FFA8B3B3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
-                                            
-                                            <VisualStateManager.VisualStateGroups>
-                                                <VisualStateGroup x:Name="CommonStates">
-
-                                                    <!--Вид нажатой кнопки-->
-                                                    <VisualState x:Name="Checked">
-                                                        <Storyboard>
-                                                            <ColorAnimation To="LightGreen" Duration="0:0:0.3" Storyboard.TargetName="ellipse" Storyboard.TargetProperty="Stroke.(SolidColorBrush.Color)"/>
-                                                            <ColorAnimation To="White" Duration="0:0:0.3" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
-                                                        </Storyboard>
-                                                    </VisualState>
-
-                                                    <!--Вид не нажатой кнопки-->
-                                                    <VisualState x:Name="Unchecked">
-                                                        <Storyboard>
-                                                            <ColorAnimation To="Transparent" Duration="0:0:0.3" Storyboard.TargetName="ellipse" Storyboard.TargetProperty="Stroke.(SolidColorBrush.Color)"/>
-                                                            <ColorAnimation To="#FFA8B3B3" Duration="0:0:0.3" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
-                                                        </Storyboard>
-                                                    </VisualState>
-                                                    
-                                                </VisualStateGroup>
-                                            </VisualStateManager.VisualStateGroups>
-                                        </Grid>
-                                        
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                        
-                        <!--Стиль кнопки "Все работы"-->
-                        <Style TargetType="Button" x:Key="ButtonCheckAllWorks">
-                            <Setter Property="FontSize" Value="16"/>
-                            <Setter Property="Focusable" Value="False"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    
-                                    <ControlTemplate TargetType="Button">
-                                        <Grid>
-                                            <Border x:Name="border" Background="#FF121212" Width="100" Height="40" CornerRadius="10" RenderTransformOrigin="0 0.5">
-                                                <Border.RenderTransform>
-                                                    <SkewTransform AngleX="-20"/>
-                                                </Border.RenderTransform>
-                                            </Border>
-                                            <Label x:Name="label" Content="{TemplateBinding Content}" Foreground="#FFA8B3B3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Grid>
-                                        
-                                        <ControlTemplate.Triggers>
-                                            
-                                            <Trigger Property="IsMouseOver" Value="True">
-
-                                                <!--Анимация при заходе мышки на элемент-->
-                                                <Trigger.EnterActions>
-                                                    <BeginStoryboard>
-                                                        <Storyboard>
-                                                            <ColorAnimation To="#FF3B3B3B" Duration="0:0:0.4" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
-                                                            <ColorAnimation To="White" Duration="0:0:0.4" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </Trigger.EnterActions>
-                                                
-                                                <!--Анимация при выходе мышки с элемента-->
-                                                <Trigger.ExitActions>
-                                                    <BeginStoryboard>
-                                                        <Storyboard>
-                                                            <ColorAnimation To="#FF121212" Duration="0:0:0.4" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
-                                                            <ColorAnimation To="#FFA8B3B3" Duration="0:0:0.4" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </Trigger.ExitActions>
-                                            </Trigger>
-                                            
-                                        </ControlTemplate.Triggers>
-                                        
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-
-                    </StackPanel.Resources>
-
-                    <GroupBox Header="Практические работы" HorizontalAlignment="Stretch">
+                    <GroupBox Header="Практические работы" HorizontalAlignment="Stretch" Visibility="{Binding PracticesVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
-                            <StackPanel x:Name="stackPanelPracticalWorks" Orientation="Horizontal">
-
-                                <Button Content="Все работы" Click="CheckAllWorks" Margin="10" Style="{StaticResource ButtonCheckAllWorks}"/>
-                            </StackPanel>
+                            <ItemsControl ItemsSource="{Binding PracticalWorksButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
                         </ScrollViewer>
                     </GroupBox>
 
-                    <GroupBox Header="Лабораторные работы" HorizontalAlignment="Stretch">
+                    <GroupBox Header="Лабораторные работы" HorizontalAlignment="Stretch" Visibility="{Binding LaboratoriesVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
-                            <StackPanel x:Name="stackPanelLaboratoryWorks" Orientation="Horizontal">
-                                <Button Content="Все работы" Click="CheckAllWorks" Margin="10" Style="{StaticResource ButtonCheckAllWorks}"/>
-                            </StackPanel>
+                            <ItemsControl ItemsSource="{Binding LaboratoryWorksButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
                         </ScrollViewer>
                     </GroupBox>
 
@@ -197,15 +112,16 @@
                 </Grid.Resources>
 
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="&lt;" Click="ShowFormMainWindow" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Margin="10 0 0 0"/>
+                
+                <Button Grid.Column="0" Content="В меню" Click="ShowFormMainWindow" Style="{StaticResource CommonAnimatedButton}" HorizontalAlignment="Left" Margin="10 0 0 0"/>
                 <Button Grid.Column="1" Content="Сохранить информацию о студенте" Command="{Binding SaveStudentInfo}" Style="{StaticResource CommonAnimatedButton}" Margin="25 0 5 0"/>
                 <Button Grid.Column="2" Content="Загрузить информацию о студенте" Command="{Binding LoadStudentInfo}" Style="{StaticResource CommonAnimatedButton}" Margin="5 0 25 0"/>
-                <Button Grid.Column="3" Content="&gt;" Click="ShowFormReportsPage" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Right" Margin="0 0 10 0"/>
+                <Button Grid.Column="3" Content="К отчетам" Command ="{Binding ShowReportsPage}" Style="{StaticResource CommonAnimatedButton}" HorizontalAlignment="Right" Margin="0 0 10 0"/>
                 
             </Grid>
         </StackPanel>
