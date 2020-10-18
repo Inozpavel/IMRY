@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style TargetType="TextBox" x:Key="DarkTextBox">
+    <Style TargetType="TextBox" x:Key="CommonTextBox">
         <Setter Property="Margin" Value="10 3 10 3"/>
         <Setter Property="Focusable" Value="True"/>
         <Setter Property="FontSize" Value="15"/>

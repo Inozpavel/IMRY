@@ -125,7 +125,7 @@
         <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" Margin="10 0 0 0" Visibility="{Binding ReportInformationVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             
             <ScrollViewer.Resources>
-                <ResourceDictionary Source="/Views/Styles/TemplateTextBox.xaml"/>
+                <ResourceDictionary Source="/Views/Styles/ScrollBarTextDarkTextBoxStyle.xaml"/>
             </ScrollViewer.Resources>
             
             <Grid>
@@ -153,29 +153,24 @@
                 </Grid.Resources>
 
                 <Label Grid.Row="0" Content="Название работы"/>
-                <TextBox Grid.Row="1" Text="{Binding CurrentInformation.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextBox}"/>
+                <TextBox Grid.Row="1" Text="{Binding CurrentInformation.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextDarkTextBox}"/>
 
                 <Label Grid.Row="2" Content="Цель работы"/>
-                <TextBox Grid.Row="3" Text="{Binding CurrentInformation.WorkTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextBox}"/>
+                <TextBox Grid.Row="3" Text="{Binding CurrentInformation.WorkTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextDarkTextBox}"/>
 
                 <Label Grid.Row="4" Content="Теоритическая часть"/>
-                <TextBox Grid.Row="5" Text="{Binding CurrentInformation.TheoryPart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextBox}"/>
+                <TextBox Grid.Row="5" Text="{Binding CurrentInformation.TheoryPart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextDarkTextBox}"/>
 
                 <Label Grid.Row="6" Content="Общее задание"/>
-                <TextBox Grid.Row="7" Text="{Binding CurrentInformation.CommonTask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextBox}"/>
+                <TextBox Grid.Row="7" Text="{Binding CurrentInformation.CommonTask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextDarkTextBox}"/>
 
-                <GroupBox Grid.Row="10" Header="Задания на выбор" Foreground="White" FontSize="14" Margin="5" MinHeight="100" BorderThickness="1">
+                <GroupBox Grid.Row="10" Header="Задания на выбор" Foreground="White" FontSize="14" Margin="5 5 1 1" MinHeight="100" BorderThickness="1">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         
                         <Grid>
 
                             <Grid.Resources>
-                                <ResourceDictionary>
-                                    <ResourceDictionary.MergedDictionaries>
-                                        <ResourceDictionary Source="/Views/Styles/OneSymbolButtonStyle.xaml"/>
-                                        <ResourceDictionary Source="/Views/Styles/CommonTextBox.xaml"/>
-                                    </ResourceDictionary.MergedDictionaries>
-                                </ResourceDictionary>
+                                <ResourceDictionary Source="/Views/Styles/OneSymbolButtonStyle.xaml"/>
                             </Grid.Resources>
                         
                             <Grid.RowDefinitions>
@@ -184,11 +179,11 @@
                             </Grid.RowDefinitions>
                                 
                             <!--Список заданий-->
-                            <ListBox ItemsSource="{Binding CurrentInformation.DynamicTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedDescriptionIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListBox ItemsSource="{Binding CurrentInformation.DynamicTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedDescriptionIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0">
                                 
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBox TextWrapping="Wrap" Margin="2" HorizontalAlignment="Stretch" Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextBox}"/>
+                                        <TextBox TextWrapping="Wrap" Margin="5 1 5 1" HorizontalAlignment="Stretch" Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextDarkTextBox}"/>
                                     </DataTemplate>
                                 
                                 </ListBox.ItemTemplate>
