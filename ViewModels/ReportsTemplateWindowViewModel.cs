@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -45,11 +46,13 @@ namespace WorkReportCreator.ViewModels
 
         private Visibility _reportInformationVisibility;
 
-        public string FilePath { get; private set; }
-
         private ObservableCollection<RadioButton> _worksButtons = new ObservableCollection<RadioButton>();
 
         private int? _selecteDescriptionIndex = null;
+
+        private string _filePath;
+
+        private string _saveStatus = "Сохранить в файл";
 
         #region Properties
 
@@ -173,6 +176,34 @@ namespace WorkReportCreator.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        /// <summary>
+        /// Путь до файла, в который все сохраняется
+        /// </summary>
+        public string FilePath
+        {
+            get => _filePath;
+            set
+            {
+                _filePath = value;
+                SaveStatus = string.IsNullOrEmpty(value) ? "Сохранить в файл" : "Автосохранение включено";
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Надпись на кнопке для сохранения
+        /// </summary>
+        public string SaveStatus
+        {
+            get => _saveStatus;
+            set
+            {
+                _saveStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -228,8 +259,8 @@ namespace WorkReportCreator.ViewModels
             SwapUpElement = new Command(SwapUpSelectedItem, SwapUpCanExecute);
             SwapDownElement = new Command(SwapDownSelectedItem, SwapDownCanExecute);
 
-            
-                
+
+
             AddDescription = new Command(AddNewDescription, null);
             RemoveDescription = new Command(RemoveSelectedDescription, (sender) => SelectedDescriptionIndex != null);
 
@@ -279,15 +310,20 @@ namespace WorkReportCreator.ViewModels
         /// </summary>
         private void AddNewWork(object sender)
         {
-            InputWorkNumberBox box = new InputWorkNumberBox(WorksButtons.Select(x => x.Content.ToString()).ToList());
-
-            if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) == false)
+            RadioButton radioButton;
+            ReportInformation reportInformation;
+            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                radioButton = GenerateNewItem(WorksButtons.Count + 1);
+            else
             {
+                InputWorkNumberBox box = new InputWorkNumberBox(WorksButtons.Select(x => x.Content.ToString()).ToList());
                 box.ShowDialog();
-            }
+                if (box.ResultNumber == null)
+                    return;
+                radioButton = GenerateNewItem(box.ResultNumber ?? WorksButtons.Count + 1);
 
-            RadioButton radioButton = GenerateNewItem(box.ResultNumber ?? WorksButtons.Count + 1);
-            ReportInformation reportInformation = new ReportInformation();
+            }
+            reportInformation = new ReportInformation();
             reportInformation.PropertyChanged += SaveAllInformation;
             Works.Add(radioButton, reportInformation);
             WorksButtons.Add(radioButton);
@@ -403,28 +439,6 @@ namespace WorkReportCreator.ViewModels
         private bool SwapDownCanExecute(object sender) => WorksButtons.Any(x => x.IsChecked ?? false) && GetSelectedIndex() < Works.Count - 1;
 
         /// <summary>
-        /// Сохраняет всю введенную информацию в файл
-        /// </summary>
-        private void SaveAllInformation(object sender, PropertyChangedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(FilePath))
-                return;
-            Dictionary<string, Dictionary<string, ReportInformation>> template = new Dictionary<string, Dictionary<string, ReportInformation>>();
-
-            Dictionary<string, ReportInformation> practisesinfo = new Dictionary<string, ReportInformation>();
-            foreach (var button in PractisesWorksButtons)
-                practisesinfo[button.Content.ToString()] = PractisesWorks[button];
-
-            Dictionary<string, ReportInformation> laboratoriesInfo = new Dictionary<string, ReportInformation>();
-            foreach (var button in LaboratoriesWorksButtons)
-                laboratoriesInfo[button.Content.ToString()] = LaboratoriesWorks[button];
-
-            template["Practices"] = practisesinfo;
-            template["Laboratories"] = laboratoriesInfo;
-            File.WriteAllText(FilePath, JsonConvert.SerializeObject(template, Formatting.Indented));
-        }
-
-        /// <summary>
         /// Добавляет новое описание работы в список, подписывает его на автообновление
         /// </summary>
         private void AddNewDescription(object sender)
@@ -472,6 +486,28 @@ namespace WorkReportCreator.ViewModels
                 SelectedDescriptionIndex = index - 1;
             else
                 SelectedDescriptionIndex = null;
+        }
+
+        /// <summary>
+        /// Сохраняет всю введенную информацию в файл
+        /// </summary>
+        private void SaveAllInformation(object sender, PropertyChangedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(FilePath))
+                return;
+            Dictionary<string, Dictionary<string, ReportInformation>> template = new Dictionary<string, Dictionary<string, ReportInformation>>();
+
+            Dictionary<string, ReportInformation> practisesinfo = new Dictionary<string, ReportInformation>();
+            foreach (var button in PractisesWorksButtons)
+                practisesinfo[button.Content.ToString()] = PractisesWorks[button];
+
+            Dictionary<string, ReportInformation> laboratoriesInfo = new Dictionary<string, ReportInformation>();
+            foreach (var button in LaboratoriesWorksButtons)
+                laboratoriesInfo[button.Content.ToString()] = LaboratoriesWorks[button];
+
+            template["Practices"] = practisesinfo;
+            template["Laboratories"] = laboratoriesInfo;
+            File.WriteAllText(FilePath, Regex.Replace(JsonConvert.SerializeObject(template, Formatting.Indented), "\\r", ""));
         }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

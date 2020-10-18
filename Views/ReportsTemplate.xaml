@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Редактирование шаблона" Height="450" Width="800" Background="#FF1E1E1E" WindowStartupLocation="CenterScreen" Closing="ShowMainWindow" MinHeight="273" MinWidth="720" FontFamily="MyriadPro">
+        
+        Title="WorksReportCreator" Height="450" Width="800" Background="#FF191A1B" WindowStartupLocation="CenterScreen" Closing="ShowMainWindow" MinHeight="273" MinWidth="720" FontFamily="Verdana">
     <Grid>
         <Grid.Resources>
             <Style TargetType="RadioButton">
@@ -13,7 +14,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="RadioButton">
                             <Border x:Name="border" Width="{TemplateBinding Width}" HorizontalAlignment="Left" Background="#FF333337" BorderThickness="2" BorderBrush="Transparent">
-                                <Label Content="{TemplateBinding Content}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MyriadPro" FontSize="14"/>
+                                <Label Content="{TemplateBinding Content}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
 
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="CommonStates">
@@ -41,21 +42,23 @@
         </Grid.Resources>
         
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="260"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         
         <Border Grid.Column="0">
             <DockPanel>
+                
                 <DockPanel.Resources>
                     <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
                 </DockPanel.Resources>
+                
                 <StackPanel DockPanel.Dock="Top">
-                    <RadioButton Content="Практические работы" Margin="0 10 0 5" Width="210" DockPanel.Dock="Top" IsChecked="{Binding IsPracticesChecked}" Command="{Binding ChangeWorkType}"/>
-                    <RadioButton Content="Лабораторные работы" Margin="0 5 0 10" Width="210" DockPanel.Dock="Top" IsChecked="{Binding IsLaboratoriesChecked}" Command="{Binding ChangeWorkType}"/>
+                    <RadioButton Content="Практические работы" Margin="0 10 0 5" Width="240" DockPanel.Dock="Top" IsChecked="{Binding IsPracticesChecked}" Command="{Binding ChangeWorkType}"/>
+                    <RadioButton Content="Лабораторные работы" Margin="0 5 0 10" Width="240" DockPanel.Dock="Top" IsChecked="{Binding IsLaboratoriesChecked}" Command="{Binding ChangeWorkType}"/>
                 </StackPanel>
-                <Button Content="Выбрать файл для сохранения"  Margin="5 0 5 10" Width="210" DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Bottom" Style="{StaticResource CommonAnimatedButton}" Command="{Binding ChooseFile}"/>
+                <Button Content="{Binding SaveStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5 0 5 10" Width="250" DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Bottom" Style="{StaticResource CommonAnimatedButton}" Command="{Binding ChooseFile}"/>
             </DockPanel>
         </Border>
         
@@ -147,7 +150,6 @@
                     <Style TargetType="Label">
                         <Setter Property="Foreground" Value="White"/>
                         <Setter Property="FontSize" Value="14"/>
-                        <Setter Property="FontFamily" Value="MyriadPro"/>
                     </Style>
                     
                 </Grid.Resources>
@@ -179,7 +181,7 @@
                             </Grid.RowDefinitions>
                                 
                             <!--Список заданий-->
-                            <ListBox ItemsSource="{Binding CurrentInformation.DynamicTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedDescriptionIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0">
+                            <ListBox ItemsSource="{Binding CurrentInformation.DynamicTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedDescriptionIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="#FF1E1E1E" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0">
                                 
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
