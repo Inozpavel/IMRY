@@ -9,9 +9,13 @@ namespace WorkReportCreator.Models
 {
     internal class MainParams
     {
-        private string _titlePageFilePath = "./ TitlePage.docx";
+        private bool _workHasTitlePage = false;
 
-        private string _titlePageParametersFilePath = "./Configs/TitlePageParams.json";
+        private string _workTitlePageFilePath = "./Configs/TitlePage.docx";
+        
+        private bool _workHasTitlePageParams = false;
+
+        private string _workTitlePageParamsFilePath = "./Configs/TitlePageParams.json";
 
         private string _permittedDragAndDropExtentionsFilePath = "./Configs/PermittedDragAndDropExtentions.json";
 
@@ -21,26 +25,63 @@ namespace WorkReportCreator.Models
 
         private string _allReportsPath = "./Reports/";
 
-        public string TitlePageFilePath
+        #region Properties
+
+        /// <summary>
+        /// Имеется ли титульная страница
+        /// </summary>
+        public bool WorkHasTitlePage
         {
-            get => _titlePageFilePath;
+            get => _workHasTitlePage;
             set
             {
-                _titlePageFilePath = value;
+                _workHasTitlePage = value;
+                TrySave();
+            }
+        }
+       
+        /// <summary>
+        /// Путь до страницы с титульником
+        /// </summary>
+        public string WorkTitlePageFilePath
+        {
+            get => _workTitlePageFilePath;
+            set
+            {
+                _workTitlePageFilePath = value;
                 TrySave();
             }
         }
 
-        public string TitlePageParametersFilePath
+        /// <summary>
+        /// Имеется ли титульная страница
+        /// </summary>
+        public bool WorkHasTitlePageParams
         {
-            get => _titlePageParametersFilePath;
+            get => _workHasTitlePageParams;
             set
             {
-                _titlePageParametersFilePath = value;
+                _workHasTitlePageParams = value;
                 TrySave();
             }
         }
 
+        /// <summary>
+        /// Путь до файла с параметрами для титульной страницы
+        /// </summary>
+        public string WorkTitlePageParamsFilePath
+        {
+            get => _workTitlePageParamsFilePath;
+            set
+            {
+                _workTitlePageParamsFilePath = value;
+                TrySave();
+            }
+        }
+
+        /// <summary>
+        /// Разрешенные расширения файлов для Drag & Drop
+        /// </summary>
         public string PermittedDragAndDropExtentionsFilePath
         {
             get => _permittedDragAndDropExtentionsFilePath;
@@ -51,6 +92,9 @@ namespace WorkReportCreator.Models
             }
         }
 
+        /// <summary>
+        /// Путь до текущего шаблона
+        /// </summary>
         public string CurrentTemplateFilePath
         {
             get => _currentTemplateFilePath;
@@ -61,6 +105,9 @@ namespace WorkReportCreator.Models
             }
         }
 
+        /// <summary>
+        /// Путь, по которому программа будет пытаться подгрузить информацию о пользователе
+        /// </summary>
         public string UserDataFileName
         {
             get => _standartUserDataFileName;
@@ -71,6 +118,9 @@ namespace WorkReportCreator.Models
             }
         }
 
+        /// <summary>
+        /// Путь, где все отчеты будут сохранены
+        /// </summary>
         public string AllReportsPath
         {
             get => _allReportsPath;
@@ -81,35 +131,39 @@ namespace WorkReportCreator.Models
             }
         }
 
+        #endregion
+
         public MainParams()
         {
             var parameters = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
-            _titlePageFilePath = parameters["TitlePageFilePath"];
-
-            _titlePageParametersFilePath = parameters["TitlePageParametersFilePath"];
-
+            _workHasTitlePage = bool.Parse(parameters["WorkHasTitlePage"]);
+            if (_workHasTitlePage)
+            {
+                _workTitlePageFilePath = parameters["WorkTitlePageFilePath"];
+                _workHasTitlePageParams= bool.Parse(parameters["WorkHasTitlePageParams"]);
+                if (_workHasTitlePageParams)
+                    _workTitlePageParamsFilePath = parameters["WorkTitlePageParamsFilePath"];
+            }
             _permittedDragAndDropExtentionsFilePath = parameters["PermittedDragAndDropExtentionsFilePath"];
-
             _currentTemplateFilePath = parameters["CurrentTemplateFilePath"];
-
             _standartUserDataFileName = parameters["UserDataFileName"];
-
             _allReportsPath = parameters["AllReportsPath"];
         }
 
-        public void ValidateAllParams()
+        public static void ValidateAllParams()
         {
             try
             {
                 List<string> requiredParams = new List<string>()
                 {
-                    "TitlePageFilePath",
-                    "TitlePageParametersFilePath",
+                    "WorkHasTitlePage",
                     "PermittedDragAndDropExtentionsFilePath",
                     "CurrentTemplateFilePath",
                     "AllReportsPath"
                 };
+
                 var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
+
                 if (requiredParams.All(param => globalParams.Keys.Contains(param)) == false)
                 {
                     MessageBox.Show("В главном конфигурационном файле отсутствует обязательный параметр!\nБез него нельзя использовать приложение!",

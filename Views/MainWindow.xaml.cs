@@ -22,8 +22,7 @@ namespace WorkReportCreator
                 Application.Current.Shutdown();
                 return;
             }
-            MainParams mainParams = new MainParams();
-            mainParams.ValidateAllParams();
+            MainParams.ValidateAllParams();
             textBoxVersion.Text = "Версия " + Assembly.GetExecutingAssembly().GetName().Version.ToString().Substring(2);
         }
 
