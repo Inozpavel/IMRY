@@ -146,8 +146,8 @@ namespace WorkReportCreator.Models
             }
             _permittedDragAndDropExtentionsFilePath = parameters["PermittedDragAndDropExtentionsFilePath"];
             _currentTemplateFilePath = parameters["CurrentTemplateFilePath"];
-            if (parameters.Keys.Contains(UserDataFileName));
-            _userDataFileName = parameters["UserDataFileName"];
+            if (parameters.Keys.Contains("UserDataFileName"))
+                _userDataFileName = parameters["UserDataFileName"];
             _allReportsPath = parameters["AllReportsPath"];
         }
 
