@@ -5,6 +5,25 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" Background="#FF252526">
     <Grid Background="Transparent">
+        <Grid.Resources>
+            <Style TargetType="TextBox">
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="SpellCheck.IsEnabled" Value="True"/>
+                <Setter Property="Language" Value="ru-ru"/>
+                <Setter Property="Margin" Value="3"/>
+            </Style>
+
+            <Style TargetType="Label">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+            
+        </Grid.Resources>
         <Border CornerRadius="15" BorderBrush="#FFA8B3B3" BorderThickness="1" Focusable="False">
             <StackPanel Orientation="Vertical">
                 <Grid>
@@ -13,84 +32,25 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     
                     <Grid.Resources>
-                 
-                        <Style TargetType="TextBox">
-                            <Setter Property="VerticalContentAlignment" Value="Center"/>
-                            <Setter Property="FontSize" Value="14"/>
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                            <Setter Property="TextAlignment" Value="Center"/>
-                            <Setter Property="SpellCheck.IsEnabled" Value="True"/>
-                            <Setter Property="Language" Value="ru-ru"/>
-                            <Setter Property="Margin" Value="3"/>
-                        </Style>
-                
-                        <Style TargetType="Label">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Margin" Value="5"/>
-                            <Setter Property="Foreground" Value="White"/>
-                            <Setter Property="FontSize" Value="14"/>
-                        </Style>
-
-                        <Style TargetType="Button">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Padding" Value="5"/>
-                            <Setter Property="Margin" Value="5"/>
-                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                            <Setter Property="FontSize" Value="14"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border x:Name="border" BorderBrush="Cyan" Background="Transparent" BorderThickness="2" CornerRadius="20">
-                                            <Label Name="label" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="15 2 15 2"/>
-                                        </Border>
-
-                                        <ControlTemplate.Triggers>
-
-                                            <!--Анимация про заходе мышки на элемент-->
-                                            <EventTrigger RoutedEvent="MouseEnter">
-                                                <BeginStoryboard>
-                                                    <Storyboard>
-                                                        <ColorAnimation To="Transparent" Duration="0:0:0.1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
-                                                        <ColorAnimation To="Black" Duration="0:0:0.3" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
-                                                        <ColorAnimation To="Cyan" Duration="0:0:0.3" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </EventTrigger>
-
-                                            <!--Анимация про уходе мышки с элемента-->
-                                            <EventTrigger RoutedEvent="MouseLeave">
-                                                <BeginStoryboard>
-                                                    <Storyboard>
-                                                        <ColorAnimation To="Cyan" Duration="0:0:0.3" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
-                                                        <ColorAnimation To="White" Duration="0:0:0.3" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
-                                                        <ColorAnimation To="Transparent" Duration="0:0:0.1" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </EventTrigger>
-                                            
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-
+                        <ResourceDictionary Source="/Views/Styles/TiltedButtonStyle.xaml"/>
                     </Grid.Resources>
 
                     <Grid Grid.Column="0" Margin="10 5 5 5">
                         <Ellipse Width="40" Height="40" StrokeThickness="3" Stroke="#FF14E7AE"/>
                         <TextBlock Text="{Binding Number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="20" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
-
-                    <Label Grid.Column="1" Content="Имя файла" Visibility="{Binding FileNameVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Label Grid.Column="2" Content="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding FileNameVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Grid.Column="3" Content="Выбрать файл" Click="ChooseFile" Focusable="False"/>
+                    
+                    <ScrollViewer Width="280" Grid.Column="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" Visibility="{Binding FileNameVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Label Content="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </ScrollViewer>
+                    
+                    <ToggleButton Grid.Column="2" Content="Выбрать файл" Click="ChooseFile" Margin="10 0 0 0" Style="{StaticResource TiltedButton}"/>
                 
-                    <Grid Grid.Column="4">
+                    <Grid Grid.Column="3">
                         <Label x:Name="labelFilePath" Content="{Binding FilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
                         <TextBlock Text="Полный путь до файла" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" Foreground="Gray" Visibility="{Binding HintVisibility,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
@@ -102,7 +62,7 @@
                     </StackPanel.Resources>
                     
                     <Label Content="Описание файла" Foreground="White"/>
-                    <TextBox Text="{Binding FileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="auto" MinHeight="50" TextWrapping="Wrap" Margin="6 0 6 6" Style="{StaticResource CommonTextBox}"/>
+                    <TextBox Text="{Binding FileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Focusable="False" Height="auto" MinHeight="50" TextWrapping="Wrap" Margin="6 0 6 6" Style="{StaticResource CommonTextBox}"/>
                
                 </StackPanel>
                 

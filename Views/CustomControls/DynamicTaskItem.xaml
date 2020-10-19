@@ -2,10 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:WorkReportCreator.Views.CustomConrols"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             d:DesignHeight="40" d:DesignWidth="800" MouseDown="InvertIsChecked" Height="40">
+             d:DesignWidth="800" MouseDown="InvertIsChecked" Height="auto" FontFamily="Verdana">
     <Grid Background="Transparent" HorizontalAlignment="Stretch">
         
         <Grid.ColumnDefinitions>
@@ -13,11 +12,11 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Border Height="30" Width="30" BorderBrush="White" BorderThickness="2" CornerRadius="5" Margin="10 2 0 2">
+        <Border Height="30" Width="30" BorderBrush="White" BorderThickness="1" CornerRadius="6" Margin="10 2 0 2">
             <Image VerticalAlignment="Center" HorizontalAlignment="Center" Source="{Binding ImagePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Border>
+
+        <TextBlock Grid.Column="1" Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="10 0 0 0"/>
         
-        <TextBlock Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="10 0 0 0"/>
-    
     </Grid>
 </UserControl>
