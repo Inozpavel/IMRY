@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using WorkReportCreator.Models;
@@ -89,10 +90,11 @@ namespace WorkReportCreator.ViewModels
             {
                 try
                 {
+                    List<string> dynamicTasks = template[key][number].DynamicTasks.Select(x => x.Description).Select(x => Regex.Replace(x, "\\n", "").Trim()).ToList();
                     TabItems.Add(new TabItem()
                     {
                         Header = $"{number} {shortDescription}",
-                        Content = new ReportItem(window, template[key][number].DynamicTasks.Select(x => x.Description).ToList())
+                        Content = new ReportItem(window, dynamicTasks)
                     });
                 }
                 catch (Exception)
