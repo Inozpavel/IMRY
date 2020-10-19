@@ -33,9 +33,9 @@ namespace WorkReportCreator
         {
             try
             {
-                WorksAndStudentInfoWindow document = new WorksAndStudentInfoWindow(this);
+                WorksAndStudentInfoWindow worksAndStudentInfoWindow = new WorksAndStudentInfoWindow(this);
                 Hide();
-                document.Show();
+                worksAndStudentInfoWindow.Show();
             }
             catch (Exception exception)
             {

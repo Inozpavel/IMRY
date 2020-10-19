@@ -180,7 +180,7 @@ namespace WorkReportCreator.ViewModels.Commands
             PracticesVisibility = PracticalWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
             LaboratoriesVisibility = LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
             WorksSelectVisibility = PracticalWorksButtons.Count > 1 || LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
-            SaveStatus = string.IsNullOrEmpty(mainParams.UserDataFileName) ?  "Сохранить информацию о студенте": "Автосохранение включено";
+            SaveStatus = string.IsNullOrEmpty(mainParams.UserDataFileName) ? "Сохранить информацию о студенте" : "Автосохранение включено";
         }
 
         private void SaveStudentInformation(object sender, PropertyChangedEventArgs e)

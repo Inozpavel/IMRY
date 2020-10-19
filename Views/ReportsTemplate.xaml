@@ -10,6 +10,7 @@
         <Grid.Resources>
             <Style TargetType="RadioButton">
                 <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Focusable" Value="False"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="RadioButton">
@@ -109,7 +110,7 @@
 
                 </ScrollViewer.Resources>
 
-                <ItemsControl Background="#FF333337" ItemsSource="{Binding WorksButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <ItemsControl Background="#FF333337" Focusable="False" ItemsSource="{Binding WorksButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 
             </ScrollViewer>
 
