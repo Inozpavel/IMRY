@@ -15,18 +15,18 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         
-        <Grid Grid.Row="0" >
+        <Grid Grid.Row="0" Height="auto">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
+                <RowDefinition Height="40"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             
-            <!--Надпись выбрано задание / нет-->
-            <TextBlock Grid.Column="0" Text="{Binding DynamicTasksStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="White" HorizontalAlignment="Center" FontSize="16" Margin="0 3 0 3"/>
+            <!--Надпись выбрано задание / нет / отсутствуют-->
+            <TextBlock Grid.Row="0" Text="{Binding DynamicTasksStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="White" HorizontalAlignment="Center" FontSize="16" Margin="0 3 0 3"/>
 
             <!--Свернуть / развернуть блок с заданиями-->
-            <ToggleButton Grid.Column="0" HorizontalAlignment="Right" Focusable="False">
+            <ToggleButton x:Name="toggleButton" Grid.Row="0" Focusable="False" HorizontalAlignment="Right" Visibility="{Binding DynamicTasksVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
                 <ToggleButton.Style>
                     <Style TargetType="ToggleButton">
@@ -44,7 +44,7 @@
                     </Style>
                 </ToggleButton.Style>
                 
-                <Image Height="40" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Image HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Image.Style>
 
                         <Style TargetType="Image">
@@ -70,13 +70,13 @@
             </ToggleButton>
 
             <!--Выбор варианта задания-->
-            <ScrollViewer Grid.Row="1" Height="102" x:Name="tasksScrollViewer" VerticalScrollBarVisibility="Auto" MaxHeight="140" HorizontalScrollBarVisibility="Auto">
+            <ScrollViewer Grid.Row="1" Height="102" x:Name="tasksScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Visibility="{Binding DynamicTasksVisiblity}">
                 <ScrollViewer.Style>
                     <Style TargetType="ScrollViewer">
                         
                         <Style.Triggers>
                             
-                            <DataTrigger Binding="{Binding IsChecked, ElementName= toggleButton}" Value="True">
+                            <DataTrigger Binding="{Binding IsChecked, ElementName=toggleButton}" Value="True">
 
                                 <DataTrigger.EnterActions>
                                     <BeginStoryboard>
@@ -101,7 +101,7 @@
 
                 </ScrollViewer.Style>
 
-                <ItemsControl Background="#FF333337" Focusable="False" BorderThickness="0" ItemsSource="{Binding DynamicTasksArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding DynamicTasksVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <ItemsControl Background="#FF333337" Focusable="False" BorderThickness="0" ItemsSource="{Binding DynamicTasksArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             </ScrollViewer>
 

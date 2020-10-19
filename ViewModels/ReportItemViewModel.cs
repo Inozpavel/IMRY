@@ -24,10 +24,6 @@ namespace WorkReportCreator
 
         public Command SwapDownFileInfo { get; private set; }
 
-        public Command HideDynamicTasks { get; private set; }
-
-        public Command ShowDynamicTasks { get; private set; }
-
         #endregion
 
         private int? _selectedItemIndex;
@@ -132,14 +128,12 @@ namespace WorkReportCreator
             RemoveFileInfo = new Command(RemoveSelectedFileInfo, RemoveSelectedFileInfoCanExecute);
             SwapUpFileInfo = new Command(SwapUpSelectedFileInfo, SwapUpSelectedFileInfoCanExecute);
             SwapDownFileInfo = new Command(SwapDownSelectedFileInfo, SwapDownSelectedFileInfoCanExecute);
-            ShowDynamicTasks = new Command((sender) => DynamicTasksVisiblity = Visibility.Visible, null);
-            HideDynamicTasks = new Command((sender) => DynamicTasksVisiblity = Visibility.Collapsed, null);
-
+            
             foreach (string task in DynamicTasks ?? new List<string>())
-            {
                 DynamicTasksArray.Add(new DynamicTaskItem() { Text = task, });
-            }
-            DynamicTasksStatus = "Выберите, пожалуйста, задание";
+            
+            DynamicTasksVisiblity = DynamicTasks.Count > 0 ? DynamicTasksVisiblity = Visibility.Visible : DynamicTasksVisiblity = Visibility.Collapsed;
+            DynamicTasksStatus = DynamicTasks.Count == 0 ? "Заданий для выбора нет" : "Выберите, пожалуйста, задание";
 
             void UpdateTasksStatus(object sender) => DynamicTasksStatus = DynamicTasksArray
                 .Any(x => x.IsChecked) ? "Задание выбрано" : "Выберите, пожалуйста, задание";
@@ -196,7 +190,7 @@ namespace WorkReportCreator
         public void RemoveSelectedFileInfo(object sender)
         {
             FileInformationItem reportMenuItem = _selectedItem.Content as FileInformationItem;
-            
+
             if (((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) == false) &&
                 (string.IsNullOrEmpty(reportMenuItem.FileName) == false || string.IsNullOrEmpty(reportMenuItem.FileDescription) == false))
             {
