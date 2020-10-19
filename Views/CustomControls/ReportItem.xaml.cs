@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using WorkReportCreator.Models;
 using WorkReportCreator.Views;
 using Xceed.Words.NET;
@@ -93,9 +95,18 @@ namespace WorkReportCreator
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             MainParams mainParams = new MainParams();
-
-            List<string> permittedExtentions = JsonConvert.DeserializeObject<List<string>>(
-                File.ReadAllText(mainParams.PermittedDragAndDropExtentionsFilePath));
+            List<string> permittedExtentions;
+            try
+            {
+                permittedExtentions = JsonConvert.DeserializeObject<List<string>>(
+                    File.ReadAllText(mainParams.PermittedDragAndDropExtentionsFilePath));
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Ошибка при чтении данным из файла с расширениями!",
+                    "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             bool allFilesIsFilePath = files.All(path => Directory.Exists(path) == false);
             bool allFilesIsDirectoryPath = files.All(path => Directory.Exists(path));
 
@@ -119,6 +130,7 @@ namespace WorkReportCreator
             {
                 AddFilePaths(files.ToList(), permittedExtentions);
             }
+            ChangeImageToTakenIn(this, null);
         }
 
         /// <summary>
@@ -165,5 +177,15 @@ namespace WorkReportCreator
         /// <param name="permittedExtentions">Список разрешенных расширений</param>
         /// <returns><paramref name="True"/>, если разрешено, в противном случае <paramref name="false"/></returns>
         private bool CheckFileExtentionIsPermitted(string fileName, List<string> permittedExtentions) => permittedExtentions.Any(ext => Regex.IsMatch(fileName, $@"\.{ext}$"));
+
+        /// <summary>
+        /// Изменяет картинку на папку с вытащенными файлами
+        /// </summary>
+        private void ChangeImageToTakenOut(object sender, DragEventArgs e) => image.Source = new BitmapImage(new Uri("/Images/FolderTakenOut.png", UriKind.Relative));
+
+        /// <summary>
+        /// Изменяет картинку на папку со вставленными файлами
+        /// </summary>
+        private void ChangeImageToTakenIn(object sender, DragEventArgs e) => image.Source = new BitmapImage(new Uri("/Images/FolderTakenIn.png", UriKind.Relative));
     }
 }
