@@ -515,7 +515,7 @@ namespace WorkReportCreator.ViewModels
             template["Laboratories"] = laboratoriesInfo;
             try
             {
-                File.WriteAllText(FilePath, Regex.Replace(JsonConvert.SerializeObject(template, Formatting.Indented), "\\r", ""));
+                File.WriteAllText(FilePath, Regex.Replace(JsonConvert.SerializeObject(template, Formatting.Indented), @"\\r", ""));
             }
             catch (UnauthorizedAccessException)
             {
@@ -523,7 +523,7 @@ namespace WorkReportCreator.ViewModels
                     "Ошибка", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.Yes)
                 {
                     File.SetAttributes(FilePath, FileAttributes.Normal);
-                    File.WriteAllText(FilePath, Regex.Replace(JsonConvert.SerializeObject(template, Formatting.Indented), "\\r", ""));
+                    File.WriteAllText(FilePath, Regex.Replace(JsonConvert.SerializeObject(template, Formatting.Indented), @"\\r", ""));
                 }
                 else
                     FilePath = "";
