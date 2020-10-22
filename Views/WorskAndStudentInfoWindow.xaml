@@ -1,7 +1,7 @@
 ﻿<Window x:Class="WorkReportCreator.WorksAndStudentInfoWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="WorksReportCreator" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" Closing="ExitApplication" Background="#FF191A1B" MinWidth="950" MinHeight="490">
+        Title="WorksReportCreator" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" Closing="CloseApplicationClicked" Background="#FF191A1B" MinWidth="950" MinHeight="490">
     <Grid>
        
         <Grid.Resources>

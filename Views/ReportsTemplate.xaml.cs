@@ -28,7 +28,7 @@ namespace WorkReportCreator
             _mainWindow = mainWindow;
         }
 
-        private void ShowMainWindow(object sender, System.ComponentModel.CancelEventArgs e)
+        private void CloseApplicationClicked(object sender, System.ComponentModel.CancelEventArgs e)
         {
             bool shouldClose = true;
             if (string.IsNullOrEmpty(_model.FilePath) && (_model.LaboratoriesWorksButtons.Count > 0 || _model.PractisesWorksButtons.Count > 0))

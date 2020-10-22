@@ -33,13 +33,13 @@ namespace WorkReportCreator
         /// </summary>
         private void ShowFormMainWindow(object sender, RoutedEventArgs e)
         {
-            Hide();
+            Close();
             _mainWindow.Show();
         }
 
         /// <summary>
         /// Завершает работу приложения
         /// </summary>
-        private void ExitApplication(object sender, System.ComponentModel.CancelEventArgs e) => Application.Current.Shutdown();
+        private void CloseApplicationClicked(object sender, System.ComponentModel.CancelEventArgs e) => _mainWindow.Show();
     }
 }

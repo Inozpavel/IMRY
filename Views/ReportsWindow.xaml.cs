@@ -52,13 +52,13 @@ namespace WorkReportCreator
         /// <param name="sender"></param>
         private void ShowWorkAndStudentInformation(object sender)
         {
-            Hide();
+            Close();
             _informationPage.Show();
         }
 
         /// <summary>
         /// Завершает работу приложения
         /// </summary>
-        private void ExitApplication(object sender, System.ComponentModel.CancelEventArgs e) => Application.Current.Shutdown();
+        private void CloseApplicationClicked(object sender, System.ComponentModel.CancelEventArgs e) => _informationPage.Show();
     }
 }

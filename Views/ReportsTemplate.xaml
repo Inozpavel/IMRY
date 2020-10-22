@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         
-        Title="WorksReportCreator" Height="450" Width="800" Background="#FF191A1B" WindowStartupLocation="CenterScreen" Closing="ShowMainWindow" MinHeight="273" MinWidth="720" FontFamily="Verdana">
+        Title="WorksReportCreator" Height="450" Width="800" Background="#FF191A1B" WindowStartupLocation="CenterScreen" Closing="CloseApplicationClicked" MinHeight="273" MinWidth="720" FontFamily="Verdana">
     <Grid>
         <Grid.Resources>
             <Style TargetType="RadioButton">
