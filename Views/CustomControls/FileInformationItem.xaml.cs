@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -113,7 +114,7 @@ namespace WorkReportCreator.Views
             set
             {
                 SetValue(FilePathProperty, value);
-                FileName = Regex.Match(value, @"(\w+\.[\w]+)+$").Value;
+                FileName = new FileInfo(value).Name;
                 HintVisibility = string.IsNullOrEmpty(FilePath) == false ? Visibility.Hidden : Visibility.Visible;
                 OnPropertyChanged();
             }
