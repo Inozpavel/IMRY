@@ -93,5 +93,10 @@ namespace WorkReportCreator
         /// Открывает папки с приложением
         /// </summary>
         private void OpenApplicationFolder(object sender, RoutedEventArgs e) => Process.Start(Directory.GetCurrentDirectory());
+
+        /// <summary>
+        /// Открывает в браузере репозиторий проекта
+        /// </summary>
+        private void OpenRepositoryInBrowser(object sender, RoutedEventArgs e) => Process.Start("https://github.com/Inozpavel/IMRY");
     }
 }

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="WorkReportCreator" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Background="#FF191A1B">
+        Title="IMRY" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Background="#FF191A1B">
     <Grid Width="280">
 
         <Grid.Resources>
@@ -25,9 +25,9 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Image Grid.Row="0" Source="../ImageIcon.ico" VerticalAlignment="Center" HorizontalAlignment="Center" Height="160" Margin="0 10 0 0"/>
+        <Image Grid.Row="0" Source="../AppIcon.png" VerticalAlignment="Center" HorizontalAlignment="Center" Height="160" Margin="0 10 0 0"/>
         <Button Grid.Row="1" Content="Создать отчет" Click="ShowWindowReportsSelect" Margin="10 10 10 5" Style="{StaticResource CommonAnimatedButton}"/>
-        <Button Grid.Row="2" Content="Открыть файл с отчетом" Click="LoadReport" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
+        <Button Grid.Row="2" IsEnabled="False" Content="Открыть файл с отчетом" Click="LoadReport" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
         <Button Grid.Row="3" Content="Создать шаблон" Click="ShowWindowReportTemplate" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
         <Button Grid.Row="4" Content="Изменить шаблон" Click="LoadWindowReportTemplate" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
         <Grid Grid.Row="5" Height="40">
@@ -35,6 +35,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
@@ -48,7 +49,11 @@
             <Button Grid.Column="3" HorizontalAlignment="Right" IsEnabled="False" Opacity="0.2" Margin="0 0 2 2" Style="{StaticResource ImageButtonStyle}">
                 <Image Source="/Images/Settings.png" Margin="3" VerticalAlignment="Center"/>
             </Button>
-            
+
+            <Button Grid.Column="4" HorizontalAlignment="Right" Margin="0 0 2 2" Style="{StaticResource ImageButtonStyle}" Click="OpenRepositoryInBrowser">
+                <Image Source="/Images/GitHub.png" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Button>
+
         </Grid>
         
     </Grid>

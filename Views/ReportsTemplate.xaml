@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         
-        Title="WorksReportCreator" Height="450" Width="800" Background="#FF191A1B" WindowStartupLocation="CenterScreen" Closing="CloseApplicationClicked" MinHeight="273" MinWidth="720" FontFamily="Verdana">
+        Title="IMRY" Height="450" Width="800" Background="#FF191A1B" WindowStartupLocation="CenterScreen" Closing="CloseApplicationClicked" MinHeight="273" MinWidth="720" FontFamily="Verdana">
     <Grid>
         <Grid.Resources>
             <Style TargetType="RadioButton">
@@ -186,7 +186,7 @@
                                 
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBox TextWrapping="Wrap" Margin="5 1 5 1" HorizontalAlignment="Stretch" Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextDarkTextBox}"/>
+                                        <TextBox Margin="5 1 5 1" HorizontalAlignment="Stretch" Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextDarkTextBox}"/>
                                     </DataTemplate>
                                 
                                 </ListBox.ItemTemplate>

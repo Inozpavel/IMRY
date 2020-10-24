@@ -4,6 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="WorksReporsCreator" WindowStartupLocation="CenterScreen" Background="#FF191A1B" SizeToContent="Height" Closing="CloseApplicationClicked" FontFamily="Verdana">
+        Title="IMRY" WindowStartupLocation="CenterScreen" Background="#FF191A1B" SizeToContent="Height" Closing="CloseApplicationClicked" FontFamily="Verdana">
     <TabControl Background="#FF1E1E1E" ItemsSource="{Binding TabItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 </Window>
