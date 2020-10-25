@@ -5,10 +5,10 @@ namespace WorkReportCreator
 {
     public class StudentInformation : INotifyPropertyChanged
     {
-        private string _secondName;
-        private string _firstName;
-        private string _middleName;
-        private string _group;
+        private string _secondName = "";
+        private string _firstName = "";
+        private string _middleName = "";
+        private string _group = "";
 
         /// <summary>
         /// Фамилия студента

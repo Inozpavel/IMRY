@@ -186,28 +186,28 @@ namespace WorkReportCreator.ViewModels.Commands
         private void SaveStudentInformation(object sender, PropertyChangedEventArgs e)
         {
             MainParams mainParams = new MainParams();
-            if (File.Exists(mainParams.UserDataFileName))
+            try
             {
-                try
+                File.WriteAllText(mainParams.UserDataFileName, JsonConvert.SerializeObject(Student, Formatting.Indented));
+                mainParams.UserDataFileName = mainParams.UserDataFileName;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                if (MessageBox.Show("У файла установлен атрибут \"Только чтение\"\nНе получилось перезаписать его!\nСнять с него этот атрибут?",
+                    "Ошибка", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.Yes)
                 {
+                    File.SetAttributes(mainParams.UserDataFileName, FileAttributes.Normal);
                     File.WriteAllText(mainParams.UserDataFileName, JsonConvert.SerializeObject(Student, Formatting.Indented));
-                    mainParams.UserDataFileName = mainParams.UserDataFileName;
                 }
-                catch (UnauthorizedAccessException)
+                else
                 {
-                    if (MessageBox.Show("У файла установлен атрибут \"Только чтение\"\nНе получилось перезаписать его!\nСнять с него этот атрибут?",
-                        "Ошибка", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.Yes)
-                    {
-                        File.SetAttributes(mainParams.UserDataFileName, FileAttributes.Normal);
-                        File.WriteAllText(mainParams.UserDataFileName, JsonConvert.SerializeObject(Student, Formatting.Indented));
-                    }
-                    else
-                    {
-                        MessageBox.Show("Не получилось сохранить информацию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                        mainParams.UserDataFileName = "";
-                        SaveStatus = "Сохранить информацию о студенте";
-                    }
+                    MessageBox.Show("Не получилось сохранить информацию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    mainParams.UserDataFileName = "";
+                    SaveStatus = "Сохранить информацию о студенте";
                 }
+            }
+            catch(Exception)
+            {
             }
         }
 
