@@ -237,6 +237,8 @@ namespace WorkReportCreator
         /// </summary>
         public void SwapDownSelectedFileInfo(object sender) => SwapAdjacentItemWithSelected(+1);
 
+        #region ReportGeneration
+
         /// <summary>
         /// Cоздает отчет для работы
         /// </summary>
@@ -443,10 +445,8 @@ namespace WorkReportCreator
                 try
                 {
                     BitmapImage image = new BitmapImage(new Uri(fileInformation.FilePath));
-                    if (string.IsNullOrEmpty(fileInformation.FileDescription) == false)
-                        paragraphs.Add((fileInformation.FileDescription, 10, "normal"));
-
-                    paragraphs.Add(("{{image source=\"" + fileInformation.FilePath + "\"}}", 10, "normal"));
+                    string name = string.IsNullOrEmpty(fileInformation.FileDescription) ? "" : ",name=\"" + fileInformation.FileDescription + "\"";
+                    paragraphs.Add(("{{image source=\"" + fileInformation.FilePath + "\"" + name + "}}", 10, "normal"));
                 }
                 catch (Exception)
                 {
@@ -483,22 +483,28 @@ namespace WorkReportCreator
                     var matches = Regex.Matches(paragraphs[i], "{{\\s*image\\s+" + sourcePattern + "(,?\\s*" + namePattern + ")?}}").Cast<Match>().Select(x => x.Value).ToList();
                     foreach (string image in matches)
                     {
-                        string imagePath = Regex.Match(Regex.Match(image, sourcePattern).Value, "\".+\"").Value.Trim('"');
-                        string imageName = Regex.Match(Regex.Match(image, namePattern).Value, "\".+\"").Value.Trim('"');
-                        Paragraph paragraph = document.InsertParagraph();
+                        try
+                        {
+                            string imagePath = Regex.Match(Regex.Match(image, sourcePattern).Value, "\".+\"").Value.Trim('"');
+                            if (string.IsNullOrEmpty(imagePath) || File.Exists(imagePath) == false)
+                                continue;
+                            string imageName = Regex.Match(Regex.Match(image, namePattern).Value, "\".+\"").Value.Trim('"');
+                            Paragraph paragraph = document.InsertParagraph();
 
-                        document.RemoveParagraphAt(document.Paragraphs.Count - 1);
-                        paragraph.AppendPicture(document.AddImage(imagePath).CreatePicture());
-                        if (string.IsNullOrEmpty(imagePath) == false)
-                            paragraph.AppendLine(imageName).FontSize(12).Font("Times New Roman");
+                            document.RemoveParagraphAt(document.Paragraphs.Count - 1);
+                            paragraph.AppendPicture(document.AddImage(imagePath).CreatePicture());
 
-                        paragraph.Alignment = Alignment.center;
-                        paragraph.AppendBookmark("SEQ Рис. \\* ARABIC");
+                            paragraph.AppendLine("Рис. " + (imagesCount + 1) + " " + (string.IsNullOrEmpty(imageName) ? "" : imageName)).FontSize(12).Font("Times New Roman");
 
-                        document.Paragraphs[i + imagesCount].InsertParagraphAfterSelf(paragraph);
+                            paragraph.Alignment = Alignment.center;
+                            document.Paragraphs[i + imagesCount].InsertParagraphAfterSelf(paragraph);
 
-                        document.ReplaceText(image, "");
-                        imagesCount++;
+                            document.ReplaceText(image, "");
+                            imagesCount++;
+                        }
+                        catch (Exception)
+                        {
+                        }
                     }
                 }
             }
@@ -525,6 +531,8 @@ namespace WorkReportCreator
             }
             return index;
         }
+
+        #endregion
 
         /// <summary>
         /// Обменивает ближайший элемент с выбранным
