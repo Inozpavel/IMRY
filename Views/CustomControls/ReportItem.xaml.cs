@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using WorkReportCreator.Models;
 using WorkReportCreator.Views;
-using Xceed.Words.NET;
 
 namespace WorkReportCreator
 {
@@ -40,52 +39,13 @@ namespace WorkReportCreator
         }
 
         /// <summary>
-        /// Cоздает отчет для работы
+        /// Создает отчет для выбранной работы
         /// </summary>
-        public void GenerateReport(object sender, RoutedEventArgs e)
+        /// <exception cref="Exception"/>
+        public void GenerateReport()
         {
-            try
-            {
-                var reportName = (Parent as TabItem).Header.ToString().Trim().TrimEnd(".".ToCharArray());
-                MainParams mainParams = new MainParams();
-
-                DocX document;
-                if (mainParams.WorkHasTitlePage)
-                    document = GenerateTitlePage();
-                else
-                    document = DocX.Create("./Configs/EmptyDocument.docs");
-
-                if (Directory.Exists(mainParams.AllReportsPath) == false)
-                    Directory.CreateDirectory(mainParams.AllReportsPath);
-
-                document.SaveAs($"{mainParams.AllReportsPath}/Отчет {reportName}.docx");
-            }
-            catch (IOException)
-            {
-                MessageBox.Show("Не получилось сохранить отчет!\nВозможно, вы не закрыли файл с титульником.\n", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        /// <summary>
-        /// Создает титульник для отчета
-        /// </summary>
-        /// <returns><see cref="DocX"/> - Титульник</returns>
-        private DocX GenerateTitlePage()
-        {
-            MainParams mainParams = new MainParams();
-
-            var titlePageParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(mainParams.WorkTitlePageParamsFilePath));
-
-            StudentInformation student = _page.Student;
-            titlePageParams.Add("Group", student.Group);
-            titlePageParams.Add("StudentFullName", string.Join(" ", student.SecondName, student.FirstName, student.MiddleName));
-
-            DocX doc = DocX.Load(mainParams.WorkTitlePageFilePath);
-            foreach (string key in titlePageParams.Keys)
-            {
-                doc.ReplaceText($"{{{{{key}}}}}", $"{titlePageParams[key]}");
-            }
-            return doc;
+            string reportName = (Parent as TabItem).Header.ToString().Trim().TrimEnd(".".ToCharArray());
+            _model.GenerateReport(reportName);
         }
 
         /// <summary>
@@ -107,6 +67,7 @@ namespace WorkReportCreator
                     "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+            bool shouldAddAll = permittedExtentions.Contains("*");
             bool allFilesIsFilePath = files.All(path => Directory.Exists(path) == false);
             bool allFilesIsDirectoryPath = files.All(path => Directory.Exists(path));
 
@@ -117,19 +78,14 @@ namespace WorkReportCreator
                     if (MessageBox.Show(
                 "Вы выбрали не только файлы, но и папки!\nХотите осуществить поиск файлов в папках рекурсивно?", "Внимание!",
                     MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
-                    {
-                        RecursiveAddFile(files.ToList(), permittedExtentions);
-                    }
+                        RecursiveAddFile(files.ToList(), permittedExtentions, shouldAddAll);
                 }
                 else
-                {
-                    RecursiveAddFile(files.ToList(), permittedExtentions);
-                }
+                    RecursiveAddFile(files.ToList(), permittedExtentions, shouldAddAll);
             }
             else
-            {
-                AddFilePaths(files.ToList(), permittedExtentions);
-            }
+                AddFilePaths(files.ToList(), permittedExtentions, shouldAddAll);
+
             ChangeImageToTakenIn(this, null);
         }
 
@@ -138,11 +94,13 @@ namespace WorkReportCreator
         /// </summary>
         /// <param name="filePaths">Список путей файлов</param>
         /// <param name="permittedExtentions">Список разрешенных расширений</param>
-        private void AddFilePaths(List<string> filePaths, List<string> permittedExtentions)
+        private void AddFilePaths(List<string> filePaths, List<string> permittedExtentions, bool shouldAddAll)
         {
             foreach (string filePath in filePaths)
             {
-                if (CheckFileExtentionIsPermitted(filePath, permittedExtentions) &&
+                if (shouldAddAll && _model.FilesArray.Select(x => x.Content as FileInformationItem).Select(x => x.FilePath).ToList().Contains(filePath) == false)
+                    _model.AddNewFileInfoWithFilePath(filePath);
+                else if ((shouldAddAll || CheckFileExtentionIsPermitted(filePath, permittedExtentions)) &&
                     _model.FilesArray.Select(x => x.Content as FileInformationItem).Select(x => x.FilePath).ToList().Contains(filePath) == false)
                     _model.AddNewFileInfoWithFilePath(filePath);
             }
@@ -153,20 +111,19 @@ namespace WorkReportCreator
         /// </summary>
         /// <param name="filePaths">Список путей файлов</param>
         /// <param name="permittedExtentions">Список разрешенных расширений</param>
-        private void RecursiveAddFile(List<string> paths, List<string> permittedExtentions)
+        private void RecursiveAddFile(List<string> paths, List<string> permittedExtentions, bool shouldAddAll)
         {
             foreach (var name in paths)
             {
                 if (Directory.Exists(name))
                 {
-                    var internalNames = Directory.GetFiles(name, "*.*", SearchOption.AllDirectories)
-                         .Where(x => CheckFileExtentionIsPermitted(x, permittedExtentions)).ToList();
-                    AddFilePaths(internalNames, permittedExtentions);
+                    var internalNames = Directory.GetFiles(name, "*.*", SearchOption.AllDirectories).ToList();
+                    if (shouldAddAll == false)
+                        internalNames = internalNames.Where(x => CheckFileExtentionIsPermitted(x, permittedExtentions)).ToList();
+                    AddFilePaths(internalNames, permittedExtentions, shouldAddAll);
                 }
-                else if (CheckFileExtentionIsPermitted(name, permittedExtentions))
-                {
+                else if (shouldAddAll || CheckFileExtentionIsPermitted(name, permittedExtentions))
                     _model.AddNewFileInfoWithFilePath(name);
-                }
             }
         }
 
@@ -187,5 +144,26 @@ namespace WorkReportCreator
         /// Изменяет картинку на папку со вставленными файлами
         /// </summary>
         private void ChangeImageToTakenIn(object sender, DragEventArgs e) => image.Source = new BitmapImage(new Uri("/Images/FolderTakenIn.png", UriKind.Relative));
+
+
+        /// <summary>
+        /// Создает отчет для работы, показывает все ошибки
+        /// </summary>
+        private void GenerateReportClicked(object sender, RoutedEventArgs e)
+        {
+            MainParams mainParams = new MainParams();
+            try
+            {
+                GenerateReport();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, $"Ошибка! Не получилось создать отчет!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            MessageBox.Show($"Проверьте папку:\n{mainParams.AllReportsPath}", "Отчет успешно создан!",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 }
