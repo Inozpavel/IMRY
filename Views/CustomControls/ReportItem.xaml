@@ -10,7 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
@@ -23,7 +23,7 @@
             </Grid.RowDefinitions>
             
             <!--Надпись выбрано задание / нет / отсутствуют-->
-            <TextBlock Grid.Row="0" Text="{Binding DynamicTasksStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="White" HorizontalAlignment="Center" FontSize="16" Margin="0 3 0 3"/>
+            <TextBlock Grid.Row="0" Text="{Binding DynamicTasksStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" Margin="0 3 0 3"/>
 
             <!--Свернуть / развернуть блок с заданиями-->
             <ToggleButton x:Name="toggleButton" Grid.Row="0" Focusable="False" HorizontalAlignment="Right" Visibility="{Binding DynamicTasksVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -110,11 +110,11 @@
         <!--Drag & Drop область и список файлов-->
         <Grid Grid.Row="2" Background="#FF252526" ToolTip="Перетащите в эту область файлы или папки, которые хотите добавить в проект">
             
-            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding HintVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <Image x:Name="image" Height="200" AllowDrop="True" Source="/Images/FolderTakenIn.png"/>
+            <Grid Visibility="{Binding HintVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <Image x:Name="image" Height="200" AllowDrop="True" Source="/Images/FolderTakenIn.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
 
-            <ListBox AllowDrop="True" BorderThickness="3" BorderBrush="Transparent" x:Name="listBox" Height="317" Background="Transparent" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding FilesArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Grid.Row="0" Drop="AddAllFiles" DragEnter="ChangeImageToTakenOut" DragLeave="ChangeImageToTakenIn">
+            <ListBox AllowDrop="True" BorderThickness="3" BorderBrush="Transparent" x:Name="listBox" MinHeight="347" Background="Transparent" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding FilesArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="0" Drop="AddAllFiles" DragEnter="ChangeImageToTakenOut" DragLeave="ChangeImageToTakenIn" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 
                 <ListBox.Style>
                     <Style TargetType="ListBox">
@@ -166,16 +166,19 @@
 
         <!--Кнопки с сохранием данных-->
         <Border Background="#FF121212" Grid.Row="5">
-            <Grid Margin="4" >
-                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                
-                    <StackPanel.Resources>
-                        <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
-                    </StackPanel.Resources>
+            <Grid Margin="4">
 
-                    <Button IsEnabled="False" Content="Сохранить данные" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource CommonAnimatedButton}"/>
-                    <Button Content="Сгенерировать отчет" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource CommonAnimatedButton}" Click="GenerateReport"/>
-                </StackPanel>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                
+                <Grid.Resources>
+                    <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
+                </Grid.Resources>
+
+                <Button Width="250" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="False" Content="Сохранить данные" Margin="3" Style="{StaticResource CommonAnimatedButton}"/>
+                <Button Width="250" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Сгенерировать отчет" Margin="3" Style="{StaticResource CommonAnimatedButton}" Click="GenerateReportClicked"/>
             </Grid>
         </Border>
     </Grid>

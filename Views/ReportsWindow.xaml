@@ -5,5 +5,5 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="IMRY" WindowStartupLocation="CenterScreen" Background="#FF191A1B" SizeToContent="Height" Closing="CloseApplicationClicked" FontFamily="Verdana">
-    <TabControl Background="#FF1E1E1E" ItemsSource="{Binding TabItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+    <TabControl Background="#FF1E1E1E" ItemsSource="{Binding TabItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0"/>
 </Window>

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" Background="#FF252526">
-    <Grid Background="Transparent">
+    <Grid>
         <Grid.Resources>
             <Style TargetType="TextBox">
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -24,9 +24,14 @@
             </Style>
             
         </Grid.Resources>
-        <Border CornerRadius="15" BorderBrush="#FFA8B3B3" BorderThickness="1" Focusable="False">
-            <StackPanel Orientation="Vertical">
-                <Grid>
+        <Border CornerRadius="15" BorderBrush="#FFA8B3B3" BorderThickness="2" Focusable="False">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                
+                <Grid Grid.Row="0">
                     
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
@@ -43,30 +48,34 @@
                         <Ellipse Width="40" Height="40" StrokeThickness="3" Stroke="#FF14E7AE"/>
                         <TextBlock Text="{Binding Number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="20" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
-                    
-                    <ScrollViewer Width="280" Grid.Column="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" Visibility="{Binding FileNameVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <Label Content="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    </ScrollViewer>
-                    
+                    <Grid Grid.Column="1" Width="280" Visibility="{Binding FileNameVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ScrollViewer  HorizontalAlignment="Left" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+                            <Label Content="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
+                        </ScrollViewer>
+                    </Grid>
+
                     <ToggleButton Grid.Column="2" Content="Выбрать файл" Click="ChooseFile" Margin="10 0 0 0" Style="{StaticResource TiltedButton}"/>
                 
-                    <Grid Grid.Column="3">
-                        <Label x:Name="labelFilePath" Content="{Binding FilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
-                        <TextBlock Text="Полный путь до файла" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" Foreground="Gray" Visibility="{Binding HintVisibility,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    <Grid Grid.Column="3" Margin="0 0 5 0">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left">
+                            <Label x:Name="labelFilePath" Content="{Binding FilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
+                        </ScrollViewer>
+                        <TextBlock Text="Полный путь до файла" VerticalAlignment="Center" Margin="5" Foreground="Gray" Visibility="{Binding HintVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                 </Grid>
-                
-                <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Visibility="{Binding TextBoxVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Bottom" Visibility="{Binding TextBoxVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <StackPanel.Resources>
                         <ResourceDictionary Source="../Styles/CommonTextBoxStyle.xaml"/>
                     </StackPanel.Resources>
                     
                     <Label Content="Описание файла" Foreground="White"/>
-                    <TextBox Text="{Binding FileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Focusable="False" Height="auto" MinHeight="50" TextWrapping="Wrap" Margin="6 0 6 6" Style="{StaticResource CommonTextBox}"/>
-               
+                    
+                    <TextBox Text="{Binding FileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalScrollBarVisibility="Auto" Height="auto" MaxHeight="150" MinHeight="50" TextWrapping="Wrap" Margin="6 0 6 6" Style="{StaticResource CommonTextBox}"/>
+                    
                 </StackPanel>
                 
-            </StackPanel>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>
