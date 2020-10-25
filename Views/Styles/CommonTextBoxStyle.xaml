@@ -2,11 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style TargetType="TextBox" x:Key="CommonTextBox">
         <Setter Property="Margin" Value="10 3 10 3"/>
-        <Setter Property="Focusable" Value="True"/>
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="Background" Value="#FF333337"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontFamily" Value="Tahoma"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="SpellCheck.IsEnabled" Value="True"/>
+        <Setter Property="Language" Value="ru-ru"/>
     </Style>
 </ResourceDictionary>
