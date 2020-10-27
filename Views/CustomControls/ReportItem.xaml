@@ -114,7 +114,7 @@
                 <Image x:Name="image" Height="200" AllowDrop="True" Source="/Images/FolderTakenIn.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
 
-            <ListBox AllowDrop="True" BorderThickness="3" BorderBrush="Transparent" x:Name="listBox" MinHeight="347" Background="Transparent" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding FilesArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="0" Drop="AddAllFiles" DragEnter="ChangeImageToTakenOut" DragLeave="ChangeImageToTakenIn" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox AllowDrop="True" BorderThickness="3" BorderBrush="Transparent" x:Name="listBox" MinHeight="347" Background="Transparent" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding FilesArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Drop="AddAllFiles" DragEnter="ChangeImageToTakenOut" DragLeave="ChangeImageToTakenIn" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 
                 <ListBox.Style>
                     <Style TargetType="ListBox">
