@@ -10,3 +10,4 @@ InstallationFiles/Installer/Installer-cache
 *.sln
 *.user
 *.csproj
+/InstallationFiles/Installer/Сгенерированные активы
