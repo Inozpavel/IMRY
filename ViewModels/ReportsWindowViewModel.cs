@@ -115,7 +115,7 @@ namespace WorkReportCreator.ViewModels
                         MessageBox.Show("Не получилось найти папки с отчетами!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
             }
-            else if (failedPracticesReports.Count > 0 && failedLaboratoriesReports.Count == 0)
+            else if (failedPracticesReports.Count == 0 && failedLaboratoriesReports.Count >= 0)
             {
                 MessageBox.Show($"Все отчеты для практических работ успешно созданы!\n" +
                     $"При создании отчетов для лабораторных работ произошли ошибки:\n" +
