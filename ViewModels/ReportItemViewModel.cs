@@ -471,16 +471,15 @@ namespace WorkReportCreator
         private DocX InsertAllImages(DocX document)
         {
             List<string> paragraphs = document.Paragraphs.Cast<Paragraph>().Select(x => x.Text).ToList();// После вставки всех работ список изменился
-
             int imagesCount = 0;
             string sourcePattern = "source\\s*=\\s*\"[^\"]+\"";
             string namePattern = "name\\s*=\"[^\"]+\"";
             for (int i = 0; i < paragraphs.Count; i++)
             {
 
-                if (Regex.IsMatch(paragraphs[i], "{{\\s*image\\s+" + sourcePattern + "(,?\\s*" + namePattern + ")?}}"))
+                if (Regex.IsMatch(paragraphs[i], "{{\\s*image\\s+" + sourcePattern + "(,?\\s*" + namePattern + ")?\\s*}}"))
                 {
-                    var matches = Regex.Matches(paragraphs[i], "{{\\s*image\\s+" + sourcePattern + "(,?\\s*" + namePattern + ")?}}").Cast<Match>().Select(x => x.Value).ToList();
+                    var matches = Regex.Matches(paragraphs[i], "{{\\s*image\\s+" + sourcePattern + "(,?\\s*" + namePattern + ")?\\s*}}").Cast<Match>().Select(x => x.Value).ToList();
                     foreach (string image in matches)
                     {
                         try
