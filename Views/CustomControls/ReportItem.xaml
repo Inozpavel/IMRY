@@ -70,7 +70,7 @@
             </ToggleButton>
 
             <!--Выбор варианта задания-->
-            <ScrollViewer Grid.Row="1" Height="102" x:Name="tasksScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Visibility="{Binding DynamicTasksVisiblity}">
+            <ScrollViewer Grid.Row="1" Height="118" x:Name="tasksScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Visibility="{Binding DynamicTasksVisiblity}">
                 <ScrollViewer.Style>
                     <Style TargetType="ScrollViewer">
                         
