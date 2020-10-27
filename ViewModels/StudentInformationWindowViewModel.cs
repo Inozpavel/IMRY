@@ -259,6 +259,7 @@ namespace WorkReportCreator.ViewModels.Commands
                 {
                     UserDataFileName = dialog.FileName
                 };
+                SaveStudentInformation(this, null);
             }
         }
 

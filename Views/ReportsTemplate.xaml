@@ -88,13 +88,13 @@
 
                                                 <VisualState x:Name="Checked">
                                                     <Storyboard>
-                                                        <ColorAnimation To="Wheat" Duration="0:0:0:1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                        <ColorAnimation To="Wheat" Duration="0:0:0.1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
                                                     </Storyboard>
                                                 </VisualState>
 
                                                 <VisualState x:Name="Unchecked">
                                                     <Storyboard>
-                                                        <ColorAnimation To="Transparent" Duration="0:0:0:1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                        <ColorAnimation To="Transparent" Duration="0:0:0.1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
                                                     </Storyboard>
                                                 </VisualState>
 
