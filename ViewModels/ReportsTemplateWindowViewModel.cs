@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using WorkReportCreator.Models;
 using WorkReportCreator.Views;
 
@@ -39,6 +40,8 @@ namespace WorkReportCreator.ViewModels
         public Command SwapDownDescription { get; private set; }
 
         public Command RemoveDescription { get; private set; }
+
+        public Command AddImage { get; private set; }
 
         #endregion
 
@@ -263,7 +266,7 @@ namespace WorkReportCreator.ViewModels
             ChooseFile = new Command(ChooseFilePath, null);
             SwapUpElement = new Command(SwapUpSelectedItem, SwapUpCanExecute);
             SwapDownElement = new Command(SwapDownSelectedItem, SwapDownCanExecute);
-
+            AddImage = new Command(ShowDialogAddImage, null);
 
 
             AddDescription = new Command(AddNewDescription, null);
@@ -278,6 +281,29 @@ namespace WorkReportCreator.ViewModels
             WorksButtons.CollectionChanged += (sender, e) => ReportInformationVisibility = WorksButtons.Any(x => x.IsChecked ?? false) ? Visibility.Visible : Visibility.Collapsed;
 
             ReportInformationVisibility = Visibility.Collapsed;
+        }
+
+        private void ShowDialogAddImage(object sender)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog()
+            {
+                Title = "Выберите файл с изображением. Ссылка не него будет скопирована в буфер обмена.",
+                Filter = "Изображения (*.jpg, *.png, *.bmp, *.jpeg)|*.jpg; *.png; *.bmp; *.jpeg",
+            };
+            if (fileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    Uri uri = new Uri(fileDialog.FileName);
+                    BitmapImage image = new BitmapImage(uri);
+                    Clipboard.SetText("{{image source=\"" + uri.MakeRelativeUri(new Uri(Directory.GetCurrentDirectory())) + "\", source=\"\"}}");
+                }
+                catch(Exception)
+                {
+                    MessageBox.Show("Не получилось обработать картинку!");
+                }
+            }
+
         }
 
         /// <summary>
