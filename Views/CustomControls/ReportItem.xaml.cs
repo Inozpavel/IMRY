@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -145,7 +146,6 @@ namespace WorkReportCreator
         /// </summary>
         private void ChangeImageToTakenIn(object sender, DragEventArgs e) => image.Source = new BitmapImage(new Uri("/Images/FolderTakenIn.png", UriKind.Relative));
 
-
         /// <summary>
         /// Создает отчет для работы, показывает все ошибки
         /// </summary>
@@ -161,9 +161,15 @@ namespace WorkReportCreator
                 MessageBox.Show(exception.Message, $"Ошибка! Не получилось создать отчет!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+            if (MessageBox.Show($"Открыть папку с отчетами?", "Отчет успешно создан!",
+                MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No) == MessageBoxResult.Yes)
+            {
+                if (Directory.Exists(mainParams.AllReportsPath))
+                    Process.Start(Directory.GetCurrentDirectory() + mainParams.AllReportsPath);
+                else
+                    MessageBox.Show("Не получилось найти папки с отчетами!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
 
-            MessageBox.Show($"Проверьте папку:\n{mainParams.AllReportsPath}", "Отчет успешно создан!",
-                MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

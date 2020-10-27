@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -86,6 +87,7 @@ namespace WorkReportCreator.ViewModels
         {
             List<int> failedPracticesReports = new List<int>();
             List<int> failedLaboratoriesReports = new List<int>();
+
             for (int i = 1; i < TabItems.Count; i++)
             {
                 string name = TabItems[i].Header as string;
@@ -100,8 +102,19 @@ namespace WorkReportCreator.ViewModels
                     list.Add(i);
                 }
             }
+
             if (failedLaboratoriesReports.Count == 0 && failedPracticesReports.Count == 0)
-                MessageBox.Show("Все отчеты успешно созданы!", "Поздравляю!", MessageBoxButton.OK, MessageBoxImage.Information);
+            {
+                if (MessageBox.Show($"Все отчеты успешно созданы!\nОткрыть папку с отчетами?", "Поздравляю!",
+               MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No) == MessageBoxResult.Yes)
+                {
+                    MainParams mainParams = new MainParams();
+                    if (Directory.Exists(mainParams.AllReportsPath))
+                        Process.Start(Directory.GetCurrentDirectory() + mainParams.AllReportsPath);
+                    else
+                        MessageBox.Show("Не получилось найти папки с отчетами!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
+            }
             else if (failedPracticesReports.Count > 0 && failedLaboratoriesReports.Count == 0)
             {
                 MessageBox.Show($"Все отчеты для практических работ успешно созданы!\n" +
