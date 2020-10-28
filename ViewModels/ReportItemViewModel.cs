@@ -492,8 +492,18 @@ namespace WorkReportCreator
                             Paragraph paragraph = document.InsertParagraph();
 
                             document.RemoveParagraphAt(document.Paragraphs.Count - 1);
-                            paragraph.AppendPicture(document.AddImage(imagePath).CreatePicture());
 
+                            var insertedImage = document.AddImage(imagePath).CreatePicture();
+                            
+                            float maxWidth = document.PageWidth - 150;
+                            if (insertedImage.Width > maxWidth)
+                            {
+                                float aspectRatio = insertedImage.Height / insertedImage.Width;
+                                insertedImage.Width = maxWidth;
+                                insertedImage.Height = maxWidth * aspectRatio;
+                            }
+
+                            paragraph.AppendPicture(insertedImage);
                             paragraph.AppendLine("Рис. " + (imagesCount + 1) + " " + (string.IsNullOrEmpty(imageName) ? "" : imageName)).FontSize(12).Font("Times New Roman");
 
                             paragraph.Alignment = Alignment.center;
