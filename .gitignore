@@ -11,3 +11,4 @@ InstallationFiles/Installer/Installer-cache
 *.user
 *.csproj
 /InstallationFiles/Installer/Сгенерированные активы
+/InstallationFiles/Installer/Build_MSIX_APPXSetupFiles
