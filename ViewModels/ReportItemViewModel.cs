@@ -330,6 +330,7 @@ namespace WorkReportCreator
                 document.ReplaceText("{{WorkType}}", $"{(Regex.IsMatch(reportName, "пр|Пр") ? "Практическая работа" : "Лабораторная работа")}");
                 document.ReplaceText("{{WorkNumber}}", $"{Regex.Match(reportName, @"\d+").Value}");
                 document.ReplaceText("{{WorkName}}", $"{task.Name}");
+                document.ReplaceText("{{TheoryPart}}", $"{task.TheoryPart}");
                 document.ReplaceText("{{WorkTarget}}", $"{task.WorkTarget}");
                 document.ReplaceText("{{CommonTask}}", $"{task.CommonTask}");
             }
@@ -337,7 +338,6 @@ namespace WorkReportCreator
             {
                 throw new Exception("Не удалось вставить в документ информацию о работе!");
             }
-
             return document;
         }
 
@@ -431,12 +431,13 @@ namespace WorkReportCreator
             if (userFilesParagraphIndex == -1)
                 return document;
 
+            document.RemoveParagraphAt(userFilesParagraphIndex); //Удаляем надпись {{UserFiles}}
+            userFilesParagraphIndex--;
+
             var selectedFiles = FilesArray.Select(x => x.Content as FileInformationItem).ToList();
             if (selectedFiles.Count > 0 == false)
                 return document;
 
-            document.RemoveParagraphAt(userFilesParagraphIndex); //Удаляем надпись {{UserFiles}}
-            userFilesParagraphIndex--;
             List<(string text, int fontSize, string style)> paragraphs = new List<(string, int, string)>();
 
 
