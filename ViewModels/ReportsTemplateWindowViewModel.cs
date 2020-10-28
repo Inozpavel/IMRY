@@ -296,7 +296,10 @@ namespace WorkReportCreator.ViewModels
                 {
                     Uri uri = new Uri(fileDialog.FileName);
                     BitmapImage image = new BitmapImage(uri);
-                    Clipboard.SetText("{{image source=\"" + uri.MakeRelativeUri(new Uri(Directory.GetCurrentDirectory())) + "\", source=\"\"}}");
+                    string relativePath = new Uri(Directory.GetCurrentDirectory()).MakeRelativeUri(uri).ToString();
+                    List<string> splittedPath = relativePath.Split('/').Skip(1).ToList();
+                    splittedPath.Insert(0, ".");
+                    Clipboard.SetText("{{image source=\"" + string.Join("/", splittedPath) + "\", name=\"\"}}");
                 }
                 catch(Exception)
                 {

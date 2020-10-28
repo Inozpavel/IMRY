@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -474,7 +475,7 @@ namespace WorkReportCreator
             List<string> paragraphs = document.Paragraphs.Cast<Paragraph>().Select(x => x.Text).ToList();// После вставки всех работ список изменился
             int imagesCount = 0;
             string sourcePattern = "source\\s*=\\s*\"[^\"]+\"";
-            string namePattern = "name\\s*=\"[^\"]+\"";
+            string namePattern = "name\\s*=\"[^\"]*\"";
             for (int i = 0; i < paragraphs.Count; i++)
             {
 
@@ -486,9 +487,11 @@ namespace WorkReportCreator
                         try
                         {
                             string imagePath = Regex.Match(Regex.Match(image, sourcePattern).Value, "\".+\"").Value.Trim('"');
+                            imagePath = imagePath.Replace('\\','/');
                             if (string.IsNullOrEmpty(imagePath) || File.Exists(imagePath) == false)
                                 continue;
-                            string imageName = Regex.Match(Regex.Match(image, namePattern).Value, "\".+\"").Value.Trim('"');
+                           
+                            string imageName = Regex.Match(Regex.Match(image, namePattern).Value, "\".*\"").Value.Trim('"');
                             Paragraph paragraph = document.InsertParagraph();
 
                             document.RemoveParagraphAt(document.Paragraphs.Count - 1);
