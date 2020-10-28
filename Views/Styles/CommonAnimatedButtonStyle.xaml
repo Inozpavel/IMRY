@@ -6,19 +6,27 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
 
-                    <Border CornerRadius="10" BorderBrush="White" BorderThickness="2" Background="#FF191A1B" Height="50">
+                    <Border x:Name="border" CornerRadius="10" BorderBrush="White" BorderThickness="2" Opacity="0.2" Background="#FF191A1B" Height="50">
                         <Label x:Name="label" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFBAC3C3" FontSize="15" FontFamily="Verdana"/>
                         
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                
-                                <VisualState x:Name="Disabled">
+
+                                <VisualState x:Name="Normal">
                                     <Storyboard>
-                                        <DoubleAnimation To="0.2" Duration="0:0:0.8" Storyboard.TargetProperty="Opacity"/>
+                                        <DoubleAnimation To="1" Duration="0:0:0.8" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="border"/>
                                     </Storyboard>
                                 </VisualState>
                                 
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimation To="0.2" Duration="0:0:0.8" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="border"/>
+                                    </Storyboard>
+                                </VisualState>
+
                             </VisualStateGroup>
+                            
+                            
                         </VisualStateManager.VisualStateGroups>
                         
                     </Border>
