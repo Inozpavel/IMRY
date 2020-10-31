@@ -1,29 +1,33 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace WorkReportCreator.Models
 {
-    internal class MainParams
+    public class MainParams : INotifyPropertyChanged
     {
         private bool _workHasTitlePage = false;
 
-        private string _workTitlePageFilePath = "./Configs/TitlePage.docx";
+        private string _workTitlePageFilePath = "";
 
         private bool _workHasTitlePageParams = false;
 
-        private string _workTitlePageParamsFilePath = "./Configs/TitlePageParams.json";
+        private string _workTitlePageParamsFilePath = "";
 
-        private string _permittedDragAndDropExtentionsFilePath = "./Configs/PermittedDragAndDropExtentions.json";
+        private string _permittedDragAndDropExtentionsFilePath = "";
 
-        private string _currentTemplateFilePath = "./Configs/JavaTasks.json";
+        private string _currentTemplateFilePath = "";
 
-        private string _userDataFileName = "";
+        private string _userDataFilePath = "";
 
         private string _allReportsPath = "./Reports/";
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #region Properties
 
@@ -36,6 +40,7 @@ namespace WorkReportCreator.Models
             set
             {
                 _workHasTitlePage = value;
+                OnPropertyChanged();
                 TrySave();
             }
         }
@@ -49,6 +54,7 @@ namespace WorkReportCreator.Models
             set
             {
                 _workTitlePageFilePath = value;
+                OnPropertyChanged();
                 TrySave();
             }
         }
@@ -62,6 +68,7 @@ namespace WorkReportCreator.Models
             set
             {
                 _workHasTitlePageParams = value;
+                OnPropertyChanged();
                 TrySave();
             }
         }
@@ -75,6 +82,7 @@ namespace WorkReportCreator.Models
             set
             {
                 _workTitlePageParamsFilePath = value;
+                OnPropertyChanged();
                 TrySave();
             }
         }
@@ -88,6 +96,7 @@ namespace WorkReportCreator.Models
             set
             {
                 _permittedDragAndDropExtentionsFilePath = value;
+                OnPropertyChanged();
                 TrySave();
             }
         }
@@ -101,6 +110,7 @@ namespace WorkReportCreator.Models
             set
             {
                 _currentTemplateFilePath = value;
+                OnPropertyChanged();
                 TrySave();
             }
         }
@@ -108,12 +118,13 @@ namespace WorkReportCreator.Models
         /// <summary>
         /// Путь, по которому программа будет пытаться подгрузить информацию о пользователе
         /// </summary>
-        public string UserDataFileName
+        public string UserDataFilePath
         {
-            get => _userDataFileName;
+            get => _userDataFilePath;
             set
             {
-                _userDataFileName = value;
+                _userDataFilePath = value;
+                OnPropertyChanged();
                 TrySave();
             }
         }
@@ -127,6 +138,7 @@ namespace WorkReportCreator.Models
             set
             {
                 _allReportsPath = value;
+                OnPropertyChanged();
                 TrySave();
             }
         }
@@ -137,17 +149,13 @@ namespace WorkReportCreator.Models
         {
             var parameters = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
             _workHasTitlePage = bool.Parse(parameters["WorkHasTitlePage"]);
-            if (_workHasTitlePage)
-            {
-                _workTitlePageFilePath = parameters["WorkTitlePageFilePath"];
-                _workHasTitlePageParams = bool.Parse(parameters["WorkHasTitlePageParams"]);
-                if (_workHasTitlePageParams)
-                    _workTitlePageParamsFilePath = parameters["WorkTitlePageParamsFilePath"];
-            }
+            _workTitlePageFilePath = parameters["WorkTitlePageFilePath"];
+            _workHasTitlePageParams = bool.Parse(parameters["WorkHasTitlePageParams"]);
+            _workTitlePageParamsFilePath = parameters["WorkTitlePageParamsFilePath"];
             _permittedDragAndDropExtentionsFilePath = parameters["PermittedDragAndDropExtentionsFilePath"];
             _currentTemplateFilePath = parameters["CurrentTemplateFilePath"];
-            if (parameters.Keys.Contains("UserDataFileName"))
-                _userDataFileName = parameters["UserDataFileName"];
+            if (parameters.Keys.Contains("UserDataFilePath"))
+                _userDataFilePath = parameters["UserDataFilePath"];
             _allReportsPath = parameters["AllReportsPath"];
         }
 
@@ -173,11 +181,11 @@ namespace WorkReportCreator.Models
                     return;
                 }
 
-                foreach (var param in globalParams.Keys.Where(x => x.Contains("FilePath")))
+                foreach (var param in globalParams.Keys.Where(x => x.Contains("FilePath") && x != "UserDataFilePath"))
                 {
                     if (File.Exists(globalParams[param]) == false)
                     {
-                        MessageBox.Show($"Ошибка в параметре {param},\nфайла {globalParams[param]} не существует!\nОн необходим для работы приложения!\nПроверьть его корректность",
+                        MessageBox.Show($"Ошибка в параметре {param},\nфайл {globalParams[param]} не существует!\nОн необходим для работы приложения!\nПроверьть его корректность",
                             "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                         Application.Current.Shutdown();
                         return;
@@ -205,5 +213,7 @@ namespace WorkReportCreator.Models
                 return false;
             }
         }
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
