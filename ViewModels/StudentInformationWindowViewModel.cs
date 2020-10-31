@@ -142,7 +142,7 @@ namespace WorkReportCreator.ViewModels.Commands
             ShowReportsPage = new Command(LoadReportsPage, null);
 
             MainParams mainParams = new MainParams();
-            LoadStudent(mainParams.UserDataFileName);
+            LoadStudent(mainParams.UserDataFilePath);
 
             ResourceDictionary dictionaryWithTiltedButton = new ResourceDictionary() { Source = new Uri("/Views/Styles/TiltedButtonStyle.xaml", UriKind.Relative) };
             ResourceDictionary dictionaryWithNumberToggleButton = new ResourceDictionary() { Source = new Uri("/Views/Styles/NumberToggleButtonStyle.xaml", UriKind.Relative) };
@@ -180,7 +180,7 @@ namespace WorkReportCreator.ViewModels.Commands
             PracticesVisibility = PracticalWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
             LaboratoriesVisibility = LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
             WorksSelectVisibility = PracticalWorksButtons.Count > 1 || LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
-            SaveStatus = string.IsNullOrEmpty(mainParams.UserDataFileName) ? "Сохранить информацию о студенте" : "Автосохранение включено";
+            SaveStatus = string.IsNullOrEmpty(mainParams.UserDataFilePath) ? "Сохранить информацию о студенте" : "Автосохранение включено";
         }
 
         private void SaveStudentInformation(object sender, PropertyChangedEventArgs e)
@@ -188,25 +188,25 @@ namespace WorkReportCreator.ViewModels.Commands
             MainParams mainParams = new MainParams();
             try
             {
-                File.WriteAllText(mainParams.UserDataFileName, JsonConvert.SerializeObject(Student, Formatting.Indented));
-                mainParams.UserDataFileName = mainParams.UserDataFileName;
+                File.WriteAllText(mainParams.UserDataFilePath, JsonConvert.SerializeObject(Student, Formatting.Indented));
+                mainParams.UserDataFilePath = mainParams.UserDataFilePath;
             }
             catch (UnauthorizedAccessException)
             {
                 if (MessageBox.Show("У файла установлен атрибут \"Только чтение\"\nНе получилось перезаписать его!\nСнять с него этот атрибут?",
                     "Ошибка", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.Yes)
                 {
-                    File.SetAttributes(mainParams.UserDataFileName, FileAttributes.Normal);
-                    File.WriteAllText(mainParams.UserDataFileName, JsonConvert.SerializeObject(Student, Formatting.Indented));
+                    File.SetAttributes(mainParams.UserDataFilePath, FileAttributes.Normal);
+                    File.WriteAllText(mainParams.UserDataFilePath, JsonConvert.SerializeObject(Student, Formatting.Indented));
                 }
                 else
                 {
                     MessageBox.Show("Не получилось сохранить информацию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    mainParams.UserDataFileName = "";
+                    mainParams.UserDataFilePath = "";
                     SaveStatus = "Сохранить информацию о студенте";
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
             }
         }
@@ -257,7 +257,7 @@ namespace WorkReportCreator.ViewModels.Commands
             {
                 MainParams mainParams = new MainParams
                 {
-                    UserDataFileName = dialog.FileName
+                    UserDataFilePath = dialog.FileName
                 };
                 SaveStudentInformation(this, null);
             }
@@ -296,7 +296,7 @@ namespace WorkReportCreator.ViewModels.Commands
                 Title = "Загрузка информации о студенте",
                 Filter = "JSON файлы (*.json)|*.json|Все файлы (*.*)|*.*",
                 DefaultExt = "json",
-                FileName = mainParams.UserDataFileName
+                FileName = mainParams.UserDataFilePath
             };
 
             if (dialog.ShowDialog() == true)
@@ -306,7 +306,7 @@ namespace WorkReportCreator.ViewModels.Commands
                     MessageBox.Show("Не получилось загрузить данные из файла", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return;
                 }
-                mainParams.UserDataFileName = dialog.FileName;
+                mainParams.UserDataFilePath = dialog.FileName;
                 SaveStatus = "Автосохранение включено";
             }
         }

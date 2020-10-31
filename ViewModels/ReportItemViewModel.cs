@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -290,7 +289,7 @@ namespace WorkReportCreator
             StudentInformation student;
             try
             {
-                student = JsonConvert.DeserializeObject<StudentInformation>(File.ReadAllText(mainParams.UserDataFileName));
+                student = JsonConvert.DeserializeObject<StudentInformation>(File.ReadAllText(mainParams.UserDataFilePath));
             }
             catch (Exception)
             {
@@ -331,7 +330,7 @@ namespace WorkReportCreator
                 document.ReplaceText("{{WorkType}}", $"{(Regex.IsMatch(reportName, "пр|Пр") ? "Практическая работа" : "Лабораторная работа")}");
                 document.ReplaceText("{{WorkNumber}}", $"{Regex.Match(reportName, @"\d+").Value}");
                 document.ReplaceText("{{WorkName}}", $"{task.Name}");
-                document.ReplaceText("{{TheoryPart}}", $"{task.TheoryPart}");
+                document.ReplaceText("{{WorkTheoryPart}}", $"{task.TheoryPart}");
                 document.ReplaceText("{{WorkTarget}}", $"{task.WorkTarget}");
                 document.ReplaceText("{{CommonTask}}", $"{task.CommonTask}");
             }
@@ -487,17 +486,17 @@ namespace WorkReportCreator
                         try
                         {
                             string imagePath = Regex.Match(Regex.Match(image, sourcePattern).Value, "\".+\"").Value.Trim('"');
-                            imagePath = imagePath.Replace('\\','/');
+                            imagePath = imagePath.Replace('\\', '/');
                             if (string.IsNullOrEmpty(imagePath) || File.Exists(imagePath) == false)
                                 continue;
-                           
+
                             string imageName = Regex.Match(Regex.Match(image, namePattern).Value, "\".*\"").Value.Trim('"');
                             Paragraph paragraph = document.InsertParagraph();
 
                             document.RemoveParagraphAt(document.Paragraphs.Count - 1);
 
                             var insertedImage = document.AddImage(imagePath).CreatePicture();
-                            
+
                             float maxWidth = document.PageWidth - 150;
                             if (insertedImage.Width > maxWidth)
                             {
