@@ -43,7 +43,7 @@
                                             <Label Foreground="White" x:Name="labelOff" Opacity="1" Grid.Column="0" Content="Выключить" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             <Label Foreground="White" x:Name="labelOn" Opacity="1" Grid.Column="1" Content="Включить" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             <Canvas Grid.ColumnSpan="2" Width="210">
-                                                <Rectangle Canvas.Left="0" Canvas.Top="0" Height="40" x:Name="animatedRectangle" Width="105" Fill="White" RadiusX="5" RadiusY="5" HorizontalAlignment="Left"/>
+                                                <Rectangle Canvas.Left="0" Canvas.Top="0" Height="40" x:Name="animatedRectangle" Width="105" Fill="#FF333337" RadiusX="5" RadiusY="5" HorizontalAlignment="Left"/>
                                             </Canvas>
                                         </Grid>
 
@@ -121,7 +121,8 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Text="Титульная страница"/>
-            <CheckBox Height="40" x:Name="checkBoxWorkHasTitlePage" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="{Binding Params.WorkHasTitlePage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <!--IsChecked="{Binding Params.WorkHasTitlePage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"-->
+            <CheckBox Height="40" x:Name="checkBoxWorkHasTitlePage" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="True"/>
         
             <Grid x:Name="gridTitlePagePath" Grid.Row="1" Grid.ColumnSpan="3">
             
