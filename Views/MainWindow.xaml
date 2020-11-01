@@ -50,7 +50,39 @@
             </Button>
 
             <Button Grid.Column="3" HorizontalAlignment="Right" Margin="0 0 2 2" Style="{StaticResource ImageButtonStyle}" Click="ShowSettingsWindow">
-                <Image Source="/Images/Settings.png" Margin="3" Style="{StaticResource ScalableImage}"/>
+                <Image Source="/Images/Settings.png" Margin="3">
+                    
+                    <Image.RenderTransform>
+                        <RotateTransform Angle="0" CenterX="15" CenterY="15"/>
+                    </Image.RenderTransform>
+                    
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard x:Name="rotateAnimationBegin">
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation Duration="0:0:1" From="0" To="360"  Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+
+                                    <Trigger.ExitActions>
+                                        <StopStoryboard BeginStoryboardName="rotateAnimationBegin"/>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Duration="0:0:0.5" To="0" Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                    
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
             </Button>
 
             <Button Grid.Column="4" HorizontalAlignment="Right" Margin="0 0 2 2" Style="{StaticResource ImageButtonStyle}" Click="OpenRepositoryInBrowser">
