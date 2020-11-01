@@ -6,9 +6,14 @@ namespace WorkReportCreator
     public class StudentInformation : INotifyPropertyChanged
     {
         private string _secondName = "";
+
         private string _firstName = "";
+
         private string _middleName = "";
+
         private string _group = "";
+
+        private bool _useFullName = true;
 
         /// <summary>
         /// Фамилия студента
@@ -62,6 +67,17 @@ namespace WorkReportCreator
             }
         }
 
+        /// <summary>
+        /// Использовать полное имя или фамилию + инициалы
+        /// </summary>
+        public bool UseFullName
+        {   get => _useFullName;
+            set
+            {
+                _useFullName = value;
+                OnPropertyChanged();
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

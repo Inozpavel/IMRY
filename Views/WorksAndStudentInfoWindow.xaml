@@ -52,6 +52,7 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
                     <!--Фамилия студента-->
@@ -69,6 +70,63 @@
                     <!--Номер группы студента-->
                     <TextBlock Text="Группа" Grid.Row="3"/>
                     <TextBox Grid.Row="3" Text="{Binding Student.Group, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Style="{StaticResource CommonTextBox}"/>
+                    
+                    <!--Использовать аббревиатуру Или полное ФИО-->
+                    <TextBlock Grid.Row="4" Margin="10 0 0 0" Foreground="#FFA8B3B3">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value=""/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, ElementName=checkBoxNameType}" Value="True">
+                                        <Setter Property="Text" Value="Полное ФИО"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding IsChecked, ElementName=checkBoxNameType}" Value="False">
+                                        <Setter Property="Text" Value="Инициалы"/>
+                                    </DataTrigger>
+
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <CheckBox x:Name="checkBoxNameType" Grid.Row="4" Grid.Column="1" Content="1" Width="80" Height="20" Margin="0 5 0 0" Focusable="False" IsChecked="{Binding Student.UseFullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <CheckBox.Style>
+                            <Style TargetType="CheckBox">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        
+                                        <ControlTemplate TargetType="CheckBox">
+                                            
+                                            <Border x:Name="border" BorderBrush="White" BorderThickness="1" CornerRadius="10" Background="Transparent">
+                                                <Canvas>
+                                                    <Border x:Name="moveableBorder" Background="#FFA8B3B3" CornerRadius="{Binding CornerRadius, ElementName=border}" Width="40" Canvas.Left="-1" Canvas.Top="-1" Height="{TemplateBinding Height}"/>
+                                                </Canvas>
+
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup x:Name="CommonStates">
+                                                        
+                                                        <VisualState x:Name="Checked">
+                                                            <Storyboard>
+                                                                <DoubleAnimation To="39" Duration="0:0:0.5" Storyboard.TargetName="moveableBorder" Storyboard.TargetProperty="(Canvas.Left)"/>
+                                                            </Storyboard>
+                                                        </VisualState>
+
+                                                        <VisualState x:Name="Unchecked">
+                                                            <Storyboard>
+                                                                <DoubleAnimation To="-1" Duration="0:0:0.5" Storyboard.TargetName="moveableBorder" Storyboard.TargetProperty="(Canvas.Left)"/>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
+                                            </Border>
+                                            
+                                        </ControlTemplate>
+                                        
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </CheckBox.Style>
+                    </CheckBox>
                 </Grid>
 
             </GroupBox>
