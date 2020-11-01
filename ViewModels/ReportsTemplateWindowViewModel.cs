@@ -301,7 +301,7 @@ namespace WorkReportCreator.ViewModels
                     splittedPath.Insert(0, ".");
                     Clipboard.SetText("{{image source=\"" + string.Join("/", splittedPath) + "\", name=\"\"}}");
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     MessageBox.Show("Не получилось обработать картинку!");
                 }

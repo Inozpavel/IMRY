@@ -5,15 +5,30 @@
     <Grid>
        
         <Grid.Resources>
-            <!--Дизайн групповых контейнеров-->
-            <Style TargetType="GroupBox">
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="Foreground" Value="White"/>
-                <Setter Property="FontSize" Value="16"/>
-                <Setter Property="Margin" Value="10 5 10 5"/>
-                <Setter Property="BorderThickness" Value="0"/>
-            </Style>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
+                    <ResourceDictionary Source="/Views/Styles/CommonTextBoxStyle.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
 
+                <!--Дизайн групповых контейнеров-->
+                <Style TargetType="GroupBox">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="Margin" Value="10 5 10 5"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+
+                <!--Дизайн надписей-->
+                <Style TargetType="TextBlock">
+                    <Setter Property="Margin" Value="10 0 0 0"/>
+                    <Setter Property="Foreground" Value="#FFA8B3B3"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                </Style>
+                
+            </ResourceDictionary>
+            
         </Grid.Resources>
 
         <Grid Grid.ColumnSpan="2">
@@ -23,16 +38,6 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-
-            <Grid.Resources>
-                <!--Дизайн надписей-->
-                <Style TargetType="TextBlock">
-                    <Setter Property="Margin" Value="10 0 0 0"/>
-                    <Setter Property="Foreground" Value="#FFA8B3B3"/>
-                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                </Style>
-
-            </Grid.Resources>
 
             <GroupBox Grid.Row="0" Header="Информация о студенте" Width="300" Background="#FF252526" FontFamily="Verdana">
                 <Grid>
@@ -48,10 +53,6 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-
-                    <Grid.Resources>
-                        <ResourceDictionary Source="/Views/Styles/CommonTextBoxStyle.xaml"/>
-                    </Grid.Resources>
 
                     <!--Фамилия студента-->
                     <TextBlock Text="Фамилия" Grid.Row="0"/>
@@ -105,9 +106,6 @@
 
             <!--Длинная панель с кнопками-->
             <Grid Grid.Row="2" HorizontalAlignment="Stretch" Margin="0 10 0 10" VerticalAlignment="Bottom">
-                <Grid.Resources>
-                    <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
-                </Grid.Resources>
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="105"/>

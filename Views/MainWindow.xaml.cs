@@ -56,7 +56,7 @@ namespace WorkReportCreator
         /// <summary>
         /// Показывает окно для редактирования шаблона
         /// </summary>
-        private void ShowWindowReportTemplate(object sender, RoutedEventArgs e)
+        private void ShowWindowReportsTemplate(object sender, RoutedEventArgs e)
         {
             ReportsTemplate reportsTemplate = new ReportsTemplate(this);
             Hide();
@@ -66,7 +66,7 @@ namespace WorkReportCreator
         /// <summary>
         /// Загружает шаблон работы и показывает окно для редактирования шаблона
         /// </summary>
-        private void LoadWindowReportTemplate(object sender, RoutedEventArgs e)
+        private void LoadWindowReportsTemplate(object sender, RoutedEventArgs e)
         {
             try
             {

@@ -14,6 +14,7 @@ namespace WorkReportCreator
 
         private readonly MainWindow _mainWindow;
 
+        /// <param name="mainWindow">Главное окно</param>
         public ReportsTemplate(MainWindow mainWindow)
         {
             InitializeComponent();
@@ -21,6 +22,9 @@ namespace WorkReportCreator
             _mainWindow = mainWindow;
         }
 
+        /// <param name="mainWindow">Главное окно</param>
+        /// <param name="template">Шаблон для работ</param>
+        /// <param name="filePath">Путь до файла с шаблоном для работ</param>
         public ReportsTemplate(MainWindow mainWindow, Dictionary<string, Dictionary<string, ReportInformation>> template, string filePath)
         {
             InitializeComponent();
