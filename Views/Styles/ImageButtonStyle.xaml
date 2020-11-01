@@ -16,7 +16,7 @@
                             <Trigger.EnterActions>
                                 <BeginStoryboard x:Name="borderColorBegin">
                                     <Storyboard RepeatBehavior="Forever">
-                                        <ColorAnimation From="Transparent" To="White" Duration="0:0:1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                        <ColorAnimation To="White" Duration="0:0:1" AutoReverse="True" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
