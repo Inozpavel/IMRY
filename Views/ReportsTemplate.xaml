@@ -8,16 +8,17 @@
         Title="IMRY" Height="500" Width="800" Background="#FF191A1B" WindowStartupLocation="CenterScreen" Closing="CloseApplicationClicked" MinHeight="273" MinWidth="720" FontFamily="Verdana">
     <Grid>
         <Grid.Resources>
-            
+
             <ResourceDictionary>
-                
+
                 <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="/Views/Styles/OneSymbolButtonStyle.xaml"/>
                     <ResourceDictionary Source="/Views/Styles/ImageButtonStyle.xaml"/>
                     <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
                     <ResourceDictionary Source="/Views/Styles/ScrollBarTextDarkTextBoxStyle.xaml"/>
+                    <ResourceDictionary Source="/Views/Styles/ScalableImageStyle.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
-                
+
                 <Style TargetType="RadioButton">
                     <Setter Property="Foreground" Value="White"/>
                     <Setter Property="Focusable" Value="False"/>
@@ -32,13 +33,13 @@
 
                                             <VisualState x:Name="Checked">
                                                 <Storyboard>
-                                                    <ColorAnimation To="White" Duration="0:0:0:1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                    <ColorAnimation To="White" Duration="0:0:0.2" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
                                                 </Storyboard>
                                             </VisualState>
 
                                             <VisualState x:Name="Unchecked">
                                                 <Storyboard>
-                                                    <ColorAnimation To="Transparent" Duration="0:0:0:1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                    <ColorAnimation To="Transparent" Duration="0:0:0.2" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
                                                 </Storyboard>
                                             </VisualState>
 
@@ -50,25 +51,62 @@
                         </Setter.Value>
                     </Setter>
                 </Style>
-                
+
+                <Style TargetType="RadioButton" x:Key="RadioButtonDigit">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="RadioButton">
+                                <Border x:Name="border" Background="#FF121212" CornerRadius="10" Margin="1" BorderThickness="2" BorderBrush="Transparent">
+                                    <Label Content="{TemplateBinding Content}" Foreground="White" HorizontalAlignment="Center" FontSize="16"/>
+
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="CommonStates">
+
+                                            <VisualState x:Name="Checked">
+                                                <Storyboard>
+                                                    <ColorAnimation To="Wheat" Duration="0:0:0.1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                </Storyboard>
+                                            </VisualState>
+
+                                            <VisualState x:Name="Unchecked">
+                                                <Storyboard>
+                                                    <ColorAnimation To="Transparent" Duration="0:0:0.1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                </Storyboard>
+                                            </VisualState>
+
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+
+                </Style>
+
+                <Style TargetType="Label">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontSize" Value="14"/>
+                </Style>
+
             </ResourceDictionary>
-            
+
         </Grid.Resources>
-        
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="260"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        
+
         <Border Grid.Column="0">
             <DockPanel>
-                
+
                 <StackPanel DockPanel.Dock="Top">
                     <RadioButton Content="Практические работы" Margin="0 10 0 5" Width="240" DockPanel.Dock="Top" IsChecked="{Binding IsPracticesChecked}" Command="{Binding ChangeWorkType}"/>
                     <RadioButton Content="Лабораторные работы" Margin="0 5 0 10" Width="240" DockPanel.Dock="Top" IsChecked="{Binding IsLaboratoriesChecked}" Command="{Binding ChangeWorkType}"/>
                 </StackPanel>
-                
+
                 <Button Content="{Binding SaveStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5 0 5 10" Width="250" DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Bottom" Style="{StaticResource CommonAnimatedButton}" Command="{Binding ChooseFile}"/>
             </DockPanel>
         </Border>
@@ -81,54 +119,17 @@
             </Grid.RowDefinitions>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" Width="200" HorizontalAlignment="Left">
-                <ScrollViewer.Resources>
-
-                    <Style TargetType="RadioButton" x:Key="RadioButtonDigit">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="RadioButton">
-                                    <Border x:Name="border" Background="#FF121212" CornerRadius="10" Margin="1" BorderThickness="2" BorderBrush="Transparent">
-                                        <Label Content="{TemplateBinding Content}" Foreground="White" HorizontalAlignment="Center" FontSize="16"/>
-
-                                        <VisualStateManager.VisualStateGroups>
-                                            <VisualStateGroup x:Name="CommonStates">
-
-                                                <VisualState x:Name="Checked">
-                                                    <Storyboard>
-                                                        <ColorAnimation To="Wheat" Duration="0:0:0.1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
-                                                    </Storyboard>
-                                                </VisualState>
-
-                                                <VisualState x:Name="Unchecked">
-                                                    <Storyboard>
-                                                        <ColorAnimation To="Transparent" Duration="0:0:0.1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
-                                                    </Storyboard>
-                                                </VisualState>
-
-                                            </VisualStateGroup>
-                                        </VisualStateManager.VisualStateGroups>
-
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-
-                    </Style>
-
-                </ScrollViewer.Resources>
-
                 <ItemsControl Background="#FF333337" Focusable="False" ItemsSource="{Binding WorksButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
             </ScrollViewer>
 
-            <Border Grid.Row="1" VerticalAlignment="Bottom" BorderThickness="2" BorderBrush="White">
+            <Border Grid.Row="1" VerticalAlignment="Bottom" BorderThickness="2" BorderBrush="White" Height="45">
                 <Grid>
-                    <Button Content="+" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Command="{Binding AddWork}" Margin="5 2 0 2"/>
+                    <Button Content="+" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Command="{Binding AddWork}" Margin="5 0 0 0"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Content="⮝" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapUpElement}" Margin="0 2 2 2"/>
-                        <Button Content="⮟" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapDownElement}" Margin="2 2 0 2"/>
+                        <Button Content="⮝" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapUpElement}" Margin="0 0 2 0"/>
+                        <Button Content="⮟" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapDownElement}" Margin="2 0 0 0"/>
                     </StackPanel>
-                    <Button Content="-" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Right" Command="{Binding RemoveWork}" Margin="0 2 5 2"/>
+                    <Button Content="-" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Right" Command="{Binding RemoveWork}" Margin="0 0 5 0"/>
                 </Grid>
             </Border>
         </Grid>
@@ -139,14 +140,6 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Grid.Resources>
-                <Style TargetType="Label">
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="FontSize" Value="14"/>
-                </Style>
-                    
-            </Grid.Resources>
-            
             <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="10 0 1 0" VerticalAlignment="Top">
 
                 <StackPanel>
@@ -162,18 +155,18 @@
                     <Label Grid.Row="6" Content="Общее задание"/>
                     <TextBox Grid.Row="7" Text="{Binding CurrentInformation.CommonTask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextDarkTextBox}"/>
                 </StackPanel>
-                
+
             </ScrollViewer>
-            
+
             <GroupBox Grid.Row="2" Header="Задания на выбор" Foreground="White" FontSize="14" Margin="5 5 1 1" BorderThickness="1">
-                        
+
                 <Grid>
 
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition MinHeight="40" Height="auto"/>
                     </Grid.RowDefinitions>
-                               
+
                     <!--Список заданий-->
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
 
@@ -186,13 +179,17 @@
 
                             </ListBox.ItemTemplate>
                         </ListBox>
-                        
+
                     </ScrollViewer>
 
                     <!--Панель с кнопками для управлением заданиями-->
-                    <Border BorderBrush="White" BorderThickness="2" Grid.Row="1" VerticalAlignment="Bottom">
+                    <Border BorderBrush="White" BorderThickness="2" Grid.Row="1" VerticalAlignment="Bottom" Height="45">
                         <Grid>
-                            
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="6*"/>
+                            </Grid.RowDefinitions>
+
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
@@ -200,24 +197,24 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            
-                            <Button Content="+" Grid.Column="0" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Command="{Binding AddDescription}" Margin="5 2 0 2"/>
-                            
-                            <Button Grid.Column="1" Style="{StaticResource ImageButtonStyle}" HorizontalAlignment="Left" Command="{Binding AddImage}" Margin="5 0 0 0">
-                                <Image Source="../Images/Picture.png" Height="35" Margin="2 0 1 0"/>
+
+                            <Button Content="+" Grid.Column="0" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Command="{Binding AddDescription}" Margin="5 0 0 0" Grid.RowSpan="2"/>
+
+                            <Button Grid.Column="1" Style="{StaticResource ImageButtonStyle}" Command="{Binding AddImage}" Height="35" Margin="0 3 0 3" Grid.RowSpan="2">
+                                <Image Source="../Images/Picture.png" Margin="3" Style="{StaticResource ScalableImage}"/>
                             </Button>
-                            
-                            <Button Content="⮝" Grid.Column="2" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapUpDescription}" Margin="0 2 2 2"/>
-                            <Button Content="⮟" Grid.Column="3" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapDownDescription}" Margin="2 2 0 2"/>
-                            <Button Content="-" Grid.Column="4" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Right" Command="{Binding RemoveDescription}" Margin="0 2 5 2"/>
-                        
+
+                            <Button Content="⮝" Grid.Column="2" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapUpDescription}" Grid.RowSpan="2"/>
+                            <Button Content="⮟" Grid.Column="3" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapDownDescription}" Grid.RowSpan="2"/>
+                            <Button Content="-" Grid.Column="4" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Right" Command="{Binding RemoveDescription}" Margin="0 0 5 0" Grid.RowSpan="2"/>
+
                         </Grid>
                     </Border>
                 </Grid>
-                       
+
 
             </GroupBox>
-                
+
         </Grid>
     </Grid>
 </Window>

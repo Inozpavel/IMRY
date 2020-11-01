@@ -10,7 +10,7 @@ namespace WorkReportCreator.Views
     public partial class InputWorkNumberBox : Window
     {
         public Command CloseWindow { get; private set; }
-        public Command EnterValue { get; private set; }
+        public Command ValidateValue { get; private set; }
 
         private readonly List<string> _existingWorks;
 
@@ -25,16 +25,14 @@ namespace WorkReportCreator.Views
             DataContext = this;
             _existingWorks = existingWorks;
             CloseWindow = new Command((sender) => Close(), null);
-            EnterValue = new Command((sender) => ValidateInput(sender, null), null);
+            ValidateValue = new Command((sender) => ValidateInput(), null);
             textBox.Focus();
         }
 
         /// <summary>
         /// Проверяет введенные данные на корректность, если они корректны, запишет в <paramref name="ResultNumber"/> число, иначе null
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ValidateInput(object sender, RoutedEventArgs e)
+        private void ValidateInput()
         {
             string text = textBox.Text;
 

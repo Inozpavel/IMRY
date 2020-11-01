@@ -14,18 +14,19 @@
                             
                             <!--Анимация при заходе мышки на элемент-->
                             <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation To="White" Duration="0:0:0.2" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                <BeginStoryboard x:Name="borderColorBegin">
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <ColorAnimation From="Transparent" To="White" Duration="0:0:1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
 
                             <!--Анимация про уходе мышки с элемента-->
                             <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="borderColorBegin"/>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation To="Transparent" Duration="0:0:0.2" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                        <ColorAnimation To="Transparent" Duration="0:0:1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
