@@ -5,21 +5,23 @@
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
                     
-                    <Border x:Name="border" Background="#FF121212" CornerRadius="10" Margin="1" BorderThickness="2" BorderBrush="Transparent">
-                        <Label Content="{TemplateBinding Content}" Foreground="White" HorizontalAlignment="Center" FontSize="16"/>
+                    <Border x:Name="border" Background="#FF121212" CornerRadius="10" BorderThickness="2" BorderBrush="Transparent">
+                        <Label x:Name="label" Content="{TemplateBinding Content}" Foreground="#FFBAC3C3" HorizontalAlignment="Center" FontSize="16"/>
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
 
                                 <VisualState x:Name="Checked">
                                     <Storyboard>
-                                        <ColorAnimation To="Wheat" Duration="0:0:0.2" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                        <ColorAnimation To="Yellow" Duration="0:0:0.5" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                        <ColorAnimation To="White" Duration="0:0:0.5" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
                                     </Storyboard>
                                 </VisualState>
 
                                 <VisualState x:Name="Unchecked">
                                     <Storyboard>
-                                        <ColorAnimation To="Transparent" Duration="0:0:0.2" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                        <ColorAnimation To="Transparent" Duration="0:0:0.5" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                        <ColorAnimation To="#FFBAC3C3" Duration="0:0:0.5" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
                                     </Storyboard>
                                 </VisualState>
 
