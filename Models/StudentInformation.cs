@@ -13,7 +13,7 @@ namespace WorkReportCreator
 
         private string _group = "";
 
-        private bool _useFullName = true;
+        private bool _useFullName = false;
 
         /// <summary>
         /// Фамилия студента
@@ -71,7 +71,8 @@ namespace WorkReportCreator
         /// Использовать полное имя или фамилию + инициалы
         /// </summary>
         public bool UseFullName
-        {   get => _useFullName;
+        {
+            get => _useFullName;
             set
             {
                 _useFullName = value;
