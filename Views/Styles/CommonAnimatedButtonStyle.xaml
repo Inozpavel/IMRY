@@ -6,7 +6,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
 
-                    <Border x:Name="border" CornerRadius="10" BorderBrush="White" BorderThickness="2" Opacity="0.2" Background="#FF191A1B" Height="50">
+                    <Border x:Name="border" CornerRadius="10" BorderBrush="White" BorderThickness="2" Opacity="0.2" Background="#FF21222F" Height="50">
                         <Label x:Name="label" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFBAC3C3" FontSize="15" FontFamily="Verdana"/>
                         
                         <VisualStateManager.VisualStateGroups>

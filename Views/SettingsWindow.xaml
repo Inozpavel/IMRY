@@ -32,7 +32,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <Border x:Name="border" Background="Transparent" CornerRadius="8" Width="210">
+                                    <Border x:Name="border" Background="Transparent" CornerRadius="8" Width="210" BorderThickness="1" BorderBrush="#FFBAC3C3">
                                         <Grid>
 
                                             <Grid.ColumnDefinitions>
@@ -43,7 +43,7 @@
                                             <Label Foreground="White" x:Name="labelOff" Opacity="1" Grid.Column="0" Content="Выключить" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             <Label Foreground="White" x:Name="labelOn" Opacity="1" Grid.Column="1" Content="Включить" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             <Canvas Grid.ColumnSpan="2" Width="210">
-                                                <Rectangle Canvas.Left="0" Canvas.Top="0" Height="40" x:Name="animatedRectangle" Width="105" Fill="#FF333337" RadiusX="5" RadiusY="5" HorizontalAlignment="Left"/>
+                                                <Border x:Name="innerBorder" Canvas.Left="-1" Canvas.Top="-1" Height="40" Width="105" Background="#FF21222F" CornerRadius="8" HorizontalAlignment="Left" BorderBrush="#FFBAC3C3" BorderThickness="1 1 1 1"/>
                                             </Canvas>
                                         </Grid>
 
@@ -52,7 +52,7 @@
 
                                                 <VisualState x:Name="Checked">
                                                     <Storyboard>
-                                                        <DoubleAnimation Storyboard.TargetProperty="(Canvas.Left)" To="105" Duration="0:0:0.5" Storyboard.TargetName="animatedRectangle"/>
+                                                        <DoubleAnimation Storyboard.TargetProperty="(Canvas.Left)" To="105" Duration="0:0:0.5" Storyboard.TargetName="innerBorder"/>
                                                         <ColorAnimation To="#FF5FB456" Duration="0:0:0.3" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
                                                         <DoubleAnimation To="1" Duration="0:0:0.1" Storyboard.TargetName="labelOff" Storyboard.TargetProperty="Opacity"/>
                                                         <DoubleAnimation To="0" Duration="0:0:0.1" Storyboard.TargetName="labelOn" Storyboard.TargetProperty="Opacity"/>
@@ -61,7 +61,7 @@
 
                                                 <VisualState x:Name="Unchecked">
                                                     <Storyboard>
-                                                        <DoubleAnimation Storyboard.TargetProperty="(Canvas.Left)" To="0"  Duration="0:0:0.5" Storyboard.TargetName="animatedRectangle"/>
+                                                        <DoubleAnimation Storyboard.TargetProperty="(Canvas.Left)" To="-1" Duration="0:0:0.5" Storyboard.TargetName="innerBorder"/>
                                                         <ColorAnimation To="#FFB45157" Duration="0:0:0.3" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
                                                         <DoubleAnimation To="0" Duration="0:0:0.1" Storyboard.TargetName="labelOff" Storyboard.TargetProperty="Opacity"/>
                                                         <DoubleAnimation To="1" Duration="0:0:0.1" Storyboard.TargetName="labelOn" Storyboard.TargetProperty="Opacity"/>
@@ -82,6 +82,7 @@
                                                     <Storyboard>
                                                         <DoubleAnimation To="16" Duration="0:0:0.2" Storyboard.TargetName="labelOff" Storyboard.TargetProperty="FontSize"/>
                                                         <DoubleAnimation To="16" Duration="0:0:0.2" Storyboard.TargetName="labelOn" Storyboard.TargetProperty="FontSize"/>
+                                                        <ColorAnimation To="White" Duration="0:0:0.3" Storyboard.TargetName="innerBorder" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
                                                     </Storyboard>
                                                 </BeginStoryboard>
                                             </Trigger.EnterActions>
@@ -91,6 +92,7 @@
                                                     <Storyboard>
                                                         <DoubleAnimation From="16" Duration="0:0:0.2" Storyboard.TargetName="labelOff" Storyboard.TargetProperty="FontSize"/>
                                                         <DoubleAnimation From="16" Duration="0:0:0.2" Storyboard.TargetName="labelOn" Storyboard.TargetProperty="FontSize"/>
+                                                        <ColorAnimation To="#FFBAC3C3" Duration="0:0:0.3" Storyboard.TargetName="innerBorder" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
                                                     </Storyboard>
                                                 </BeginStoryboard>
                                             </Trigger.ExitActions>
@@ -121,8 +123,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Text="Титульная страница"/>
-            <!--IsChecked="{Binding Params.WorkHasTitlePage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"-->
-            <CheckBox Height="40" x:Name="checkBoxWorkHasTitlePage" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="True"/>
+            <CheckBox Height="40" x:Name="checkBoxWorkHasTitlePage" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="{Binding Params.WorkHasTitlePage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         
             <Grid x:Name="gridTitlePagePath" Grid.Row="1" Grid.ColumnSpan="3">
             
