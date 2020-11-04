@@ -7,8 +7,9 @@
         
         Title="IMRY" Height="500" Width="800" Background="#FF191A1B" WindowStartupLocation="CenterScreen" Closing="CloseApplicationClicked" MinHeight="273" MinWidth="720" FontFamily="Verdana">
     <Grid>
+        
         <Grid.Resources>
-
+            
             <ResourceDictionary>
 
                 <ResourceDictionary.MergedDictionaries>
@@ -19,27 +20,31 @@
                     <ResourceDictionary Source="/Views/Styles/ScalableImageStyle.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
 
-                <Style TargetType="RadioButton">
+                <Style TargetType="RadioButton" x:Key="radioButtonSelectWorkType">
                     <Setter Property="Foreground" Value="White"/>
                     <Setter Property="Focusable" Value="False"/>
+                    <Setter Property="Width" Value="210"/>
+                    <Setter Property="Height" Value="45"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="RadioButton">
-                                <Border x:Name="border" Width="{TemplateBinding Width}" HorizontalAlignment="Left" Background="#FF333337" BorderThickness="2" BorderBrush="Transparent">
-                                    <Label Content="{TemplateBinding Content}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                <Border x:Name="border" Width="{TemplateBinding Width}" HorizontalAlignment="Left" Background="#FF191A1B" BorderThickness="2" CornerRadius="8" BorderBrush="#FF333337">
+                                    <Label x:Name="label" Content="{TemplateBinding Content}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
 
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroup x:Name="CommonStates">
 
                                             <VisualState x:Name="Checked">
                                                 <Storyboard>
-                                                    <ColorAnimation To="White" Duration="0:0:0.2" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                    <ColorAnimation To="Yellow" Duration="0:0:0.4" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                    <DoubleAnimation To="16" Duration="0:0:0.4" Storyboard.TargetName="label" Storyboard.TargetProperty="FontSize"/>
                                                 </Storyboard>
                                             </VisualState>
 
                                             <VisualState x:Name="Unchecked">
                                                 <Storyboard>
-                                                    <ColorAnimation To="Transparent" Duration="0:0:0.2" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                    <ColorAnimation To="Transparent" Duration="0:0:0.4" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                    <DoubleAnimation To="14" Duration="0:0:0.4" Storyboard.TargetName="label" Storyboard.TargetProperty="FontSize"/>
                                                 </Storyboard>
                                             </VisualState>
 
@@ -52,169 +57,189 @@
                     </Setter>
                 </Style>
 
-                <Style TargetType="RadioButton" x:Key="RadioButtonDigit">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="RadioButton">
-                                <Border x:Name="border" Background="#FF121212" CornerRadius="10" Margin="1" BorderThickness="2" BorderBrush="Transparent">
-                                    <Label Content="{TemplateBinding Content}" Foreground="White" HorizontalAlignment="Center" FontSize="16"/>
-
-                                    <VisualStateManager.VisualStateGroups>
-                                        <VisualStateGroup x:Name="CommonStates">
-
-                                            <VisualState x:Name="Checked">
-                                                <Storyboard>
-                                                    <ColorAnimation To="Wheat" Duration="0:0:0.1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
-                                                </Storyboard>
-                                            </VisualState>
-
-                                            <VisualState x:Name="Unchecked">
-                                                <Storyboard>
-                                                    <ColorAnimation To="Transparent" Duration="0:0:0.1" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
-                                                </Storyboard>
-                                            </VisualState>
-
-                                        </VisualStateGroup>
-                                    </VisualStateManager.VisualStateGroups>
-
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-
-                </Style>
-
-                <Style TargetType="Label">
-                    <Setter Property="Foreground" Value="White"/>
+                <Style TargetType="TextBlock" x:Key="Description">
+                    <Setter Property="Foreground" Value="#FFA8B3B3"/>
                     <Setter Property="FontSize" Value="14"/>
+                </Style>
+
+                <Style TargetType="Button" x:Key="buttonSelectableText">
+                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                    <Setter Property="MinWidth" Value="100"/>
+                    <Setter Property="MinHeight" Value="20"/>
+                    <Setter Property="ToolTip" Value="СКМ - вставка из буфера с форматированием. Shift + ПКМ - форматирование текста"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+
+                                <Border x:Name="border" BorderThickness="2" BorderBrush="Transparent" Background="#FF333337">
+                                    <TextBlock Text="{TemplateBinding Content}" Foreground="White" TextWrapping="Wrap"/>
+                                </Border>
+
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard x:Name="borderAnimationBegin">
+                                                <Storyboard RepeatBehavior="Forever">
+                                                    <ColorAnimation From="Transparent" To="White" Duration="0:0:0.8" AutoReverse="True" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.EnterActions>
+
+                                        <Trigger.ExitActions>
+                                            <StopStoryboard BeginStoryboardName="borderAnimationBegin"/>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ColorAnimation To="Transparent" Duration="0:0:0.8" Storyboard.TargetName="border" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.ExitActions>
+
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+
                 </Style>
 
             </ResourceDictionary>
 
         </Grid.Resources>
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="260"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Column="0">
-            <DockPanel>
+        <Grid Grid.Row="0" Grid.ColumnSpan="3" Background="#FF252526">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-                <StackPanel DockPanel.Dock="Top">
-                    <RadioButton Content="Практические работы" Margin="0 10 0 5" Width="240" DockPanel.Dock="Top" IsChecked="{Binding IsPracticesChecked}" Command="{Binding ChangeWorkType}"/>
-                    <RadioButton Content="Лабораторные работы" Margin="0 5 0 10" Width="240" DockPanel.Dock="Top" IsChecked="{Binding IsLaboratoriesChecked}" Command="{Binding ChangeWorkType}"/>
-                </StackPanel>
+            <RadioButton Grid.Column="0" Margin="4 0 2 0" Content="Практические работы" HorizontalAlignment="Center" IsChecked="{Binding IsPracticesChecked}" Command="{Binding ChangeWorkType}" Style="{StaticResource radioButtonSelectWorkType}"/>
+            <RadioButton Grid.Column="1" Margin="2 0 5 0" Content="Лабораторные работы" HorizontalAlignment="Center" IsChecked="{Binding IsLaboratoriesChecked}" Command="{Binding ChangeWorkType}" Style="{StaticResource radioButtonSelectWorkType}"/>
 
-                <Button Content="{Binding SaveStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5 0 5 10" Width="250" DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Bottom" Style="{StaticResource CommonAnimatedButton}" Command="{Binding ChooseFile}"/>
-            </DockPanel>
-        </Border>
+            <Button Grid.Column="2" Margin="0 5 4 5" Width="250" HorizontalAlignment="Right" Content="{Binding SaveStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding ChooseFile}" Style="{StaticResource CommonAnimatedButton}"/>
+        
+        </Grid>
 
-        <Grid Grid.Column="1" VerticalAlignment="Stretch">
+        <Grid Grid.Row="1" Grid.Column="0" Width="200">
 
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto" Width="200" HorizontalAlignment="Left">
-                <ItemsControl Background="#FF333337" Focusable="False" ItemsSource="{Binding WorksButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl Background="#FF252526" Focusable="False" ItemsSource="{Binding WorksButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </ScrollViewer>
+            <!--FF333337
+            FF252526-->
 
-            <Border Grid.Row="1" VerticalAlignment="Bottom" BorderThickness="2" BorderBrush="White" Height="45">
+            <Border Grid.Row="1" Background="#FF333337" VerticalAlignment="Bottom" BorderThickness="1" BorderBrush="White" Height="45" CornerRadius="10 10 0 0">
+
                 <Grid>
-                    <Button Content="+" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Command="{Binding AddWork}" Margin="5 0 0 0"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Content="⮝" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapUpElement}" Margin="0 0 2 0"/>
-                        <Button Content="⮟" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapDownElement}" Margin="2 0 0 0"/>
-                    </StackPanel>
-                    <Button Content="-" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Right" Command="{Binding RemoveWork}" Margin="0 0 5 0"/>
+                    
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Content="+" Style="{StaticResource OneSymbolButton}" Command="{Binding AddWork}"/>
+                    <Button Grid.Column="1" Content="⮝" Style="{StaticResource OneSymbolButton}"  Command="{Binding SwapUpElement}"/>
+
+                    <Button Grid.Column="2" Margin="3" Style="{StaticResource ImageButtonStyle}" Command="{Binding FormatFields}" ToolTip="Отформатировать все поля с текстом в выбранной работе">
+                        <Image Source="/Images/Format.png" Margin="3" Style="{StaticResource ScalableImage}"/>
+                    </Button>
+                    
+                    <Button Grid.Column="3" Content="⮟" Style="{StaticResource OneSymbolButton}" Command="{Binding SwapDownElement}"/>
+                    <Button Grid.Column="4" Content="-" Style="{StaticResource OneSymbolButton}" Command="{Binding RemoveWork}" ToolTip="Shift + ПКМ - удаление без проверок"/>
+                    
                 </Grid>
             </Border>
         </Grid>
 
-        <Grid Grid.Column="2" Visibility="{Binding ReportInformationVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <Grid Grid.Row="1" Grid.Column="2" Visibility="{Binding ReportInformationVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="10 0 1 0" VerticalAlignment="Top">
+            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="10 0 10 0" VerticalAlignment="Top">
 
-                <StackPanel>
-                    <Label Grid.Row="0" Content="Название работы"/>
-                    <TextBox Grid.Row="1" Text="{Binding CurrentInformation.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextDarkTextBox}"/>
+                <StackPanel HorizontalAlignment="Stretch">
 
-                    <Label Grid.Row="2" Content="Цель работы"/>
-                    <TextBox Grid.Row="3" Text="{Binding CurrentInformation.WorkTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextDarkTextBox}"/>
+                    <TextBlock Text="Название работы" Style="{StaticResource Description}"/>
+                    <Button x:Name="button" Content="{Binding CurrentInformation.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Click="ShowEditWindowForWorkName" Style="{StaticResource buttonSelectableText}" MouseRightButtonUp="FormatNameText" MouseUp="InsertNameFromBufferAndFormat"/>
 
-                    <Label Grid.Row="4" Content="Теоритическая часть"/>
-                    <TextBox Grid.Row="5" Text="{Binding CurrentInformation.TheoryPart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextDarkTextBox}"/>
+                    <TextBlock Text="Цель работы" Style="{StaticResource Description}"/>
+                    <Button Content="{Binding CurrentInformation.WorkTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Click="ShowEditWindowForWorkTarget" Style="{StaticResource buttonSelectableText}" MouseRightButtonUp="FormatText" MouseUp="InsertNotNameFromBufferAndFormat"/>
 
-                    <Label Grid.Row="6" Content="Общее задание"/>
-                    <TextBox Grid.Row="7" Text="{Binding CurrentInformation.CommonTask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextDarkTextBox}"/>
+                    <TextBlock Text="Теоритическая часть" Style="{StaticResource Description}"/>
+                    <Button Content="{Binding CurrentInformation.TheoryPart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Click="ShowEditWindowForWorkTheoryPart" Style="{StaticResource buttonSelectableText}" MouseRightButtonUp="FormatText" MouseUp="InsertNotNameFromBufferAndFormat"/>
+
+                    <TextBlock Text="Общее задание" Style="{StaticResource Description}"/>
+                    <Button Content="{Binding CurrentInformation.CommonTask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Click="ShowEditWindowForWorkCommonTask" Style="{StaticResource buttonSelectableText}" MouseRightButtonUp="FormatText" MouseUp="InsertNotNameFromBufferAndFormat"/>
+
                 </StackPanel>
 
             </ScrollViewer>
 
-            <GroupBox Grid.Row="2" Header="Задания на выбор" Foreground="White" FontSize="14" Margin="5 5 1 1" BorderThickness="1">
+            <Grid Grid.Row="1">
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                    <RowDefinition MinHeight="40" Height="auto"/>
+                </Grid.RowDefinitions>
 
-                <Grid>
+                <TextBlock Grid.Row="0" Text="Задания на выбор" Style="{StaticResource Description}" Margin="10 0 0 0"/>
+                <!--Список заданий-->
+                <ListBox Grid.Row="1" ItemsSource="{Binding CurrentInformation.DynamicTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedDescriptionIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="#FF1E1E1E" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0">
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition MinHeight="40" Height="auto"/>
-                    </Grid.RowDefinitions>
+                    <ListBox.ItemTemplate>
 
-                    <!--Список заданий-->
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <DataTemplate>
+                            <Button Content="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Click="ShowEditWindowForDynamicTask" Style="{StaticResource buttonSelectableText}" MouseRightButtonUp="FormatText" MouseUp="InsertNotNameFromBufferAndFormat"/>
+                        </DataTemplate>
 
-                        <ListBox ItemsSource="{Binding CurrentInformation.DynamicTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedDescriptionIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="#FF1E1E1E" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0">
+                    </ListBox.ItemTemplate>
+                </ListBox>
 
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBox Margin="5 1 5 1" HorizontalAlignment="Stretch" Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ScrollBarTextDarkTextBox}"/>
-                                </DataTemplate>
+                <!--Панель с кнопками для управлением заданиями-->
+                <Border Grid.Row="2" BorderBrush="White" BorderThickness="1" VerticalAlignment="Bottom" Height="45" CornerRadius="10 10 0 0">
+                    <Grid>
+                        
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
 
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                        <Button Content="+" Grid.Column="0" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Right" Command="{Binding AddDescription}" Margin="5 0 0 0" Grid.RowSpan="2"/>
+                        <Button Content="⮝" Grid.Column="1" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Right" Command="{Binding SwapUpDescription}" Grid.RowSpan="2"/>
+                        
+                        <Button Content="⮟" Grid.Column="3" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Command="{Binding SwapDownDescription}" Grid.RowSpan="2"/>
+                        <Button Content="-" Grid.Column="4" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Command="{Binding RemoveDescription}" Margin="0 0 5 0" Grid.RowSpan="2" ToolTip="Shift + ПКМ - удаление без проверок"/>
 
-                    </ScrollViewer>
+                    </Grid>
+                </Border>
 
-                    <!--Панель с кнопками для управлением заданиями-->
-                    <Border BorderBrush="White" BorderThickness="2" Grid.Row="1" VerticalAlignment="Bottom" Height="45">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition Height="6*"/>
-                            </Grid.RowDefinitions>
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-
-                            <Button Content="+" Grid.Column="0" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Command="{Binding AddDescription}" Margin="5 0 0 0" Grid.RowSpan="2"/>
-
-                            <Button Grid.Column="1" Style="{StaticResource ImageButtonStyle}" Command="{Binding AddImage}" Height="35" Margin="0 3 0 3" Grid.RowSpan="2">
-                                <Image Source="../Images/Picture.png" Margin="3" Style="{StaticResource ScalableImage}"/>
-                            </Button>
-
-                            <Button Content="⮝" Grid.Column="2" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapUpDescription}" Grid.RowSpan="2"/>
-                            <Button Content="⮟" Grid.Column="3" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Center" Command="{Binding SwapDownDescription}" Grid.RowSpan="2"/>
-                            <Button Content="-" Grid.Column="4" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Right" Command="{Binding RemoveDescription}" Margin="0 0 5 0" Grid.RowSpan="2"/>
-
-                        </Grid>
-                    </Border>
-                </Grid>
-
-
-            </GroupBox>
-
+            </Grid>
+                
         </Grid>
     </Grid>
 </Window>

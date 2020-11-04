@@ -11,7 +11,6 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using WorkReportCreator.Models;
 using WorkReportCreator.Views;
 
@@ -41,15 +40,11 @@ namespace WorkReportCreator.ViewModels
 
         public Command RemoveDescription { get; private set; }
 
-        public Command AddImage { get; private set; }
+        public Command FormatFields { get; private set; }
 
         #endregion
 
         private ReportInformation _currentInformation;
-
-        private ReportInformation _practisesCurrentInformation;
-
-        private ReportInformation _laboratoriesCurrentInformation;
 
         private Visibility _reportInformationVisibility;
 
@@ -120,8 +115,6 @@ namespace WorkReportCreator.ViewModels
             set
             {
                 _currentInformation = value;
-                SwapUpElement.CanExecute(this);
-                SwapDownElement.CanExecute(this);
                 OnPropertyChanged();
             }
         }
@@ -129,34 +122,12 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Текущее выбранное описание практической работы
         /// </summary>
-        public ReportInformation PractisesCurrentInformation
-        {
-            get => _practisesCurrentInformation;
-            set
-            {
-                _practisesCurrentInformation = value;
-                if (IsPracticesChecked)
-                    CurrentInformation = PractisesCurrentInformation;
-                else if (IsLaboratoriesChecked)
-                    CurrentInformation = LaboratoriesCurrentInformation;
-            }
-        }
+        public ReportInformation PractisesCurrentInformation { get; set; }
 
         /// <summary>
         /// Текущее выбранное описание лабораторной работы
         /// </summary>
-        public ReportInformation LaboratoriesCurrentInformation
-        {
-            get => _laboratoriesCurrentInformation;
-            set
-            {
-                _laboratoriesCurrentInformation = value;
-                if (IsPracticesChecked)
-                    CurrentInformation = PractisesCurrentInformation;
-                else if (IsLaboratoriesChecked)
-                    CurrentInformation = LaboratoriesCurrentInformation;
-            }
-        }
+        public ReportInformation LaboratoriesCurrentInformation { get; set; }
 
         /// <summary>
         /// Видимость описания работы
@@ -218,7 +189,7 @@ namespace WorkReportCreator.ViewModels
         public ReportsTemplateWindowViewModel()
         {
             AddBaseFunctional();
-            AddAutoSaveForCollections();
+            AddAutoSaveForWorksCollections();
         }
 
         /// <param name="template">Шаблон</param>
@@ -238,7 +209,7 @@ namespace WorkReportCreator.ViewModels
                     ReportInformation reportInformation = template[workType][number];
                     reportInformation.PropertyChanged += SaveAllInformation;
                     foreach (DynamicTask task in reportInformation.DynamicTasks)
-                        task.DescriptionChanged += (sender) => SaveAllInformation(this, null);
+                        task.PropertyChanged += (sender, e) => SaveAllInformation(this, null);
                     if (workType == "Practices")
                     {
                         PractisesWorks.Add(radioButton, reportInformation);
@@ -252,7 +223,7 @@ namespace WorkReportCreator.ViewModels
                 }
             }
             FilePath = filePath;
-            AddAutoSaveForCollections();
+            AddAutoSaveForWorksCollections();
         }
 
         /// <summary>
@@ -266,8 +237,8 @@ namespace WorkReportCreator.ViewModels
             ChooseFile = new Command(ChooseFilePath, null);
             SwapUpElement = new Command(SwapUpSelectedItem, SwapUpCanExecute);
             SwapDownElement = new Command(SwapDownSelectedItem, SwapDownCanExecute);
-            AddImage = new Command(ShowDialogAddImage, null);
 
+            FormatFields = new Command(FormatAllFields, (sender) => CurrentInformation != null);
 
             AddDescription = new Command(AddNewDescription, null);
             RemoveDescription = new Command(RemoveSelectedDescription, (sender) => SelectedDescriptionIndex != null);
@@ -283,39 +254,40 @@ namespace WorkReportCreator.ViewModels
             ReportInformationVisibility = Visibility.Collapsed;
         }
 
-        private void ShowDialogAddImage(object sender)
-        {
-            OpenFileDialog fileDialog = new OpenFileDialog()
-            {
-                Title = "Выберите файл с изображением. Ссылка не него будет скопирована в буфер обмена.",
-                Filter = "Изображения (*.jpg, *.png, *.bmp, *.jpeg)|*.jpg; *.png; *.bmp; *.jpeg",
-            };
-            if (fileDialog.ShowDialog() == true)
-            {
-                try
-                {
-                    Uri uri = new Uri(fileDialog.FileName);
-                    BitmapImage image = new BitmapImage(uri);
-                    string relativePath = new Uri(Directory.GetCurrentDirectory()).MakeRelativeUri(uri).ToString();
-                    List<string> splittedPath = relativePath.Split('/').Skip(1).ToList();
-                    splittedPath.Insert(0, ".");
-                    Clipboard.SetText("{{image source=\"" + string.Join("/", splittedPath) + "\", name=\"\"}}");
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Не получилось обработать картинку!");
-                }
-            }
-
-        }
-
         /// <summary>
         /// Подписывает коллекции PractisesWorksButtons и LaboratoriesWorksButtons на автосохранении информации при изменении
         /// </summary>
-        private void AddAutoSaveForCollections()
+        private void AddAutoSaveForWorksCollections()
         {
             PractisesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
             LaboratoriesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
+        }
+
+        private void FormatAllFields(object sender)
+        {
+            CurrentInformation.Name = FormatText(CurrentInformation.Name, isNameOfWork: true);
+            CurrentInformation.WorkTarget = FormatText(CurrentInformation.WorkTarget);
+            CurrentInformation.TheoryPart = FormatText(CurrentInformation.TheoryPart);
+            CurrentInformation.CommonTask = FormatText(CurrentInformation.CommonTask);
+            for (int i = 0; i < CurrentInformation.DynamicTasks.Count; i++)
+                CurrentInformation.DynamicTasks[i].Description = FormatText(CurrentInformation.DynamicTasks[i].Description);
+        }
+
+        public string FormatText(string textToFormat, bool isNameOfWork = false)
+        {
+            if (textToFormat.Length == 0)
+                return textToFormat;
+            string formattedText = textToFormat.Trim();
+            if (isNameOfWork == false & ".!?".Contains(formattedText.Last()) == false)
+                formattedText += ".";
+            else if (isNameOfWork)
+            {
+                while (formattedText.Length > 0 && ".!?".Contains(formattedText[formattedText.Length - 1]))
+                    formattedText = formattedText.Substring(0, formattedText.Length - 1);
+
+                formattedText = formattedText.ToUpper();
+            }
+            return formattedText;
         }
 
         /// <summary>
@@ -412,12 +384,17 @@ namespace WorkReportCreator.ViewModels
             radioButton.Checked += (sender, e) =>
             {
                 ReportInformationVisibility = Visibility.Visible;
-                if (IsPracticesChecked)
-                    PractisesCurrentInformation = Works[sender as RadioButton];
-                else if (IsLaboratoriesChecked)
-                    LaboratoriesCurrentInformation = Works[sender as RadioButton];
+                UpdateCurrentInformation(sender);
             };
             return radioButton;
+        }
+
+        private void UpdateCurrentInformation(object sender)
+        {
+            if (IsPracticesChecked)
+                CurrentInformation = PractisesCurrentInformation = Works[sender as RadioButton];
+            else if (IsLaboratoriesChecked)
+                CurrentInformation = LaboratoriesCurrentInformation = Works[sender as RadioButton];
         }
 
         /// <summary>
@@ -479,7 +456,7 @@ namespace WorkReportCreator.ViewModels
         private void AddNewDescription(object sender)
         {
             DynamicTask task = new DynamicTask();
-            task.DescriptionChanged += (s) => SaveAllInformation(this, null);
+            task.PropertyChanged += (s, e) => SaveAllInformation(this, null);
             CurrentInformation.DynamicTasks.Add(task);
         }
 
