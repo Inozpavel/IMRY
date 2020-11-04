@@ -1,10 +1,11 @@
-﻿using System;
+﻿using System.ComponentModel;
 
 namespace WorkReportCreator.Models
 {
-    public class DynamicTask
+    public class DynamicTask : INotifyPropertyChanged
     {
-        public event Action<object> DescriptionChanged;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private string _description = "";
 
@@ -17,15 +18,11 @@ namespace WorkReportCreator.Models
             set
             {
                 _description = value;
-                DescriptionChanged?.Invoke(this);
+                OnPropertyChanged();
             }
         }
 
-        public DynamicTask()
-        {
-        }
+        private void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        /// <param name="description">Описание работы</param>
-        public DynamicTask(string description) => Description = description;
     }
 }
