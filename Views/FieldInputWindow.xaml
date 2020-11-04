@@ -7,7 +7,7 @@
         Title="IMRY" Height="450" Width="800" Background="#FF191A1B" FontFamily="Verdana" WindowStartupLocation="CenterScreen" MinWidth="600" MinHeight="300">
     <Window.InputBindings>
         <KeyBinding Key="ESC" Command="{Binding HideWindow}"/>
-        <KeyBinding Key="Enter" Command="{Binding SubmitInput}"/>
+        <KeyBinding Modifiers="Ctrl" Key="Enter" Command="{Binding SubmitInput}"/>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding FormatText}"/>
     </Window.InputBindings>
     <Grid>
@@ -31,12 +31,14 @@
             <Label Name="labelCaption" Content="Название вводимого поля" Height="30" Foreground="White" FontSize="16"/>
         </Border>
 
-        <TextBox x:Name="textBoxInput" Grid.Row="1" Background="Transparent" TextWrapping="Wrap" Foreground="White" FontSize="14" BorderThickness="0" AcceptsReturn="True" AcceptsTab="True">
-            <TextBox.CaretBrush>
-                <SolidColorBrush Color="White"/>
-            </TextBox.CaretBrush>
-        </TextBox>
-        
+        <ScrollViewer  Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <TextBox x:Name="textBoxInput" Background="Transparent" TextWrapping="Wrap" Foreground="White" FontSize="14" BorderThickness="0" AcceptsReturn="True" AcceptsTab="True">
+                <TextBox.CaretBrush>
+                    <SolidColorBrush Color="White"/>
+                </TextBox.CaretBrush>
+            </TextBox>
+        </ScrollViewer>
+
         <Border Grid.Row="2" Background="#FF333337" CornerRadius="10 0 0 0" HorizontalAlignment="Right">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -49,7 +51,7 @@
                     <Image Source="../Images/Picture.png" Margin="3" Style="{StaticResource ScalableImage}"/>
                 </Button>
                 <Button Grid.Column="1" ToolTip="Ctrl + S" Width="155" Margin="5" Content="Форматировать" HorizontalAlignment="Right" Style="{StaticResource CommonAnimatedButton}" Command="{Binding FormatText}"/>
-                <Button Grid.Column="2" ToolTip="Enter" Width="155" Margin="5" Content="Подтвердить" HorizontalAlignment="Right" Style="{StaticResource CommonAnimatedButton}" Command="{Binding SubmitInput}"/>
+                <Button Grid.Column="2" ToolTip="Ctrl + Enter" Width="155" Margin="5" Content="Подтвердить" HorizontalAlignment="Right" Style="{StaticResource CommonAnimatedButton}" Command="{Binding SubmitInput}"/>
 
             </Grid>
         </Border>
