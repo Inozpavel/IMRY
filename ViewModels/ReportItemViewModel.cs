@@ -237,6 +237,47 @@ namespace WorkReportCreator
         /// </summary>
         public void SwapDownSelectedFileInfo(object sender) => SwapAdjacentItemWithSelected(+1);
 
+
+        /// <summary>
+        /// Обменивает ближайший элемент с выбранным
+        /// </summary>
+        /// <param name="i">1 - элемент снизу, -1 - элемент снизу</param>
+        private void SwapAdjacentItemWithSelected(int i)
+        {
+            int number = (_selectedItem.Content as FileInformationItem).Number - 1;
+            SwapArrayItems(number, number + i);
+            SelectedItemIndex = number + i;
+        }
+
+        /// <summary>
+        /// Проверяет, можно ли переместить ниже выбранный элемент
+        /// </summary>
+        /// <returns><paramref name="True"/> если может переместить, в противное случает <paramref name="false"/></returns>
+        public bool SwapDownSelectedFileInfoCanExecute(object sender) => _selectedItem != null && _selectedItemIndex + 1 != FilesArray.Count;
+
+        /// <summary>
+        /// Обменивает два элемента в списке файлов с указанными индексами
+        /// </summary>
+        /// <param name="firstIndex">Индекс первого элемента</param>
+        /// <param name="secondIndex">Индекс второго элемента</param>
+        private void SwapArrayItems(int firstIndex, int secondIndex)
+        {
+            FileInformationItem temp = FilesArray[firstIndex].Content as FileInformationItem;
+            FilesArray[firstIndex].Content = FilesArray[secondIndex].Content;
+            FilesArray[secondIndex].Content = temp;
+
+            UpdateAllNumbers();
+        }
+
+        /// <summary>
+        /// Для каждого элемента в списке файлов перепросчитывет индекс
+        /// </summary>
+        private void UpdateAllNumbers()
+        {
+            for (int i = 0; i < FilesArray.Count; i++)
+                (FilesArray[i].Content as FileInformationItem).Number = i + 1;
+        }
+
         #region ReportGeneration
 
         /// <summary>
@@ -283,7 +324,7 @@ namespace WorkReportCreator
             if (mainParams.WorkHasTitlePage == false)
                 throw new Exception("Вызвано создание титульника, хотя его быть не должно!");
 
-            if (mainParams.WorkHasTitlePageParams == true && File.Exists(mainParams.WorkTitlePageParamsFilePath) == false)
+            if (mainParams.WorkHasTitlePageParams && File.Exists(mainParams.WorkTitlePageParamsFilePath) == false)
                 throw new Exception("Файл с параметрами для титульной страницы отсутствует!");
 
             StudentInformation student;
@@ -304,7 +345,16 @@ namespace WorkReportCreator
             {
                 Dictionary<string, string> titlePageParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(mainParams.WorkTitlePageParamsFilePath));
                 titlePageParams.Add("Group", student.Group);
-                titlePageParams.Add("StudentFullName", string.Join(" ", student.SecondName, student.FirstName, student.MiddleName));
+                if (student.UseFullName)
+                {
+                    titlePageParams.Add("StudentFullName", string.Join(" ", student.SecondName,
+                       student.FirstName, student.MiddleName));
+                }
+                else
+                {
+                    titlePageParams.Add("StudentFullName", string.Join(" ", student.SecondName,
+                       student.FirstName.Substring(0, 1).ToUpper() + ".", student.MiddleName.Substring(0, 1).ToUpper() + "."));
+                }
 
                 foreach (string key in titlePageParams.Keys)
                     doc.ReplaceText("{{" + key + "}}", titlePageParams[key]);
@@ -545,46 +595,6 @@ namespace WorkReportCreator
         }
 
         #endregion
-
-        /// <summary>
-        /// Обменивает ближайший элемент с выбранным
-        /// </summary>
-        /// <param name="i">1 - элемент снизу, -1 - элемент снизу</param>
-        private void SwapAdjacentItemWithSelected(int i)
-        {
-            int number = (_selectedItem.Content as FileInformationItem).Number - 1;
-            SwapArrayItems(number, number + i);
-            SelectedItemIndex = number + i;
-        }
-
-        /// <summary>
-        /// Проверяет, можно ли переместить ниже выбранный элемент
-        /// </summary>
-        /// <returns><paramref name="True"/> если может переместить, в противное случает <paramref name="false"/></returns>
-        public bool SwapDownSelectedFileInfoCanExecute(object sender) => _selectedItem != null && _selectedItemIndex + 1 != FilesArray.Count;
-
-        /// <summary>
-        /// Обменивает два элемента в списке файлов с указанными индексами
-        /// </summary>
-        /// <param name="firstIndex">Индекс первого элемента</param>
-        /// <param name="secondIndex">Индекс второго элемента</param>
-        private void SwapArrayItems(int firstIndex, int secondIndex)
-        {
-            FileInformationItem temp = FilesArray[firstIndex].Content as FileInformationItem;
-            FilesArray[firstIndex].Content = FilesArray[secondIndex].Content;
-            FilesArray[secondIndex].Content = temp;
-
-            UpdateAllNumbers();
-        }
-
-        /// <summary>
-        /// Для каждого элемента в списке файлов перепросчитывет индекс
-        /// </summary>
-        private void UpdateAllNumbers()
-        {
-            for (int i = 0; i < FilesArray.Count; i++)
-                (FilesArray[i].Content as FileInformationItem).Number = i + 1;
-        }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
