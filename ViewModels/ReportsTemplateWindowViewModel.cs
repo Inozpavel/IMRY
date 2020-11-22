@@ -247,7 +247,7 @@ namespace WorkReportCreator.ViewModels
                 (sender) => SelectedDescriptionIndex != null && SelectedDescriptionIndex > 0);
 
             SwapDownDescription = new Command((sender) => CurrentInformation.DynamicTasks.Move(SelectedDescriptionIndex ?? 0, SelectedDescriptionIndex + 1 ?? 0),
-                (sender) => SelectedDescriptionIndex != null && SelectedDescriptionIndex < CurrentInformation.DynamicTasks.Count - 1);
+                (sender) => SelectedDescriptionIndex != null && SelectedDescriptionIndex < CurrentInformation?.DynamicTasks.Count - 1);
 
             WorksButtons.CollectionChanged += (sender, e) => ReportInformationVisibility = WorksButtons.Any(x => x.IsChecked ?? false) ? Visibility.Visible : Visibility.Collapsed;
 
