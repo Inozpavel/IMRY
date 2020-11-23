@@ -130,7 +130,7 @@ namespace WorkReportCreator.ViewModels
             }
         }
 
-        private void ExecuteWithAllReports(ReportAction action, string actionName, string actionName1)
+        private void ExecuteWithAllReports(ReportAction action, string actionName, string actionNameDuringAction)
         {
             List<int> failedPracticesReports = new List<int>();
             List<int> failedLaboratoriesReports = new List<int>();
@@ -166,23 +166,21 @@ namespace WorkReportCreator.ViewModels
                         MessageBox.Show("Не получилось найти папку с отчетами!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
             }
-            else if (failedPracticesReports.Count == 0 && failedLaboratoriesReports.Count >= 0)
+            else if (failedPracticesReports.Count == 0 && failedLaboratoriesReports.Count > 0)
             {
-                MessageBox.Show($"Все отчеты для практических работ успешно {actionName}!\n" +
-                    $"При {actionName1} отчетов для лабораторных работ произошли ошибки:\n" +
+                MessageBox.Show($"При {actionNameDuringAction} отчетов для лабораторных работ произошли ошибки, номера работ:\n" +
                     string.Join(" ", failedLaboratoriesReports.Take(10)) + (failedLaboratoriesReports.Count > 10 ? "..." : ""),
-                    "Поздравляю!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    "Внимание!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
-            else if (failedLaboratoriesReports.Count > 0 && failedPracticesReports.Count == 0)
+            else if (failedPracticesReports.Count > 0 && failedLaboratoriesReports.Count == 0)
             {
-                MessageBox.Show($"Все отчеты для лабораторных работ успешно {actionName}!\n" +
-                    $"При {actionName1} отчетов для практических работ произошли ошибки:\n" +
+                MessageBox.Show($"При {actionNameDuringAction} отчетов для практических работ произошли ошибки, номера работ:\n" +
                     string.Join(" ", failedPracticesReports.Take(10)) + (failedPracticesReports.Count > 10 ? "..." : ""),
-                    "Поздравляю!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    "Внимание!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             else
             {
-                MessageBox.Show($"При {actionName1} отчетов произошли ошибки!\n" +
+                MessageBox.Show($"При {actionNameDuringAction} отчетов произошли ошибки!\n" +
                     $"Практические работы:\n{string.Join(" ", failedPracticesReports.Take(10)) + (failedPracticesReports.Count > 10 ? "..." : "")}" +
                     $"\nЛабораторные работы:\n{string.Join(" ", failedLaboratoriesReports.Take(10)) + (failedLaboratoriesReports.Count > 10 ? "..." : "")}",
                     "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
