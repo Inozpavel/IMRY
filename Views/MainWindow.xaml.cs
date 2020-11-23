@@ -28,39 +28,12 @@ namespace WorkReportCreator
         }
 
         /// <summary>
-        /// Показывает окно с выбором заданий и вводом информации о студенте
-        /// </summary>
-        private void ShowWindowReportsSelect(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                WorksAndStudentInfoWindow worksAndStudentInfoWindow = new WorksAndStudentInfoWindow(this);
-                Hide();
-                worksAndStudentInfoWindow.Show();
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        /// <summary>
         /// Показывает диалоговое окно для выбором файла с отчетом, чтобы редактировать его
         /// </summary>
         private void LoadReport(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("В процессе разработки...", "Work in progress!", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
-        }
-
-        /// <summary>
-        /// Показывает окно для редактирования шаблона
-        /// </summary>
-        private void ShowWindowReportsTemplate(object sender, RoutedEventArgs e)
-        {
-            ReportsTemplate reportsTemplate = new ReportsTemplate(this);
-            Hide();
-            reportsTemplate.Show();
         }
 
         /// <summary>
@@ -78,8 +51,8 @@ namespace WorkReportCreator
                 };
                 if (dialog.ShowDialog() == true)
                 {
-                    var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, ReportInformation>>>(File.ReadAllText(dialog.FileName));
-                    ReportsTemplate reportsTemplate = new ReportsTemplate(this, template, dialog.FileName);
+                    var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Report>>>(File.ReadAllText(dialog.FileName));
+                    ReportsTemplateWindow reportsTemplate = new ReportsTemplateWindow(this, template, dialog.FileName);
                     Hide();
                     reportsTemplate.Show();
                 }
@@ -101,13 +74,25 @@ namespace WorkReportCreator
         private void OpenRepositoryInBrowser(object sender, RoutedEventArgs e) => Process.Start("https://github.com/Inozpavel/IMRY");
 
         /// <summary>
-        /// ПОказывает окно с настройками
+        /// Показывает окно с выбором заданий и вводом информации о студенте
         /// </summary>
-        private void ShowSettingsWindow(object sender, RoutedEventArgs e)
+        private void ShowWindowReportsSelect(object sender, RoutedEventArgs e) => ShowWindow<SelectionOfWorksWindow>();
+
+        /// <summary>
+        /// Показывает окно с настройками
+        /// </summary>
+        private void ShowSettingsWindow(object sender, RoutedEventArgs e) => ShowWindow<SettingsWindow>();
+
+        /// <summary>
+        /// Показывает окно для редактирования шаблона
+        /// </summary>
+        private void ShowWindowReportsTemplate(object sender, RoutedEventArgs e) => ShowWindow<ReportsTemplateWindow>();
+
+        private void ShowWindow<T>() where T : Window
         {
-            SettingsWindow window = new SettingsWindow(this);
-            window.Show();
+            T window = (T)Activator.CreateInstance(typeof(T), this);
             Hide();
+            window.Show();
         }
     }
 }
