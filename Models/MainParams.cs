@@ -11,6 +11,8 @@ namespace WorkReportCreator.Models
 {
     public class MainParams : INotifyPropertyChanged
     {
+        private string _shortSubjectName = "";
+
         private bool _workHasTitlePage = false;
 
         private string _workTitlePageFilePath = "";
@@ -32,6 +34,19 @@ namespace WorkReportCreator.Models
         public event PropertyChangedEventHandler PropertyChanged;
 
         #region Properties
+
+        /// <summary>
+        /// Имеется ли титульная страница
+        /// </summary>
+        public string ShortSubjectName
+        {
+            get => _shortSubjectName;
+            set
+            {
+                _shortSubjectName = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Имеется ли титульная страница
@@ -162,6 +177,7 @@ namespace WorkReportCreator.Models
                 _userDataFilePath = parameters["UserDataFilePath"];
             _reportsPath = parameters["ReportsPath"];
             _savedReportsPath = parameters["SavedReportsPath"];
+            _shortSubjectName = parameters["ShortSubjectName"];
         }
 
         public static void ValidateAllParams()
@@ -175,6 +191,7 @@ namespace WorkReportCreator.Models
                     "CurrentTemplateFilePath",
                     "ReportsPath",
                     "SavedReportsPath",
+                    "ShortSubjectName",
                 };
 
                 var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));

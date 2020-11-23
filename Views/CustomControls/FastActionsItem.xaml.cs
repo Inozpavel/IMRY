@@ -32,7 +32,7 @@ namespace WorkReportCreator.Views
         /// <summary>
         /// Включены ли кнопки "Сохранить всю информацию" и "Сгенерировать все отчеты"
         /// </summary>
-        public bool IsButtonEnabled
+        public bool IsButtonsEnabled
         {
             get => _isButtonEnabled;
             set

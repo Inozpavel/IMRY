@@ -18,6 +18,14 @@ namespace WorkReportCreator
     /// </summary>
     public partial class ReportItem : UserControl
     {
+        private enum ReportAction
+        {
+            Save,
+            Generate,
+        }
+
+        private string ReportName { get => (Parent as TabItem).Header.ToString().Trim().TrimEnd(".".ToCharArray()); }
+
         /// <summary>
         /// Модель данных этого элемента
         /// </summary>
@@ -43,16 +51,14 @@ namespace WorkReportCreator
         /// Создает отчет для выбранной работы
         /// </summary>
         /// <exception cref="Exception"/>
-        public void GenerateReport()
-        {
-            string reportName = (Parent as TabItem).Header.ToString().Trim().TrimEnd(".".ToCharArray());
-            _model.GenerateReport(reportName);
-        }
+        public void GenerateReport() => _model.GenerateReport(ReportName);
+
+        public void SaveReport() => _model.SaveReport(ReportName);
 
         /// <summary>
         /// При использовании Drag & Drop добавляет / дополняет информацию о выбранных файлах с список информации о файлах
         /// </summary>
-        private void AddAllFiles(object sender, DragEventArgs e)
+        private void AddFilesFromDragAndDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             MainParams mainParams = new MainParams();
@@ -149,27 +155,41 @@ namespace WorkReportCreator
         /// <summary>
         /// Создает отчет для работы, показывает все ошибки
         /// </summary>
-        private void GenerateReportClicked(object sender, RoutedEventArgs e)
+        private void GenerateReportClicked(object sender, RoutedEventArgs e) => ExecuteWithReport(ReportAction.Generate, "создать", "создан");
+
+        private void SaveReportClicked(object sender, RoutedEventArgs e) => ExecuteWithReport(ReportAction.Save, "сохранить", "сохранен");
+
+        private void ExecuteWithReport(ReportAction action, string actionName, string actionNameInPastSimple)
         {
             MainParams mainParams = new MainParams();
+            bool isDone;
             try
             {
-                GenerateReport();
+                if (action == ReportAction.Generate)
+                    GenerateReport();
+                else if (action == ReportAction.Save)
+                    SaveReport();
+                isDone = true;
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message, $"Ошибка! Не получилось создать отчет!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(exception.Message, $"Ошибка! Не получилось {actionName} отчет!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            if (MessageBox.Show($"Открыть папку с отчетами?", "Отчет успешно создан!",
+
+            if (isDone && MessageBox.Show("Открыть папку с отчетами?", $"Отчет успешно {actionNameInPastSimple}!",
                 MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No) == MessageBoxResult.Yes)
             {
-                if (Directory.Exists(mainParams.AllReportsPath))
-                    Process.Start(Directory.GetCurrentDirectory() + mainParams.AllReportsPath);
+                string path = "";
+                if (action == ReportAction.Generate)
+                    path = mainParams.ReportsPath;
+                else if (action == ReportAction.Save)
+                    path = mainParams.SavedReportsPath;
+                if (Directory.Exists(path))
+                    Process.Start(Directory.GetCurrentDirectory() + path);
                 else
-                    MessageBox.Show("Не получилось найти папки с отчетами!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    MessageBox.Show("Не получилось найти папку с отчетами!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
-
         }
     }
 }

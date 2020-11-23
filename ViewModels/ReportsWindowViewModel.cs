@@ -19,6 +19,12 @@ namespace WorkReportCreator.ViewModels
     {
         private int? _selectedIndex;
 
+        private enum ReportAction
+        {
+            Save,
+            Generate
+        }
+
         /// <summary>
         /// Список всех вкладок
         /// </summary>
@@ -52,21 +58,22 @@ namespace WorkReportCreator.ViewModels
         {
             FastActionsItem fastActionsItem = new FastActionsItem
             {
-                IsButtonEnabled = laboratoryWorks.Count > 0 || practicalWorks.Count > 0
+                IsButtonsEnabled = laboratoryWorks.Count > 0 || practicalWorks.Count > 0
             };
 
             fastActionsItem.ButtonGenerateAllClicked += GenerateAllReports;
+            fastActionsItem.ButtonSaveAllClicked += SaveAllReports;
             fastActionsItem.ButtonBackClicked += (sender) => ButtonBackClicked?.Invoke(sender);
 
             ResourceDictionary tabItemStyle = new ResourceDictionary() { Source = new Uri("./Views/Styles/CommonTabItemStyle.xaml", UriKind.Relative) };
 
             TabItems.Add(new TabItem() { Header = "Быстрые действия", Content = fastActionsItem, Style = tabItemStyle["CommonTabItemStyle"] as Style });
 
-            Dictionary<string, Dictionary<string, ReportInformation>> template;
+            Dictionary<string, Dictionary<string, Report>> template;
             MainParams mainParams = new MainParams();
             try
             {
-                template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, ReportInformation>>>(File.ReadAllText(mainParams.CurrentTemplateFilePath));
+                template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Report>>>(File.ReadAllText(mainParams.CurrentTemplateFilePath));
             }
             catch (Exception)
             {
@@ -83,60 +90,9 @@ namespace WorkReportCreator.ViewModels
             OnPropertyChanged();
         }
 
-        private void GenerateAllReports(object obj)
-        {
-            List<int> failedPracticesReports = new List<int>();
-            List<int> failedLaboratoriesReports = new List<int>();
+        private void GenerateAllReports(object obj) => ExecuteWithAllReports(ReportAction.Generate, "созданы", "создании");
 
-            for (int i = 1; i < TabItems.Count; i++)
-            {
-                string name = TabItems[i].Header as string;
-                ReportItem item = TabItems[i].Content as ReportItem;
-                try
-                {
-                    item.GenerateReport();
-                }
-                catch (Exception)
-                {
-                    List<int> list = Regex.IsMatch(name, "пр|Пр") ? failedPracticesReports : failedLaboratoriesReports;
-                    list.Add(i);
-                }
-            }
-
-            if (failedLaboratoriesReports.Count == 0 && failedPracticesReports.Count == 0)
-            {
-                if (MessageBox.Show($"Все отчеты успешно созданы!\nОткрыть папку с отчетами?", "Поздравляю!",
-               MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No) == MessageBoxResult.Yes)
-                {
-                    MainParams mainParams = new MainParams();
-                    if (Directory.Exists(mainParams.AllReportsPath))
-                        Process.Start(Directory.GetCurrentDirectory() + mainParams.AllReportsPath);
-                    else
-                        MessageBox.Show("Не получилось найти папки с отчетами!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                }
-            }
-            else if (failedPracticesReports.Count == 0 && failedLaboratoriesReports.Count >= 0)
-            {
-                MessageBox.Show($"Все отчеты для практических работ успешно созданы!\n" +
-                    $"При создании отчетов для лабораторных работ произошли ошибки:\n" +
-                    string.Join(" ", failedLaboratoriesReports.Take(10)) + (failedLaboratoriesReports.Count > 10 ? "..." : ""),
-                    "Поздравляю!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
-            else if (failedLaboratoriesReports.Count > 0 && failedPracticesReports.Count == 0)
-            {
-                MessageBox.Show($"Все отчеты для лабораторных работ успешно созданы!\n" +
-                    $"При создании отчетов для практических работ произошли ошибки:\n" +
-                    string.Join(" ", failedPracticesReports.Take(10)) + (failedPracticesReports.Count > 10 ? "..." : ""),
-                    "Поздравляю!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
-            else
-            {
-                MessageBox.Show($"При создании отчетов произошли ошибки!\n" +
-                    $"Практические работы:\n{string.Join(" ", failedPracticesReports.Take(10)) + (failedPracticesReports.Count > 10 ? "..." : "")}" +
-                    $"\nЛабораторные работы:\n{string.Join(" ", failedLaboratoriesReports.Take(10)) + (failedLaboratoriesReports.Count > 10 ? "..." : "")}",
-                    "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
+        private void SaveAllReports(object obj) => ExecuteWithAllReports(ReportAction.Save, "сохранены", "сохранении");
 
         /// <summary>
         /// Добавляет новые вкладки для всех выбранных работ
@@ -147,7 +103,7 @@ namespace WorkReportCreator.ViewModels
         /// <param name="shortDescription">Аббревеатура типа работы</param>
         /// <param name="selectedWorks">Выбранные пользователем работы</param>
         /// <param name="style">Стиль для TabItem</param>
-        private void LoadTemplateInfoFromKey(Dictionary<string, Dictionary<string, ReportInformation>> template, ReportsWindow window,
+        private void LoadTemplateInfoFromKey(Dictionary<string, Dictionary<string, Report>> template, ReportsWindow window,
             string workType, string shortDescription, List<string> selectedWorks, Style style)
         {
             if (template.Keys.Contains(workType) == false)
@@ -171,6 +127,65 @@ namespace WorkReportCreator.ViewModels
                     MessageBox.Show($"Не получилось загрузить {number} {shortDescription} работу,\nвозможно, ошибка в ключах.",
                         $"Ошибка при загрузке работы!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+            }
+        }
+
+        private void ExecuteWithAllReports(ReportAction action, string actionName, string actionName1)
+        {
+            List<int> failedPracticesReports = new List<int>();
+            List<int> failedLaboratoriesReports = new List<int>();
+
+            for (int i = 1; i < TabItems.Count; i++)
+            {
+                string name = TabItems[i].Header as string;
+                ReportItem item = TabItems[i].Content as ReportItem;
+                try
+                {
+                    if (action == ReportAction.Generate)
+                        item.GenerateReport();
+                    else if (action == ReportAction.Save)
+                        item.SaveReport();
+                }
+                catch (Exception)
+                {
+                    List<int> list = Regex.IsMatch(name, "пр|Пр") ? failedPracticesReports : failedLaboratoriesReports;
+                    list.Add(i);
+                }
+            }
+
+            if (failedLaboratoriesReports.Count == 0 && failedPracticesReports.Count == 0)
+            {
+                if (MessageBox.Show($"Все отчеты успешно {actionName}!\nОткрыть папку с отчетами?", "Поздравляю!",
+               MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No) == MessageBoxResult.Yes)
+                {
+                    MainParams mainParams = new MainParams();
+                    string path = action == ReportAction.Generate ? mainParams.ReportsPath : mainParams.SavedReportsPath;
+                    if (Directory.Exists(path))
+                        Process.Start(Directory.GetCurrentDirectory() + path);
+                    else
+                        MessageBox.Show("Не получилось найти папку с отчетами!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
+            }
+            else if (failedPracticesReports.Count == 0 && failedLaboratoriesReports.Count >= 0)
+            {
+                MessageBox.Show($"Все отчеты для практических работ успешно {actionName}!\n" +
+                    $"При {actionName1} отчетов для лабораторных работ произошли ошибки:\n" +
+                    string.Join(" ", failedLaboratoriesReports.Take(10)) + (failedLaboratoriesReports.Count > 10 ? "..." : ""),
+                    "Поздравляю!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            else if (failedLaboratoriesReports.Count > 0 && failedPracticesReports.Count == 0)
+            {
+                MessageBox.Show($"Все отчеты для лабораторных работ успешно {actionName}!\n" +
+                    $"При {actionName1} отчетов для практических работ произошли ошибки:\n" +
+                    string.Join(" ", failedPracticesReports.Take(10)) + (failedPracticesReports.Count > 10 ? "..." : ""),
+                    "Поздравляю!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            else
+            {
+                MessageBox.Show($"При {actionName1} отчетов произошли ошибки!\n" +
+                    $"Практические работы:\n{string.Join(" ", failedPracticesReports.Take(10)) + (failedPracticesReports.Count > 10 ? "..." : "")}" +
+                    $"\nЛабораторные работы:\n{string.Join(" ", failedLaboratoriesReports.Take(10)) + (failedLaboratoriesReports.Count > 10 ? "..." : "")}",
+                    "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

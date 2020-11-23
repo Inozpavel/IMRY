@@ -114,7 +114,7 @@
                 <Image x:Name="image" Height="200" AllowDrop="True" Source="/Images/FolderTakenIn.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
 
-            <ListBox AllowDrop="True" BorderThickness="3" BorderBrush="Transparent" x:Name="listBox" MinHeight="347" Background="Transparent" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding FilesArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Drop="AddAllFiles" DragEnter="ChangeImageToTakenOut" DragLeave="ChangeImageToTakenIn" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox AllowDrop="True" BorderThickness="3" BorderBrush="Transparent" x:Name="listBox" MinHeight="347" Background="Transparent" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding FilesArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Drop="AddFilesFromDragAndDrop" DragEnter="ChangeImageToTakenOut" DragLeave="ChangeImageToTakenIn" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 
                 <ListBox.Style>
                     <Style TargetType="ListBox">
@@ -177,7 +177,7 @@
                     <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
                 </Grid.Resources>
 
-                <Button Width="320" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="False" Content="Сохранить данные" Margin="3" Style="{StaticResource CommonAnimatedButton}"/>
+                <Button Width="320" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Сохранить данные" Margin="3" Style="{StaticResource CommonAnimatedButton}" Click="SaveReportClicked"/>
                 <Button Width="320" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Сгенерировать отчет для работы" Margin="3" Style="{StaticResource CommonAnimatedButton}" Click="GenerateReportClicked"/>
             </Grid>
         </Border>
