@@ -30,7 +30,7 @@
 
         <Image Grid.Row="0" Source="../AppIcon.png" VerticalAlignment="Center" HorizontalAlignment="Center" Height="160" Margin="0 10 0 0"/>
         <Button Grid.Row="1" Content="Создать отчет" Click="ShowWindowReportsSelect" Margin="10 10 10 5" Style="{StaticResource CommonAnimatedButton}"/>
-        <Button Grid.Row="2" IsEnabled="False" Content="Открыть файл с отчетом" Click="LoadReport" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
+        <Button Grid.Row="2" IsEnabled="False" Content="Загрузить отчет из файла" Click="LoadReport" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
         <Button Grid.Row="3" Content="Создать шаблон" Click="ShowWindowReportsTemplate" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
         <Button Grid.Row="4" Content="Изменить шаблон" Click="LoadWindowReportsTemplate" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
         <Grid Grid.Row="5" Height="40">
