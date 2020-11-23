@@ -44,7 +44,7 @@ namespace WorkReportCreator.ViewModels
 
         #endregion
 
-        private ReportInformation _currentInformation;
+        private Report _currentInformation;
 
         private Visibility _reportInformationVisibility;
 
@@ -74,7 +74,7 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Текущий список описаний работ
         /// </summary>
-        public Dictionary<RadioButton, ReportInformation> Works { get; set; }
+        public Dictionary<RadioButton, Report> Works { get; set; }
 
         /// <summary>
         /// Список кнопок с номерами доступных лабораторных работ 
@@ -89,12 +89,12 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Список описаний лабораторных работ
         /// </summary>
-        public Dictionary<RadioButton, ReportInformation> LaboratoriesWorks { get; set; } = new Dictionary<RadioButton, ReportInformation>();
+        public Dictionary<RadioButton, Report> LaboratoriesWorks { get; set; } = new Dictionary<RadioButton, Report>();
 
         /// <summary>
         /// Список описаний практических работ
         /// </summary>
-        public Dictionary<RadioButton, ReportInformation> PractisesWorks { get; set; } = new Dictionary<RadioButton, ReportInformation>();
+        public Dictionary<RadioButton, Report> PractisesWorks { get; set; } = new Dictionary<RadioButton, Report>();
 
         /// <summary>
         /// Показывает, выбран ли пункт "Лабораторные работы"
@@ -109,7 +109,7 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Текущее выбранное описание работы
         /// </summary>
-        public ReportInformation CurrentInformation
+        public Report CurrentInformation
         {
             get => _currentInformation;
             set
@@ -122,12 +122,12 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Текущее выбранное описание практической работы
         /// </summary>
-        public ReportInformation PractisesCurrentInformation { get; set; }
+        public Report PractisesCurrentInformation { get; set; }
 
         /// <summary>
         /// Текущее выбранное описание лабораторной работы
         /// </summary>
-        public ReportInformation LaboratoriesCurrentInformation { get; set; }
+        public Report LaboratoriesCurrentInformation { get; set; }
 
         /// <summary>
         /// Видимость описания работы
@@ -195,7 +195,7 @@ namespace WorkReportCreator.ViewModels
         /// <param name="template">Шаблон</param>
         /// <param name="filePath">Путь до файла с шаблоном</param>
         /// <exception cref="ArgumentException"/>
-        public ReportsTemplateWindowViewModel(Dictionary<string, Dictionary<string, ReportInformation>> template, string filePath)
+        public ReportsTemplateWindowViewModel(Dictionary<string, Dictionary<string, Report>> template, string filePath)
         {
             AddBaseFunctional();
             foreach (string workType in template.Keys)
@@ -206,7 +206,7 @@ namespace WorkReportCreator.ViewModels
                 foreach (string number in template[workType].Keys)
                 {
                     RadioButton radioButton = GenerateNewItem(int.Parse(number));
-                    ReportInformation reportInformation = template[workType][number];
+                    Report reportInformation = template[workType][number];
                     reportInformation.PropertyChanged += SaveAllInformation;
                     foreach (DynamicTask task in reportInformation.DynamicTasks)
                         task.PropertyChanged += (sender, e) => SaveAllInformation(this, null);
@@ -317,7 +317,7 @@ namespace WorkReportCreator.ViewModels
         private void AddNewWork(object sender)
         {
             RadioButton radioButton;
-            ReportInformation reportInformation;
+            Report reportInformation;
             if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
                 radioButton = GenerateNewItem(WorksButtons.Count + 1);
             else
@@ -329,7 +329,7 @@ namespace WorkReportCreator.ViewModels
                 radioButton = GenerateNewItem(box.ResultNumber ?? WorksButtons.Count + 1);
 
             }
-            reportInformation = new ReportInformation();
+            reportInformation = new Report();
             reportInformation.PropertyChanged += SaveAllInformation;
             Works.Add(radioButton, reportInformation);
             WorksButtons.Add(radioButton);
@@ -346,7 +346,7 @@ namespace WorkReportCreator.ViewModels
                 (string.IsNullOrEmpty(CurrentInformation.Name) && string.IsNullOrEmpty(CurrentInformation.WorkTarget) &&
                 string.IsNullOrEmpty(CurrentInformation.CommonTask) && string.IsNullOrEmpty(CurrentInformation.TheoryPart)) == false)
             {
-                if (MessageBox.Show("В выбранно элементу имеются введенные данные!\nПри удалении вы потеряет их БЕЗВОЗВРАТНО!\nВы уверены?", "Подтвердите действие",
+                if (MessageBox.Show("В выбранно элементе имеются введенные данные!\nПри удалении вы потеряет их БЕЗВОЗВРАТНО!\nВы уверены?", "Подтвердите действие",
                     MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No)
                 {
                     return;
@@ -507,13 +507,13 @@ namespace WorkReportCreator.ViewModels
         {
             if (string.IsNullOrEmpty(FilePath))
                 return;
-            Dictionary<string, Dictionary<string, ReportInformation>> template = new Dictionary<string, Dictionary<string, ReportInformation>>();
+            Dictionary<string, Dictionary<string, Report>> template = new Dictionary<string, Dictionary<string, Report>>();
 
-            Dictionary<string, ReportInformation> practisesinfo = new Dictionary<string, ReportInformation>();
+            Dictionary<string, Report> practisesinfo = new Dictionary<string, Report>();
             foreach (var button in PractisesWorksButtons)
                 practisesinfo[button.Content.ToString()] = PractisesWorks[button];
 
-            Dictionary<string, ReportInformation> laboratoriesInfo = new Dictionary<string, ReportInformation>();
+            Dictionary<string, Report> laboratoriesInfo = new Dictionary<string, Report>();
             foreach (var button in LaboratoriesWorksButtons)
                 laboratoriesInfo[button.Content.ToString()] = LaboratoriesWorks[button];
 

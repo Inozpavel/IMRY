@@ -60,7 +60,7 @@ namespace WorkReportCreator.ViewModels
         /// </summary>
         private void SelectCurrentTemplateFile()
         {
-            if (ShowDialogAndCheckPathIsCorrect<Dictionary<string, Dictionary<string, ReportInformation>>>("Выберите файл с шаблоном работ", "Json файлы(*.json)|*.json"))
+            if (ShowDialogAndCheckPathIsCorrect<Dictionary<string, Dictionary<string, Report>>>("Выберите файл с шаблоном работ", "Json файлы(*.json)|*.json"))
                 Params.CurrentTemplateFilePath = _dialog.FileName;
         }
 
@@ -83,7 +83,7 @@ namespace WorkReportCreator.ViewModels
                 Description = "Выберите папку, где будут сохраняться отчеты"
             };
             if (dialog.ShowDialog() == DialogResult.OK)
-                Params.AllReportsPath = dialog.SelectedPath;
+                Params.ReportsPath = dialog.SelectedPath;
         }
 
         /// <summary>
@@ -98,8 +98,7 @@ namespace WorkReportCreator.ViewModels
             _dialog = BuildDialog(title, filter);
             if (_dialog.ShowDialog() == DialogResult.OK)
             {
-                if (CheckJsonFileHasFormat<T>(File.ReadAllText(_dialog.FileName)))
-                    return true;
+                return CheckJsonFileHasFormat<T>(File.ReadAllText(_dialog.FileName));
             }
             return false;
         }
