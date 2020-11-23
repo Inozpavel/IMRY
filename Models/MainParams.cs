@@ -25,7 +25,9 @@ namespace WorkReportCreator.Models
 
         private string _userDataFilePath = "";
 
-        private string _allReportsPath = "./Reports/";
+        private string _reportsPath = "./Reports/";
+
+        private string _savedReportsPath = "./SavedReports/";
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -41,7 +43,6 @@ namespace WorkReportCreator.Models
             {
                 _workHasTitlePage = value;
                 OnPropertyChanged();
-                TrySave();
             }
         }
 
@@ -55,7 +56,6 @@ namespace WorkReportCreator.Models
             {
                 _workTitlePageFilePath = value;
                 OnPropertyChanged();
-                TrySave();
             }
         }
 
@@ -69,7 +69,6 @@ namespace WorkReportCreator.Models
             {
                 _workHasTitlePageParams = value;
                 OnPropertyChanged();
-                TrySave();
             }
         }
 
@@ -83,7 +82,6 @@ namespace WorkReportCreator.Models
             {
                 _workTitlePageParamsFilePath = value;
                 OnPropertyChanged();
-                TrySave();
             }
         }
 
@@ -97,7 +95,6 @@ namespace WorkReportCreator.Models
             {
                 _permittedDragAndDropExtentionsFilePath = value;
                 OnPropertyChanged();
-                TrySave();
             }
         }
 
@@ -111,7 +108,6 @@ namespace WorkReportCreator.Models
             {
                 _currentTemplateFilePath = value;
                 OnPropertyChanged();
-                TrySave();
             }
         }
 
@@ -125,21 +121,29 @@ namespace WorkReportCreator.Models
             {
                 _userDataFilePath = value;
                 OnPropertyChanged();
-                TrySave();
             }
         }
 
         /// <summary>
         /// Путь, где все отчеты будут сохранены
         /// </summary>
-        public string AllReportsPath
+        public string ReportsPath
         {
-            get => _allReportsPath;
+            get => _reportsPath;
             set
             {
-                _allReportsPath = value;
+                _reportsPath = value;
                 OnPropertyChanged();
-                TrySave();
+            }
+        }
+
+        public string SavedReportsPath
+        {
+            get => _savedReportsPath;
+            set
+            {
+                _savedReportsPath = value;
+                OnPropertyChanged();
             }
         }
 
@@ -156,7 +160,8 @@ namespace WorkReportCreator.Models
             _currentTemplateFilePath = parameters["CurrentTemplateFilePath"];
             if (parameters.Keys.Contains("UserDataFilePath"))
                 _userDataFilePath = parameters["UserDataFilePath"];
-            _allReportsPath = parameters["AllReportsPath"];
+            _reportsPath = parameters["ReportsPath"];
+            _savedReportsPath = parameters["SavedReportsPath"];
         }
 
         public static void ValidateAllParams()
@@ -168,7 +173,8 @@ namespace WorkReportCreator.Models
                     "WorkHasTitlePage",
                     "PermittedDragAndDropExtentionsFilePath",
                     "CurrentTemplateFilePath",
-                    "AllReportsPath"
+                    "ReportsPath",
+                    "SavedReportsPath",
                 };
 
                 var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
@@ -201,6 +207,12 @@ namespace WorkReportCreator.Models
             }
         }
 
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            TrySave();
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         private bool TrySave()
         {
             try
@@ -213,7 +225,5 @@ namespace WorkReportCreator.Models
                 return false;
             }
         }
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
