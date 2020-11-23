@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace WorkReportCreator.Models
 {
-    public class ReportInformation : INotifyPropertyChanged
+    public class Report : INotifyPropertyChanged
     {
         private string _name = "";
 
@@ -87,10 +87,7 @@ namespace WorkReportCreator.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ReportInformation()
-        {
-            _dynamicTasks.CollectionChanged += (sender, e) => OnPropertyChanged();
-        }
+        public Report() => _dynamicTasks.CollectionChanged += (sender, e) => OnPropertyChanged();
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

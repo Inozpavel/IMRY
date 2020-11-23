@@ -12,9 +12,9 @@ using WorkReportCreator.Models;
 
 namespace WorkReportCreator.ViewModels.Commands
 {
-    internal class StudentInformationWindowViewModel : INotifyPropertyChanged
+    internal class SelectionOfWorksViewModel : INotifyPropertyChanged
     {
-        private readonly WorksAndStudentInfoWindow _worksAndStudentInfoWindow;
+        private readonly SelectionOfWorksWindow _worksAndStudentInfoWindow;
 
         private Visibility _labaratoriesVisibility;
 
@@ -22,7 +22,7 @@ namespace WorkReportCreator.ViewModels.Commands
 
         private Visibility _worksSelectVisibility;
 
-        private StudentInformation _student;
+        private Student _student;
 
         private string _saveStatus;
 
@@ -114,7 +114,7 @@ namespace WorkReportCreator.ViewModels.Commands
         /// <summary>
         /// Текущая информация о студенте
         /// </summary>
-        public StudentInformation Student
+        public Student Student
         {
             get => _student;
             set
@@ -130,9 +130,9 @@ namespace WorkReportCreator.ViewModels.Commands
 
         /// <param name="window">Окно с вводом информации о студенте и выбором работ</param>
         /// <exception cref="Exception"/>
-        public StudentInformationWindowViewModel(WorksAndStudentInfoWindow window)
+        public SelectionOfWorksViewModel(SelectionOfWorksWindow window)
         {
-            _student = new StudentInformation();
+            _student = new Student();
             _student.PropertyChanged += SaveStudentInformation;
             _worksAndStudentInfoWindow = window;
             SaveStudentInfo = new Command(ShowDialogSaveStudent, null);
@@ -155,7 +155,7 @@ namespace WorkReportCreator.ViewModels.Commands
 
             try
             {
-                var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, ReportInformation>>>(File.ReadAllText(mainParams.CurrentTemplateFilePath));
+                var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Report>>>(File.ReadAllText(mainParams.CurrentTemplateFilePath));
                 foreach (string type in template.Keys.Distinct())
                 {
                     foreach (string workNumber in template[type].Keys.Distinct())
@@ -272,7 +272,7 @@ namespace WorkReportCreator.ViewModels.Commands
                 return false;
             try
             {
-                Student = JsonConvert.DeserializeObject<StudentInformation>(File.ReadAllText(filePath));
+                Student = JsonConvert.DeserializeObject<Student>(File.ReadAllText(filePath));
                 Student.PropertyChanged += SaveStudentInformation;
                 if (_student.FirstName == null && _student.SecondName == null && _student.MiddleName == null && _student.Group == null)
                     return false;

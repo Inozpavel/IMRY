@@ -18,23 +18,23 @@ namespace WorkReportCreator
         /// <summary>
         /// Данные студента
         /// </summary>
-        public StudentInformation Student { get; set; }
+        public Student Student { get; set; }
 
         /// <summary>
         /// Окно с информацией о студенте
         /// </summary>
-        private readonly WorksAndStudentInfoWindow _informationPage;
+        private readonly SelectionOfWorksWindow _informationPage;
 
         /// <param name="informationPage">Окно с выбором работ и информацией о студенте</param>
         /// <param name="laboratoryWorks">Список номеров лабораторных работ</param>
         /// <param name="practicalWorks">Список номеров практических работ</param>
-        public ReportsWindow(WorksAndStudentInfoWindow informationPage, List<string> laboratoryWorks, List<string> practicalWorks, StudentInformation student)
+        public ReportsWindow(SelectionOfWorksWindow informationPage, List<string> laboratoryWorks, List<string> practicalWorks, Student student)
         {
             InitializeComponent();
             Student = student;
             try
             {
-                _model = new ReportsWindowViewModel(laboratoryWorks, practicalWorks, this);
+                DataContext = _model = new ReportsWindowViewModel(laboratoryWorks, practicalWorks, this);
             }
             catch (Exception e)
             {
@@ -43,7 +43,6 @@ namespace WorkReportCreator
             }
             _model.ButtonBackClicked += ShowWorkAndStudentInformation;
             _informationPage = informationPage;
-            DataContext = _model;
         }
 
         /// <summary>

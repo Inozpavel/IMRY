@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace WorkReportCreator
 {
-    public class StudentInformation : INotifyPropertyChanged
+    public class Student : INotifyPropertyChanged
     {
         private string _secondName = "";
 

@@ -7,7 +7,7 @@ namespace WorkReportCreator
     /// <summary>
     /// Окно с вводом информации о студенте и выбором работ
     /// </summary>
-    public partial class WorksAndStudentInfoWindow : Window
+    public partial class SelectionOfWorksWindow : Window
     {
         /// <summary>
         /// Главное меню
@@ -17,13 +17,13 @@ namespace WorkReportCreator
         /// <summary>
         /// Модель данных этого элемента
         /// </summary>
-        private readonly StudentInformationWindowViewModel _model;
+        private readonly SelectionOfWorksViewModel _model;
 
         /// <exception cref="Exception"/>
-        public WorksAndStudentInfoWindow(MainWindow mainWindow)
+        public SelectionOfWorksWindow(MainWindow mainWindow)
         {
             InitializeComponent();
-            _model = new StudentInformationWindowViewModel(this);
+            _model = new SelectionOfWorksViewModel(this);
             DataContext = _model;
             _mainWindow = mainWindow;
         }

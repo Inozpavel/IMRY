@@ -11,46 +11,49 @@ namespace WorkReportCreator
     /// <summary>
     /// Окно с редактированием информации в шаблоне
     /// </summary>
-    public partial class ReportsTemplate : Window
+    public partial class ReportsTemplateWindow : Window
     {
         private readonly ReportsTemplateWindowViewModel _model;
 
         private readonly MainWindow _mainWindow;
 
-        /// <param name="mainWindow">Главное окно</param>
-        public ReportsTemplate(MainWindow mainWindow)
+        private ReportsTemplateWindow(MainWindow mainWindow, ReportsTemplateWindowViewModel model)
         {
             InitializeComponent();
-            DataContext = _model = new ReportsTemplateWindowViewModel();
             _mainWindow = mainWindow;
+            DataContext = _model = model;
+        }
+
+        /// <param name="mainWindow">Главное окно</param>
+        public ReportsTemplateWindow(MainWindow mainWindow) : this(mainWindow, new ReportsTemplateWindowViewModel())
+        {
         }
 
         /// <param name="mainWindow">Главное окно</param>
         /// <param name="template">Шаблон для работ</param>
         /// <param name="filePath">Путь до файла с шаблоном для работ</param>
-        public ReportsTemplate(MainWindow mainWindow, Dictionary<string, Dictionary<string, ReportInformation>> template, string filePath)
+        public ReportsTemplateWindow(MainWindow mainWindow, Dictionary<string, Dictionary<string, Report>> template, string filePath) :
+            this(mainWindow, new ReportsTemplateWindowViewModel(template, filePath))
         {
-            InitializeComponent();
-            DataContext = _model = new ReportsTemplateWindowViewModel(template, filePath);
-            _mainWindow = mainWindow;
         }
 
         private void CloseApplicationClicked(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            bool shouldClose = true;
             if (string.IsNullOrEmpty(_model.FilePath) && (_model.LaboratoriesWorksButtons.Count > 0 || _model.PractisesWorksButtons.Count > 0))
             {
-                shouldClose = MessageBox.Show("Данные не сохранены!\nПри выходе они будут ПОТЕРЯНЫ!\nВы уверены?", "Внимание!",
-                           MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes;
-            }
-
-            if (shouldClose)
-                _mainWindow.Show();
-            else
-            {
-                e.Cancel = true;
+                if (MessageBox.Show("Данные не сохранены!\nПри выходе они будут ПОТЕРЯНЫ!\nВы уверены?", "Внимание!",
+                           MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
+                {
+                    _mainWindow.Show();
+                }
+                else
+                {
+                    e.Cancel = true;
+                }
                 return;
+
             }
+            _mainWindow.Show();
         }
 
         /// <summary>
@@ -75,12 +78,8 @@ namespace WorkReportCreator
         /// <param name="isName">Нужно ли использовать правила форматирования для как для имени работы</param>
         private void CheckShiftStateAndFormatText(bool shouldShiftBePressed, Button button, bool isName = false)
         {
-            if (Keyboard.IsKeyDown(Key.LeftShift) == shouldShiftBePressed)
+            if (Keyboard.IsKeyDown(Key.LeftShift) == shouldShiftBePressed || string.IsNullOrEmpty(button.Content as string))
                 return;
-
-            if (string.IsNullOrEmpty(button.Content as string))
-                return;
-
             button.Content = _model.FormatText(button.Content as string, isNameOfWork: isName);
         }
 
