@@ -38,6 +38,7 @@ namespace WorkReportCreator.Views.CustomConrols
             set
             {
                 SetValue(IsCheckedProperty, value);
+                ImagePath = IsChecked ? CheckedImage : UncheckedImage;
                 OnPropertyChanged();
             }
         }
@@ -128,7 +129,6 @@ namespace WorkReportCreator.Views.CustomConrols
         private void InvertIsChecked(object sender, MouseButtonEventArgs e)
         {
             IsChecked = !IsChecked;
-            ImagePath = IsChecked ? CheckedImage : UncheckedImage;
             OnPropertyChanged();
             CheckedChanged?.Invoke(this);
         }
