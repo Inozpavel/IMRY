@@ -124,19 +124,26 @@ namespace WorkReportCreator
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <param name="DynamicTasks">Список заданий (при наличии)</param>
-        public ReportViewModel(List<string> DynamicTasks)
+        public ReportViewModel(List<string> DynamicTasks, ReportModel report = null)
         {
             FilesArray.CollectionChanged += (sender, e) => HintVisibility = FilesArray.Count != 0 ? Visibility.Hidden : Visibility.Visible;
 
-            AddFileInfo = new Command(AddNewFileInfo, null);
+            AddFileInfo = new Command((sender) => AddNewFileInfo(), null);
             RemoveFileInfo = new Command(RemoveSelectedFileInfo, (sender) => SelectedItem != null);
             SwapUpFileInfo = new Command(SwapUpSelectedFileInfo, (sender) => _selectedItem != null && _selectedItemIndex != 0);
             SwapDownFileInfo = new Command(SwapDownSelectedFileInfo, (sender) => _selectedItem != null && _selectedItemIndex + 1 != FilesArray.Count);
 
+            for (int i = 0; i < DynamicTasks?.Count; i++)
+            {
+                DynamicTasksArray.Add(new DynamicTaskItem()
+                {
+                    Text = DynamicTasks[i],
+                    IsChecked = report.SelectedTasksIndices.Contains(i),
+                });
+            }
             foreach (string task in DynamicTasks ?? new List<string>())
-                DynamicTasksArray.Add(new DynamicTaskItem() { Text = task, });
 
-            DynamicTasksVisiblity = DynamicTasks.Count > 0 ? DynamicTasksVisiblity = Visibility.Visible : DynamicTasksVisiblity = Visibility.Collapsed;
+                DynamicTasksVisiblity = DynamicTasks.Count > 0 ? DynamicTasksVisiblity = Visibility.Visible : DynamicTasksVisiblity = Visibility.Collapsed;
             DynamicTasksStatus = DynamicTasks.Count == 0 ? "Заданий для выбора нет" : "Выберите, пожалуйста, задание";
 
             void UpdateTasksStatus(object sender) => DynamicTasksStatus = DynamicTasksArray
@@ -144,6 +151,11 @@ namespace WorkReportCreator
 
             foreach (var i in DynamicTasksArray)
                 i.CheckedChanged += UpdateTasksStatus;
+            if (report != null)
+            {
+                foreach (var fileItem in report.FilesAndDescriptions)
+                    AddNewFileInfo(fileItem.Key, fileItem.Value);
+            }
         }
 
         public void SaveReport(string reportName)
@@ -175,13 +187,13 @@ namespace WorkReportCreator
         /// <summary>
         /// Добавляет пустой элемент в список файлов
         /// </summary>
-        public void AddNewFileInfo(object sender)
+        public void AddNewFileInfo(string filePath = "", string fileDescription = "")
         {
             if (SelectedItemIndex != null)
             {
                 FilesArray.Insert(SelectedItemIndex + 1 ?? 0, new ListBoxItem()
                 {
-                    Content = new FileInformationItem() { Number = FilesArray.Count + 1 },
+                    Content = new FileInformationItem() { Number = FilesArray.Count + 1, FilePath = filePath, FileDescription = fileDescription },
                     HorizontalContentAlignment = HorizontalAlignment.Stretch
                 });
                 SelectedItemIndex += 1;
@@ -191,7 +203,7 @@ namespace WorkReportCreator
             {
                 FilesArray.Add(new ListBoxItem()
                 {
-                    Content = new FileInformationItem() { Number = FilesArray.Count + 1 },
+                    Content = new FileInformationItem() { Number = FilesArray.Count + 1, FilePath = filePath, FileDescription = fileDescription },
                     HorizontalContentAlignment = HorizontalAlignment.Stretch
                 });
                 SelectedItemIndex = FilesArray.Count - 1;

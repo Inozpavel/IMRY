@@ -54,7 +54,7 @@ namespace WorkReportCreator.ViewModels
         /// <param name="practicalWorks">Список доступный для выбора приктических работ</param>
         /// <param name="reportsWindow">Окно, на котором расположен элемент</param>
         /// <exception cref="Exception"/>
-        public ReportsWindowViewModel(List<string> laboratoryWorks, List<string> practicalWorks, ReportsWindow reportsWindow)
+        public ReportsWindowViewModel(List<string> laboratoryWorks, List<string> practicalWorks, ReportsWindow reportsWindow, IEnumerable<ReportModel> reports)
         {
             FastActionsItem fastActionsItem = new FastActionsItem
             {
@@ -83,8 +83,8 @@ namespace WorkReportCreator.ViewModels
             if (template.Keys.Contains("Laboratories") == false && template.Keys.Contains("Practices") == false)
                 throw new Exception("В файле с шаблоном отсутствуют и практические и лабораторные работы!");
 
-            LoadTemplateInfoFromKey(template, reportsWindow, "Practices", "пр.", practicalWorks, tabItemStyle["CommonTabItemStyle"] as Style);
-            LoadTemplateInfoFromKey(template, reportsWindow, "Laboratories", "лаб.", laboratoryWorks, tabItemStyle["CommonTabItemStyle"] as Style);
+            LoadTemplateInfoFromKey(template, reportsWindow, "Practices", "пр.", practicalWorks, tabItemStyle["CommonTabItemStyle"] as Style, reports?.Where(x => x.WorkType == "Practice"));
+            LoadTemplateInfoFromKey(template, reportsWindow, "Laboratories", "лаб.", laboratoryWorks, tabItemStyle["CommonTabItemStyle"] as Style, reports?.Where(x => x.WorkType == "Laboratory"));
 
             SelectedIndex = 0;
             OnPropertyChanged();
@@ -104,21 +104,21 @@ namespace WorkReportCreator.ViewModels
         /// <param name="selectedWorks">Выбранные пользователем работы</param>
         /// <param name="style">Стиль для TabItem</param>
         private void LoadTemplateInfoFromKey(Dictionary<string, Dictionary<string, Report>> template, ReportsWindow window,
-            string workType, string shortDescription, List<string> selectedWorks, Style style)
+            string workType, string shortDescription, List<string> selectedWorks, Style style, IEnumerable<ReportModel> reports)
         {
             if (template.Keys.Contains(workType) == false)
                 return;
-
 
             foreach (string number in template[workType].Keys.Where(x => selectedWorks.Contains(x)))
             {
                 try
                 {
                     List<string> dynamicTasks = template[workType][number].DynamicTasks.Select(x => x.Description).Select(x => Regex.Replace(x, "\\n", "").Trim()).ToList();
+                    ReportModel report = reports?.First(x => x.WorkNumber.ToString() == number);
                     TabItems.Add(new TabItem()
                     {
                         Header = $"{number} {shortDescription}",
-                        Content = new ReportItem(window, dynamicTasks),
+                        Content = new ReportItem(window, dynamicTasks, report),
                         Style = style,
                     });
                 }
@@ -161,7 +161,7 @@ namespace WorkReportCreator.ViewModels
                     MainParams mainParams = new MainParams();
                     string path = action == ReportAction.Generate ? mainParams.ReportsPath : mainParams.SavedReportsPath;
                     if (Directory.Exists(path))
-                        Process.Start(Directory.GetCurrentDirectory() + path);
+                        Process.Start(path.StartsWith(".") || path.StartsWith("/") ? Directory.GetCurrentDirectory() + path : path);
                     else
                         MessageBox.Show("Не получилось найти папку с отчетами!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }

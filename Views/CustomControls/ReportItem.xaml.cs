@@ -38,10 +38,10 @@ namespace WorkReportCreator
 
         /// <param name="page">Окно, на котором расположен элемент</param>
         /// <param name="DynamicTasks">Список заданий (при наличии)</param>
-        public ReportItem(ReportsWindow page, List<string> DynamicTasks)
+        public ReportItem(ReportsWindow page, List<string> DynamicTasks, ReportModel report = null)
         {
             InitializeComponent();
-            _model = new ReportViewModel(DynamicTasks);
+            _model = new ReportViewModel(DynamicTasks, report);
             DataContext = _model;
             _page = page;
             listBox.SelectionChanged += (sender, e) => listBox.ScrollIntoView(listBox.SelectedItem);
@@ -186,7 +186,7 @@ namespace WorkReportCreator
                 else if (action == ReportAction.Save)
                     path = mainParams.SavedReportsPath;
                 if (Directory.Exists(path))
-                    Process.Start(Directory.GetCurrentDirectory() + path);
+                    Process.Start(path.StartsWith(".") || path.StartsWith("/") ? Directory.GetCurrentDirectory() + path : path);
                 else
                     MessageBox.Show("Не получилось найти папку с отчетами!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }

@@ -32,8 +32,33 @@ namespace WorkReportCreator
         /// </summary>
         private void LoadReport(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("В процессе разработки...", "Work in progress!", MessageBoxButton.OK, MessageBoxImage.Information);
-            return;
+            MainParams mainParams = new MainParams();
+            string subjectName = mainParams.ShortSubjectName;
+            OpenFileDialog dialog = new OpenFileDialog()
+            {
+                Multiselect = true,
+                Title = "Выберите отчеты, которые хотите изменить",
+                Filter = $"Отчеты для текущего предмета - {subjectName} (*.{subjectName}.json)|*.{subjectName}.json",
+            };
+            if (dialog.ShowDialog() == true)
+            {
+                List<ReportModel> reports = new List<ReportModel>();
+                foreach (var path in dialog.FileNames)
+                {
+                    try
+                    {
+                        reports.Add(JsonConvert.DeserializeObject<ReportModel>(File.ReadAllText(path)));
+                    }
+                    catch
+                    {
+                        MessageBox.Show($"Невозможно распознать сожержимое файла!\nПовторите выбор файлов!\nПуть: {path}");
+                        return;
+                    }
+                }
+                SelectionOfWorksWindow window = new SelectionOfWorksWindow(this, reports);
+                Hide();
+                window.Show();
+            }
         }
 
         /// <summary>
@@ -88,6 +113,10 @@ namespace WorkReportCreator
         /// </summary>
         private void ShowWindowReportsTemplate(object sender, RoutedEventArgs e) => ShowWindow<ReportsTemplateWindow>();
 
+        /// <summary>
+        /// Показывет окно выбранного типа
+        /// </summary>
+        /// <typeparam name="T">Тип окна</typeparam>
         private void ShowWindow<T>() where T : Window
         {
             T window = (T)Activator.CreateInstance(typeof(T), this);

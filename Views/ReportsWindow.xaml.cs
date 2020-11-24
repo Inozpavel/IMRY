@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using WorkReportCreator.Models;
 using WorkReportCreator.ViewModels;
 
 namespace WorkReportCreator
@@ -28,13 +29,13 @@ namespace WorkReportCreator
         /// <param name="informationPage">Окно с выбором работ и информацией о студенте</param>
         /// <param name="laboratoryWorks">Список номеров лабораторных работ</param>
         /// <param name="practicalWorks">Список номеров практических работ</param>
-        public ReportsWindow(SelectionOfWorksWindow informationPage, List<string> laboratoryWorks, List<string> practicalWorks, Student student)
+        public ReportsWindow(SelectionOfWorksWindow informationPage, List<string> laboratoryWorks, List<string> practicalWorks, Student student, IEnumerable<ReportModel> reports = null)
         {
             InitializeComponent();
             Student = student;
             try
             {
-                DataContext = _model = new ReportsWindowViewModel(laboratoryWorks, practicalWorks, this);
+                DataContext = _model = new ReportsWindowViewModel(laboratoryWorks, practicalWorks, this, reports);
             }
             catch (Exception e)
             {

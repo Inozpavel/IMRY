@@ -14,7 +14,11 @@ namespace WorkReportCreator.ViewModels.Commands
 {
     internal class SelectionOfWorksViewModel : INotifyPropertyChanged
     {
-        private readonly SelectionOfWorksWindow _worksAndStudentInfoWindow;
+        private readonly SelectionOfWorksWindow _selectionOfWorksWindow;
+
+        private ResourceDictionary _tiltedButtonDictionary;
+
+        private ResourceDictionary _numberToggleButtonDictionary;
 
         private Visibility _labaratoriesVisibility;
 
@@ -25,6 +29,8 @@ namespace WorkReportCreator.ViewModels.Commands
         private Student _student;
 
         private string _saveStatus;
+
+        private readonly List<ReportModel> _reports;
 
         public string SaveStatus
         {
@@ -44,7 +50,7 @@ namespace WorkReportCreator.ViewModels.Commands
         /// <summary>
         /// От значения зависит, все кнопки с лабораторными работами будут отмечены / не отмечены
         /// </summary>
-        private bool _shouldCheckAllLaboratoryWork = false;
+        private bool _shouldCheckAllLaboratoryWorks = false;
 
         #region Commands
 
@@ -128,31 +134,59 @@ namespace WorkReportCreator.ViewModels.Commands
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        /// <param name="window">Окно с вводом информации о студенте и выбором работ</param>
-        /// <exception cref="Exception"/>
-        public SelectionOfWorksViewModel(SelectionOfWorksWindow window)
+        private void AddBaseFunctional()
         {
+            _tiltedButtonDictionary = new ResourceDictionary()
+            {
+                Source = new Uri("/Views/Styles/TiltedButtonStyle.xaml", UriKind.Relative)
+            };
+            _numberToggleButtonDictionary = new ResourceDictionary()
+            {
+                Source = new Uri("/Views/Styles/NumberToggleButtonStyle.xaml", UriKind.Relative)
+            };
+
             _student = new Student();
             _student.PropertyChanged += SaveStudentInformation;
-            _worksAndStudentInfoWindow = window;
+
             SaveStudentInfo = new Command(ShowDialogSaveStudent, null);
-            LoadStudentInfo = new Command(LoadStudent, null);
-            CheckAllLaboratoryButtons = new Command((sender) => CheckAllButtons(LaboratoryWorksButtons, ref _shouldCheckAllLaboratoryWork), null);
+            LoadStudentInfo = new Command(ShowDialogLoadStudent, null);
+            CheckAllLaboratoryButtons = new Command((sender) => CheckAllButtons(LaboratoryWorksButtons, ref _shouldCheckAllLaboratoryWorks), null);
             CheckAllPracticalButtons = new Command((sender) => CheckAllButtons(PracticalWorksButtons, ref _shouldCheckAllPracticalWorks), null);
             ShowReportsPage = new Command(LoadReportsPage, null);
 
             MainParams mainParams = new MainParams();
             LoadStudent(mainParams.UserDataFilePath);
+            AddButtonsCheckAll(PracticalWorksButtons);
+            AddButtonsCheckAll(LaboratoryWorksButtons);
+        }
 
-            ResourceDictionary dictionaryWithTiltedButton = new ResourceDictionary() { Source = new Uri("/Views/Styles/TiltedButtonStyle.xaml", UriKind.Relative) };
-            ResourceDictionary dictionaryWithNumberToggleButton = new ResourceDictionary() { Source = new Uri("/Views/Styles/NumberToggleButtonStyle.xaml", UriKind.Relative) };
+        private void AddButtonsCheckAll(List<ToggleButton> buttons)
+        {
+            ToggleButton button = new ToggleButton()
+            {
+                Content = "Все работы",
+                Style = _tiltedButtonDictionary["TiltedButton"] as Style,
+                Command = CheckAllPracticalButtons,
+                Margin = new Thickness(10),
+            };
+            buttons.Add(button);
+        }
 
-            ToggleButton checkAllPracticalButton = new ToggleButton() { Content = "Все работы", Style = dictionaryWithTiltedButton["TiltedButton"] as Style, Command = CheckAllPracticalButtons, Margin = new Thickness(10) };
-            ToggleButton checkAllLaboratoriesButton = new ToggleButton() { Content = "Все работы", Style = dictionaryWithTiltedButton["TiltedButton"] as Style, Command = CheckAllLaboratoryButtons, Margin = new Thickness(10) };
+        private void UpdateVisibility(MainParams mainParams)
+        {
+            PracticesVisibility = PracticalWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+            LaboratoriesVisibility = LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+            WorksSelectVisibility = PracticalWorksButtons.Count > 1 || LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+            SaveStatus = string.IsNullOrEmpty(mainParams.UserDataFilePath) ? "Сохранить информацию о студенте" : "Автосохранение включено";
+        }
 
-            PracticalWorksButtons.Add(checkAllPracticalButton);
-            LaboratoryWorksButtons.Add(checkAllLaboratoriesButton);
-
+        /// <param name="window">Окно с вводом информации о студенте и выбором работ</param>
+        /// <exception cref="Exception"/>
+        public SelectionOfWorksViewModel(SelectionOfWorksWindow window)
+        {
+            MainParams mainParams = new MainParams();
+            _selectionOfWorksWindow = window;
+            AddBaseFunctional();
             try
             {
                 var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Report>>>(File.ReadAllText(mainParams.CurrentTemplateFilePath));
@@ -160,55 +194,70 @@ namespace WorkReportCreator.ViewModels.Commands
                 {
                     foreach (string workNumber in template[type].Keys.Distinct())
                     {
-                        ToggleButton button = new ToggleButton() { Content = workNumber, Style = dictionaryWithNumberToggleButton["NumberToggleButton"] as Style };
+                        ToggleButton button = new ToggleButton() { Content = workNumber, Style = _numberToggleButtonDictionary["NumberToggleButton"] as Style };
                         if (type == "Practices")
-                        {
                             PracticalWorksButtons.Add(button);
-                        }
                         else if (type == "Laboratories")
-                        {
                             LaboratoryWorksButtons.Add(button);
-                        }
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                MessageBox.Show("Не удалось загрузить номера работ из шаблона!\nПроверьте коррекность пути!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Не удалось загрузить номера работ из шаблона!\n{e.Message}", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 throw new Exception();
             }
-            PracticesVisibility = PracticalWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
-            LaboratoriesVisibility = LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
-            WorksSelectVisibility = PracticalWorksButtons.Count > 1 || LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
-            SaveStatus = string.IsNullOrEmpty(mainParams.UserDataFilePath) ? "Сохранить информацию о студенте" : "Автосохранение включено";
+            UpdateVisibility(mainParams);
         }
 
-        private void SaveStudentInformation(object sender, PropertyChangedEventArgs e)
+        public SelectionOfWorksViewModel(SelectionOfWorksWindow window, IEnumerable<ReportModel> reports)
         {
             MainParams mainParams = new MainParams();
+            _selectionOfWorksWindow = window;
+            _reports = reports.ToList();
+            AddBaseFunctional();
             try
             {
-                File.WriteAllText(mainParams.UserDataFilePath, JsonConvert.SerializeObject(Student, Formatting.Indented));
-                mainParams.UserDataFilePath = mainParams.UserDataFilePath;
-            }
-            catch (UnauthorizedAccessException)
-            {
-                if (MessageBox.Show("У файла установлен атрибут \"Только чтение\"\nНе получилось перезаписать его!\nСнять с него этот атрибут?",
-                    "Ошибка", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.Yes)
+                var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Report>>>(File.ReadAllText(mainParams.CurrentTemplateFilePath));
+                foreach (var report in reports)
                 {
-                    File.SetAttributes(mainParams.UserDataFilePath, FileAttributes.Normal);
-                    File.WriteAllText(mainParams.UserDataFilePath, JsonConvert.SerializeObject(Student, Formatting.Indented));
-                }
-                else
-                {
-                    MessageBox.Show("Не получилось сохранить информацию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    mainParams.UserDataFilePath = "";
-                    SaveStatus = "Сохранить информацию о студенте";
+                    ToggleButton button = new ToggleButton() { Content = report.WorkNumber.ToString(), Style = _numberToggleButtonDictionary["NumberToggleButton"] as Style };
+
+                    if (CheckTypeAndNumber(template, report.WorkType, report.WorkNumber.ToString()))
+                    {
+                        if (report.WorkType == "Practice")
+                            PracticalWorksButtons.Add(button);
+                        else if (report.WorkType == "Laboratory")
+                            LaboratoryWorksButtons.Add(button);
+                    }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                MessageBox.Show($"Не удалось загрузить работу!\n{e.Message}", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new Exception();
             }
+            UpdateVisibility(mainParams);
+            CheckAllButtons(PracticalWorksButtons, ref _shouldCheckAllPracticalWorks);
+            CheckAllButtons(LaboratoryWorksButtons, ref _shouldCheckAllLaboratoryWorks);
+        }
+
+        private bool CheckTypeAndNumber(Dictionary<string, Dictionary<string, Report>> template, string workType, string workNumber)
+        {
+            if (workType == "Practice")
+            {
+                if (template["Practices"].Keys.Contains(workNumber) == false)
+                    throw new Exception($"Шаблон для {workNumber} практики не найден!");
+                return true;
+            }
+            else if (workType == "Laboratory")
+            {
+                if (template["Laboratories"].Keys.Contains(workNumber) == false)
+                    throw new Exception($"Шаблон для {workNumber} практики не найден!");
+                return true;
+            }
+            else
+                throw new Exception($"Неизвестный тип у {workNumber} работы!({workType})");
         }
 
         /// <summary>
@@ -220,8 +269,9 @@ namespace WorkReportCreator.ViewModels.Commands
             List<string> selectedPracticalWorks = PracticalWorksButtons.Where(x => x.IsChecked ?? false).Select(x => x.Content as string).ToList();
             try
             {
-                ReportsWindow reportsPage = new ReportsWindow(_worksAndStudentInfoWindow, selectedLaboratoryWorks, selectedPracticalWorks, Student);
-                _worksAndStudentInfoWindow.Hide();
+                ReportsWindow reportsPage = new ReportsWindow(_selectionOfWorksWindow, selectedLaboratoryWorks, selectedPracticalWorks, Student, _reports);
+
+                _selectionOfWorksWindow.Hide();
                 reportsPage.Show();
             }
             catch (Exception)
@@ -238,6 +288,8 @@ namespace WorkReportCreator.ViewModels.Commands
             buttons.ForEach(x => x.IsChecked = newValue);
             oldValue = newValue;
         }
+
+        #region StudentManagement
 
         /// <summary>
         /// Сохраняет информацию о студенте в выбранном файле
@@ -288,7 +340,7 @@ namespace WorkReportCreator.ViewModels.Commands
         /// <summary>
         /// Загружает информацию о студенте из выбранного файла
         /// </summary>
-        private void LoadStudent(object sender)
+        private void ShowDialogLoadStudent(object sender)
         {
             MainParams mainParams = new MainParams();
             OpenFileDialog dialog = new OpenFileDialog()
@@ -310,6 +362,36 @@ namespace WorkReportCreator.ViewModels.Commands
                 SaveStatus = "Автосохранение включено";
             }
         }
+
+        private void SaveStudentInformation(object sender, PropertyChangedEventArgs e)
+        {
+            MainParams mainParams = new MainParams();
+            try
+            {
+                File.WriteAllText(mainParams.UserDataFilePath, JsonConvert.SerializeObject(Student, Formatting.Indented));
+                mainParams.UserDataFilePath = mainParams.UserDataFilePath;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                if (MessageBox.Show("У файла установлен атрибут \"Только чтение\"\nНе получилось перезаписать его!\nСнять с него этот атрибут?",
+                    "Ошибка", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No) == MessageBoxResult.Yes)
+                {
+                    File.SetAttributes(mainParams.UserDataFilePath, FileAttributes.Normal);
+                    File.WriteAllText(mainParams.UserDataFilePath, JsonConvert.SerializeObject(Student, Formatting.Indented));
+                }
+                else
+                {
+                    MessageBox.Show("Не получилось сохранить информацию!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    mainParams.UserDataFilePath = "";
+                    SaveStatus = "Сохранить информацию о студенте";
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        #endregion
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
