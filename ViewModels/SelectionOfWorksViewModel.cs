@@ -370,6 +370,7 @@ namespace WorkReportCreator.ViewModels.Commands
             {
                 File.WriteAllText(mainParams.UserDataFilePath, JsonConvert.SerializeObject(Student, Formatting.Indented));
                 mainParams.UserDataFilePath = mainParams.UserDataFilePath;
+                SaveStatus = "Автосохранение включено";
             }
             catch (UnauthorizedAccessException)
             {
