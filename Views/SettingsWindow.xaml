@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="IMRY" SizeToContent="Height" Width="1100" Background="#FF191A1B" FontFamily="Verdana" FontSize="14" WindowStartupLocation="CenterScreen" Closing="ShowMainWindow" MinWidth="900" MinHeight="435">
+        Title="IMRY" SizeToContent="Height" Width="1100" Background="#FF191A1B" FontFamily="Verdana" FontSize="14" WindowStartupLocation="CenterScreen" Closing="ShowMainWindow" MinWidth="900" MinHeight="547">
     <StackPanel>
         <Grid>
             <Grid.Resources>
@@ -51,25 +51,23 @@
                                         <VisualStateManager.VisualStateGroups>
                                             <VisualStateGroup x:Name="CommonStates">
 
-                                                <VisualState x:Name="Checked">
-                                                    <Storyboard>
-                                                        <DoubleAnimation Storyboard.TargetProperty="(Canvas.Left)" To="105" Duration="0:0:0.5" Storyboard.TargetName="innerBorder"/>
-                                                        <ColorAnimation To="#FF5FB456" Duration="0:0:0.3" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
-                                                        <DoubleAnimation To="1" Duration="0:0:0.1" Storyboard.TargetName="labelOff" Storyboard.TargetProperty="Opacity"/>
-                                                        <DoubleAnimation To="0" Duration="0:0:0.1" Storyboard.TargetName="labelOn" Storyboard.TargetProperty="Opacity"/>
-                                                    </Storyboard>
-                                                </VisualState>
-
                                                 <VisualState x:Name="Unchecked">
-                                                    <Storyboard>
-                                                        <DoubleAnimation Storyboard.TargetProperty="(Canvas.Left)" To="-1" Duration="0:0:0.5" Storyboard.TargetName="innerBorder"/>
+                                                    <Storyboard >
+                                                        <DoubleAnimation Storyboard.TargetProperty="(Canvas.Left)" To="-1" Duration="0:0:0.4" Storyboard.TargetName="innerBorder"/>
                                                         <ColorAnimation To="#FFB45157" Duration="0:0:0.3" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
                                                         <DoubleAnimation To="0" Duration="0:0:0.1" Storyboard.TargetName="labelOff" Storyboard.TargetProperty="Opacity"/>
                                                         <DoubleAnimation To="1" Duration="0:0:0.1" Storyboard.TargetName="labelOn" Storyboard.TargetProperty="Opacity"/>
                                                     </Storyboard>
                                                 </VisualState>
                                                 
-                                                
+                                                <VisualState x:Name="Checked">
+                                                    <Storyboard>
+                                                        <DoubleAnimation Storyboard.TargetProperty="(Canvas.Left)" To="105" Duration="0:0:0.4" Storyboard.TargetName="innerBorder"/>
+                                                        <ColorAnimation To="#FF5FB456" Duration="0:0:0.3" Storyboard.TargetName="border" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
+                                                        <DoubleAnimation To="1" Duration="0:0:0.1" Storyboard.TargetName="labelOff" Storyboard.TargetProperty="Opacity"/>
+                                                        <DoubleAnimation To="0" Duration="0:0:0.1" Storyboard.TargetName="labelOn" Storyboard.TargetProperty="Opacity"/>
+                                                    </Storyboard>
+                                                </VisualState>
 
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
@@ -125,20 +123,44 @@
                 <RowDefinition MinHeight="50"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Краткое название предмета"/>
-            <TextBox Grid.Column="1" Text="{Binding Params.ShortSubjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource CommonTextBox}" Width="200" Height="30" TextAlignment="Center" VerticalContentAlignment="Center" MaxLength="10"/>
+            <TextBlock Grid.Row="0" Text="Краткое название предмета"/>
+            <TextBox Grid.Row="0"  Grid.Column="1" Text="{Binding Params.ShortSubjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource CommonTextBox}" Width="200" Height="30" TextAlignment="Center" VerticalContentAlignment="Center" MaxLength="10"/>
             
-            <TextBlock Grid.Row="1" Text="Титульная страница"/>
-            <CheckBox Grid.Row="1" Height="40" x:Name="checkBoxWorkHasTitlePage" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="{Binding Params.WorkHasTitlePage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        
-            <Grid x:Name="gridTitlePagePath" Grid.Row="2" Grid.ColumnSpan="3">
-            
+            <TextBlock Grid.Row="1" Text="Файл с текущим шаблоном"/>
+            <ScrollViewer Grid.Row="1" Grid.Column="1">
+                <TextBlock Text="{Binding Params.CurrentTemplateFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </ScrollViewer>
+            <Button Grid.Row="1" Grid.Column="2" Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseCurrentTemplateFile}" Margin="10 5 10 5"/>
+
+            <TextBlock Grid.Row="2" Text="Файл с разрешенными расширениями файлов для Drag &amp; Drop" TextWrapping="Wrap"/>
+            <ScrollViewer Grid.Row="2" Grid.Column="1">
+                <TextBlock Text="{Binding Params.PermittedDragAndDropExtentionsFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </ScrollViewer>
+            <Button Grid.Row="2" Grid.Column="2" Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChoosePermittedExtentionsFile}" Margin="10 5 10 5"/>
+
+            <TextBlock Grid.Row="3" Text="Папка для сохранения сгенерированныъ отчетов" TextWrapping="Wrap"/>
+            <ScrollViewer  Grid.Row="3" Grid.Column="1">
+                <TextBlock Text="{Binding Params.ReportsPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </ScrollViewer>
+            <Button Grid.Row="3" Grid.Column="2" Content="Выбрать папку" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseFolderForReports}" Margin="10 5 10 5"/>
+
+            <TextBlock Grid.Row="4" Text="Папка для сохранения отчетов с введенными данными" TextWrapping="Wrap"/>
+            <ScrollViewer  Grid.Row="4" Grid.Column="1">
+                <TextBlock Text="{Binding Params.SavedReportsPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </ScrollViewer>
+            <Button Grid.Row="4" Grid.Column="2" Content="Выбрать папку" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseFolderForSavedReports}" Margin="10 5 10 5"/>
+
+            <TextBlock Grid.Row="5" Text="Титульная страница"/>
+            <CheckBox Grid.Row="5" Height="40" x:Name="checkBoxWorkHasTitlePage" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="{Binding Params.WorkHasTitlePage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Grid x:Name="gridTitlePagePath" Grid.Row="6" Grid.ColumnSpan="3">
+
                 <Grid.RowDefinitions>
-                    <RowDefinition  MinHeight="50"/>
-                    <RowDefinition  MinHeight="50"/>
-                    <RowDefinition  MinHeight="50"/>
+                    <RowDefinition MinHeight="50"/>
+                    <RowDefinition MinHeight="50"/>
+                    <RowDefinition MinHeight="50"/>
                 </Grid.RowDefinitions>
-            
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="400"/>
                     <ColumnDefinition/>
@@ -153,7 +175,7 @@
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Параметры для титульной страницы"/>
                 <CheckBox Height="40" x:Name="checkBoxWorkHasTitlePageParams" Grid.Row="1" VerticalAlignment="Center" Grid.Column="1" Grid.ColumnSpan="2" IsChecked="{Binding Params.WorkHasTitlePageParams, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            
+
                 <Grid x:Name="gridTitlePageParams" Grid.Row="2" Grid.ColumnSpan="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="400"/>
@@ -170,9 +192,9 @@
                     <Grid.Style>
                         <Style TargetType="Grid">
                             <Style.Triggers>
-                            
+
                                 <DataTrigger Binding="{Binding IsChecked, ElementName=checkBoxWorkHasTitlePageParams}" Value="True">
-                                
+
                                     <DataTrigger.EnterActions>
                                         <BeginStoryboard>
                                             <Storyboard>
@@ -190,7 +212,7 @@
                                     </DataTrigger.ExitActions>
 
                                 </DataTrigger>
-                            
+
                             </Style.Triggers>
                         </Style>
                     </Grid.Style>
@@ -199,9 +221,9 @@
                 <Grid.Style>
                     <Style TargetType="Grid">
                         <Style.Triggers>
-                        
+
                             <DataTrigger Binding="{Binding IsChecked, ElementName=checkBoxWorkHasTitlePage}" Value="True">
-                            
+
                                 <DataTrigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard>
@@ -219,35 +241,12 @@
                                 </DataTrigger.ExitActions>
 
                             </DataTrigger>
-                        
+
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
             </Grid>
 
-            <TextBlock Grid.Row="3" Text="Файл с текущим шаблоном"/>
-            <ScrollViewer Grid.Row="3" Grid.Column="1">
-                <TextBlock Text="{Binding Params.CurrentTemplateFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </ScrollViewer>
-            <Button Grid.Row="3" Grid.Column="2" Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseCurrentTemplateFile}" Margin="10 5 10 5"/>
-
-            <TextBlock Grid.Row="4" Text="Файл с разрешенными расширениями файлов для Drag &amp; Drop" TextWrapping="Wrap"/>
-            <ScrollViewer Grid.Row="4" Grid.Column="1">
-                <TextBlock Text="{Binding Params.PermittedDragAndDropExtentionsFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </ScrollViewer>
-            <Button Grid.Row="4" Grid.Column="2" Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChoosePermittedExtentionsFile}" Margin="10 5 10 5"/>
-
-            <TextBlock Grid.Row="5" Text="Папка для сохранения сгенерированныъ отчетов" TextWrapping="Wrap"/>
-            <ScrollViewer  Grid.Row="5" Grid.Column="1">
-                <TextBlock Text="{Binding Params.ReportsPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </ScrollViewer>
-            <Button Grid.Row="5" Grid.Column="2" Content="Выбрать папку" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseFolderForReports}" Margin="10 5 10 5"/>
-
-            <TextBlock Grid.Row="6" Text="Папка для сохранения отчетов с введенными данными" TextWrapping="Wrap"/>
-            <ScrollViewer  Grid.Row="6" Grid.Column="1">
-                <TextBlock Text="{Binding Params.SavedReportsPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </ScrollViewer>
-            <Button Grid.Row="6" Grid.Column="2" Content="Выбрать папку" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseFolderForSavedReports}" Margin="10 5 10 5"/>
         </Grid>
     </StackPanel>
 </Window>
