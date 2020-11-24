@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Forms;
 using WorkReportCreator.Models;
@@ -20,6 +21,8 @@ namespace WorkReportCreator.ViewModels
 
         public Command ChooseFolderForReports { get; private set; }
 
+        public Command ChooseFolderForSavedReports { get; private set; }
+
         public MainParams Params { get; set; }
 
         private OpenFileDialog _dialog;
@@ -32,6 +35,7 @@ namespace WorkReportCreator.ViewModels
             ChooseCurrentTemplateFile = new Command((x) => SelectCurrentTemplateFile(), null);
             ChoosePermittedExtentionsFile = new Command((x) => SelectPermittedExtentionFile(), null);
             ChooseFolderForReports = new Command((x) => SelectFolderForReports(), null);
+            ChooseFolderForSavedReports = new Command((x) => SelectFolderForSavedReports(), null);
         }
 
         /// <summary>
@@ -74,16 +78,23 @@ namespace WorkReportCreator.ViewModels
         }
 
         /// <summary>
-        /// Показывает диалог для выбора расположения, где будут сохраняться отчеты, обноляет свойство AllReportsPath
+        /// Показывает диалог для выбора расположения, где будут сохраняться отчеты, обноdляет свойство ReportsPath
         /// </summary>>
         private void SelectFolderForReports()
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog()
-            {
-                Description = "Выберите папку, где будут сохраняться отчеты"
-            };
-            if (dialog.ShowDialog() == DialogResult.OK)
-                Params.ReportsPath = dialog.SelectedPath;
+            string path = ShowFolderDialog("Выберите папку, где будут сохраняться отчеты");
+            if (string.IsNullOrEmpty(path) == false)
+                Params.ReportsPath = path;
+        }
+
+        /// <summary>
+        /// Показывает диалог для выбора расположения, где будут сохраняться отчеты с данными, обноdляет свойство SavedReportsPath
+        /// </summary>>
+        private void SelectFolderForSavedReports()
+        {
+            string path = ShowFolderDialog("Выберите папку, где будут сохраняться отчеты с данными");
+            if (string.IsNullOrEmpty(path) == false)
+                Params.SavedReportsPath = path;
         }
 
         /// <summary>
@@ -98,6 +109,7 @@ namespace WorkReportCreator.ViewModels
             _dialog = BuildDialog(title, filter);
             if (_dialog.ShowDialog() == DialogResult.OK)
             {
+                _dialog.FileName = Regex.Replace(_dialog.FileName, @"\\", "/");
                 return CheckJsonFileHasFormat<T>(File.ReadAllText(_dialog.FileName));
             }
             return false;
@@ -121,6 +133,17 @@ namespace WorkReportCreator.ViewModels
                 System.Windows.MessageBox.Show("Файл имеет неверный формат!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
+        }
+
+        private string ShowFolderDialog(string description)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog()
+            {
+                Description = description
+            };
+            if (dialog.ShowDialog() == DialogResult.OK)
+                return Regex.Replace(dialog.SelectedPath, @"\\", "/");
+            return null;
         }
 
         /// <summary>

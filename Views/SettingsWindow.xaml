@@ -11,6 +11,7 @@
                 <ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
                         <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
+                        <ResourceDictionary Source="/Views/Styles/CommonTextBoxStyle.xaml"/>
                     </ResourceDictionary.MergedDictionaries>
 
                     <Style TargetType="TextBlock">
@@ -116,16 +117,21 @@
         
             <Grid.RowDefinitions>
                 <RowDefinition MinHeight="50"/>
+                <RowDefinition MinHeight="50"/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition MinHeight="60"/>
                 <RowDefinition MinHeight="50"/>
+                <RowDefinition MinHeight="50"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="Титульная страница"/>
-            <CheckBox Height="40" x:Name="checkBoxWorkHasTitlePage" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="{Binding Params.WorkHasTitlePage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="Краткое название предмета"/>
+            <TextBox Grid.Column="1" Text="{Binding Params.ShortSubjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource CommonTextBox}" Width="200" Height="30" TextAlignment="Center" VerticalContentAlignment="Center" MaxLength="10"/>
+            
+            <TextBlock Grid.Row="1" Text="Титульная страница"/>
+            <CheckBox Grid.Row="1" Height="40" x:Name="checkBoxWorkHasTitlePage" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="{Binding Params.WorkHasTitlePage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         
-            <Grid x:Name="gridTitlePagePath" Grid.Row="1" Grid.ColumnSpan="3">
+            <Grid x:Name="gridTitlePagePath" Grid.Row="2" Grid.ColumnSpan="3">
             
                 <Grid.RowDefinitions>
                     <RowDefinition  MinHeight="50"/>
@@ -139,7 +145,7 @@
                     <ColumnDefinition Width="170"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Расположение файла с титульной страницей"/>
+                <TextBlock Grid.Row="0" Text="Файл с титульной страницей"/>
                 <ScrollViewer Grid.Row="0" Grid.Column="1">
                     <TextBlock  Text="{Binding Params.WorkTitlePageFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </ScrollViewer>
@@ -155,7 +161,7 @@
                         <ColumnDefinition Width="170"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Расположение файла с параметрами"/>
+                    <TextBlock Text="Файл с параметрами для титульной страницы"/>
                     <ScrollViewer Grid.Row="0" Grid.Column="1">
                         <TextBlock Text="{Binding Params.WorkTitlePageParamsFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </ScrollViewer>
@@ -219,23 +225,29 @@
                 </Grid.Style>
             </Grid>
 
-            <TextBlock Grid.Row="2" Text="Расположение файла с текущим шаблоном"/>
-            <ScrollViewer Grid.Row="2" Grid.Column="1">
+            <TextBlock Grid.Row="3" Text="Файл с текущим шаблоном"/>
+            <ScrollViewer Grid.Row="3" Grid.Column="1">
                 <TextBlock Text="{Binding Params.CurrentTemplateFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </ScrollViewer>
-            <Button Grid.Row="2" Grid.Column="2" Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseCurrentTemplateFile}" Margin="10 5 10 5"/>
+            <Button Grid.Row="3" Grid.Column="2" Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseCurrentTemplateFile}" Margin="10 5 10 5"/>
 
-            <TextBlock Grid.Row="3" Text="Расположение файла с разрешенными расширениями файлов для Drag and Drop" TextWrapping="Wrap"/>
-            <ScrollViewer Grid.Row="3" Grid.Column="1">
+            <TextBlock Grid.Row="4" Text="Файл с разрешенными расширениями файлов для Drag &amp; Drop" TextWrapping="Wrap"/>
+            <ScrollViewer Grid.Row="4" Grid.Column="1">
                 <TextBlock Text="{Binding Params.PermittedDragAndDropExtentionsFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </ScrollViewer>
-            <Button Grid.Row="3" Grid.Column="2" Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChoosePermittedExtentionsFile}" Margin="10 5 10 5"/>
+            <Button Grid.Row="4" Grid.Column="2" Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChoosePermittedExtentionsFile}" Margin="10 5 10 5"/>
 
-            <TextBlock Grid.Row="4" Text="Расположение папки, где будут сохраняться отчеты" TextWrapping="Wrap"/>
-            <ScrollViewer  Grid.Row="4" Grid.Column="1">
-                <TextBlock Text="{Binding Params.AllReportsPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Row="5" Text="Папка для сохранения сгенерированныъ отчетов" TextWrapping="Wrap"/>
+            <ScrollViewer  Grid.Row="5" Grid.Column="1">
+                <TextBlock Text="{Binding Params.ReportsPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </ScrollViewer>
-            <Button Grid.Row="4" Grid.Column="2" Content="Выбрать папку" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseFolderForReports}" Margin="10 5 10 5"/>
+            <Button Grid.Row="5" Grid.Column="2" Content="Выбрать папку" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseFolderForReports}" Margin="10 5 10 5"/>
+
+            <TextBlock Grid.Row="6" Text="Папка для сохранения отчетов с введенными данными" TextWrapping="Wrap"/>
+            <ScrollViewer  Grid.Row="6" Grid.Column="1">
+                <TextBlock Text="{Binding Params.SavedReportsPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </ScrollViewer>
+            <Button Grid.Row="6" Grid.Column="2" Content="Выбрать папку" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseFolderForSavedReports}" Margin="10 5 10 5"/>
         </Grid>
     </StackPanel>
 </Window>
