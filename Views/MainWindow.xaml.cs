@@ -21,7 +21,7 @@ namespace WorkReportCreator
                 MessageBox.Show("У вас отсутствует главый конфигурационный файл!\nБез него нельзя использовать приложение!",
                     "Невозможно запустить приложение!", MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown();
-                return;
+                return; 
             }
             MainParams.ValidateAllParams();
             textBoxVersion.Text = "Версия " + Assembly.GetExecutingAssembly().GetName().Version.ToString().Substring(2);
@@ -30,7 +30,7 @@ namespace WorkReportCreator
         /// <summary>
         /// Показывает диалоговое окно для выбором файла с отчетом, чтобы редактировать его
         /// </summary>
-        private void LoadReport(object sender, RoutedEventArgs e)
+        private void LoadSelectionOfWorksWindowWithReports(object sender, RoutedEventArgs e)
         {
             MainParams mainParams = new MainParams();
             string subjectName = mainParams.ShortSubjectName;
@@ -64,7 +64,7 @@ namespace WorkReportCreator
         /// <summary>
         /// Загружает шаблон работы и показывает окно для редактирования шаблона
         /// </summary>
-        private void LoadWindowReportsTemplate(object sender, RoutedEventArgs e)
+        private void LoadReportsTemplateWindow(object sender, RoutedEventArgs e)
         {
             try
             {

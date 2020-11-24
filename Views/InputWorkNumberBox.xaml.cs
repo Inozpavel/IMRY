@@ -10,6 +10,7 @@ namespace WorkReportCreator.Views
     public partial class InputWorkNumberBox : Window
     {
         public Command CloseWindow { get; private set; }
+
         public Command ValidateValue { get; private set; }
 
         private readonly List<string> _existingWorks;

@@ -32,16 +32,6 @@ namespace WorkReportCreator.ViewModels.Commands
 
         private readonly List<ReportModel> _reports;
 
-        public string SaveStatus
-        {
-            get => _saveStatus;
-            set
-            {
-                _saveStatus = value;
-                OnPropertyChanged();
-            }
-        }
-
         /// <summary>
         /// От значения зависит, все кнопки с практическими работами будут отмечены / не отмечены
         /// </summary>
@@ -51,6 +41,16 @@ namespace WorkReportCreator.ViewModels.Commands
         /// От значения зависит, все кнопки с лабораторными работами будут отмечены / не отмечены
         /// </summary>
         private bool _shouldCheckAllLaboratoryWorks = false;
+
+        public string SaveStatus
+        {
+            get => _saveStatus;
+            set
+            {
+                _saveStatus = value;
+                OnPropertyChanged();
+            }
+        }
 
         #region Commands
 
@@ -134,52 +134,6 @@ namespace WorkReportCreator.ViewModels.Commands
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void AddBaseFunctional()
-        {
-            _tiltedButtonDictionary = new ResourceDictionary()
-            {
-                Source = new Uri("/Views/Styles/TiltedButtonStyle.xaml", UriKind.Relative)
-            };
-            _numberToggleButtonDictionary = new ResourceDictionary()
-            {
-                Source = new Uri("/Views/Styles/NumberToggleButtonStyle.xaml", UriKind.Relative)
-            };
-
-            _student = new Student();
-            _student.PropertyChanged += SaveStudentInformation;
-
-            SaveStudentInfo = new Command(ShowDialogSaveStudent, null);
-            LoadStudentInfo = new Command(ShowDialogLoadStudent, null);
-            CheckAllLaboratoryButtons = new Command((sender) => CheckAllButtons(LaboratoryWorksButtons, ref _shouldCheckAllLaboratoryWorks), null);
-            CheckAllPracticalButtons = new Command((sender) => CheckAllButtons(PracticalWorksButtons, ref _shouldCheckAllPracticalWorks), null);
-            ShowReportsPage = new Command(LoadReportsPage, null);
-
-            MainParams mainParams = new MainParams();
-            LoadStudent(mainParams.UserDataFilePath);
-            AddButtonsCheckAll(PracticalWorksButtons);
-            AddButtonsCheckAll(LaboratoryWorksButtons);
-        }
-
-        private void AddButtonsCheckAll(List<ToggleButton> buttons)
-        {
-            ToggleButton button = new ToggleButton()
-            {
-                Content = "Все работы",
-                Style = _tiltedButtonDictionary["TiltedButton"] as Style,
-                Command = CheckAllPracticalButtons,
-                Margin = new Thickness(10),
-            };
-            buttons.Add(button);
-        }
-
-        private void UpdateVisibility(MainParams mainParams)
-        {
-            PracticesVisibility = PracticalWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
-            LaboratoriesVisibility = LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
-            WorksSelectVisibility = PracticalWorksButtons.Count > 1 || LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
-            SaveStatus = string.IsNullOrEmpty(mainParams.UserDataFilePath) ? "Сохранить информацию о студенте" : "Автосохранение включено";
-        }
-
         /// <param name="window">Окно с вводом информации о студенте и выбором работ</param>
         /// <exception cref="Exception"/>
         public SelectionOfWorksViewModel(SelectionOfWorksWindow window)
@@ -240,6 +194,52 @@ namespace WorkReportCreator.ViewModels.Commands
             UpdateVisibility(mainParams);
             CheckAllButtons(PracticalWorksButtons, ref _shouldCheckAllPracticalWorks);
             CheckAllButtons(LaboratoryWorksButtons, ref _shouldCheckAllLaboratoryWorks);
+        }
+
+        private void AddBaseFunctional()
+        {
+            _tiltedButtonDictionary = new ResourceDictionary()
+            {
+                Source = new Uri("/Views/Styles/TiltedButtonStyle.xaml", UriKind.Relative)
+            };
+            _numberToggleButtonDictionary = new ResourceDictionary()
+            {
+                Source = new Uri("/Views/Styles/NumberToggleButtonStyle.xaml", UriKind.Relative)
+            };
+
+            _student = new Student();
+            _student.PropertyChanged += SaveStudentInformation;
+
+            SaveStudentInfo = new Command(ShowDialogSaveStudent, null);
+            LoadStudentInfo = new Command(ShowDialogLoadStudent, null);
+            CheckAllLaboratoryButtons = new Command((sender) => CheckAllButtons(LaboratoryWorksButtons, ref _shouldCheckAllLaboratoryWorks), null);
+            CheckAllPracticalButtons = new Command((sender) => CheckAllButtons(PracticalWorksButtons, ref _shouldCheckAllPracticalWorks), null);
+            ShowReportsPage = new Command(LoadReportsPage, null);
+
+            MainParams mainParams = new MainParams();
+            LoadStudent(mainParams.UserDataFilePath);
+            AddButtonsCheckAll(PracticalWorksButtons);
+            AddButtonsCheckAll(LaboratoryWorksButtons);
+        }
+
+        private void AddButtonsCheckAll(List<ToggleButton> buttons)
+        {
+            ToggleButton button = new ToggleButton()
+            {
+                Content = "Все работы",
+                Style = _tiltedButtonDictionary["TiltedButton"] as Style,
+                Command = CheckAllPracticalButtons,
+                Margin = new Thickness(10),
+            };
+            buttons.Add(button);
+        }
+
+        private void UpdateVisibility(MainParams mainParams)
+        {
+            PracticesVisibility = PracticalWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+            LaboratoriesVisibility = LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+            WorksSelectVisibility = PracticalWorksButtons.Count > 1 || LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+            SaveStatus = string.IsNullOrEmpty(mainParams.UserDataFilePath) ? "Сохранить информацию о студенте" : "Автосохранение включено";
         }
 
         private bool CheckTypeAndNumber(Dictionary<string, Dictionary<string, Report>> template, string workType, string workNumber)
@@ -307,7 +307,7 @@ namespace WorkReportCreator.ViewModels.Commands
 
             if (dialog.ShowDialog() == true)
             {
-                MainParams mainParams = new MainParams
+                new MainParams()
                 {
                     UserDataFilePath = dialog.FileName
                 };
