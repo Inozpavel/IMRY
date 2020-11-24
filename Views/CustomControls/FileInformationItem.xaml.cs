@@ -113,7 +113,7 @@ namespace WorkReportCreator.Views
             set
             {
                 SetValue(FilePathProperty, value);
-                FileName = new FileInfo(value).Name;
+                FileName = File.Exists(value) ? value : null;
                 HintVisibility = string.IsNullOrEmpty(FilePath) == false ? Visibility.Hidden : Visibility.Visible;
                 OnPropertyChanged();
             }

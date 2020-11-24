@@ -138,7 +138,7 @@ namespace WorkReportCreator
                 DynamicTasksArray.Add(new DynamicTaskItem()
                 {
                     Text = DynamicTasks[i],
-                    IsChecked = report.SelectedTasksIndices.Contains(i),
+                    IsChecked = report?.SelectedTasksIndices.Contains(i) ?? false,
                 });
             }
             foreach (string task in DynamicTasks ?? new List<string>())
@@ -181,7 +181,8 @@ namespace WorkReportCreator
             };
 
             string text = JsonConvert.SerializeObject(report, Formatting.Indented);
-            File.WriteAllText(mainParams.SavedReportsPath + $@"/{reportName}.{mainParams.ShortSubjectName}.json", text);
+            string shortName = string.IsNullOrEmpty(mainParams.ShortSubjectName) ? "" : "." + mainParams.ShortSubjectName;
+            File.WriteAllText(mainParams.SavedReportsPath + $@"/{reportName}{shortName}.json", text);
         }
 
         /// <summary>
