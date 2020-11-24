@@ -157,15 +157,15 @@ namespace WorkReportCreator.Models
             dynamicTasksParagraphIndex--;
 
             int number = 1;
-            List<(string, int, string)> paragraps = new List<(string, int, string)>();
+            List<(string, int, string, string)> paragraps = new List<(string, int, string, string)>();
 
             foreach (int i in _selectedWorksNumbers) // Вставка всех работ по абзацам
             {
-                paragraps.Add((_selectedWorksNumbers.Count > 1 ? $"\t{number}) " + tasks[i] : "\t" + tasks[i], 14, "normal"));
+                paragraps.Add((_selectedWorksNumbers.Count > 1 ? $"\t{number}) " + tasks[i] : "\t" + tasks[i], 14, "normal", "Times New Roman"));
                 number++;
             }
 
-            InsertParagrapsAfterParagraphIndex(document, paragraps, dynamicTasksParagraphIndex, "Times New Roman");
+            InsertParagrapsAfterParagraphIndex(document, paragraps, dynamicTasksParagraphIndex);
         }
 
         /// <summary>
@@ -175,11 +175,11 @@ namespace WorkReportCreator.Models
         /// <param name="paragraphs">Абзацы</param>
         /// <param name="paragraphIndex">Индекс параграфа</param>
         /// <param name="FontFamily">Шрифт</param>
-        private void InsertParagrapsAfterParagraphIndex(DocX document, List<(string text, int fontSize, string style)> paragraphs, int paragraphIndex, string FontFamily)
+        private void InsertParagrapsAfterParagraphIndex(DocX document, List<(string text, int fontSize, string style, string fontFamily)> paragraphs, int paragraphIndex)
         {
             for (int i = 0; i < paragraphs.Count; i++)
             {
-                Paragraph paragraph = document.InsertParagraph(paragraphs[i].text).FontSize(paragraphs[i].fontSize).Font(FontFamily);
+                Paragraph paragraph = document.InsertParagraph(paragraphs[i].text).FontSize(paragraphs[i].fontSize).Font(paragraphs[i].fontFamily);
 
                 if (paragraphs[i].style == "bold")
                     paragraph = paragraph.Bold();
@@ -209,7 +209,7 @@ namespace WorkReportCreator.Models
             if (_filesInformation.Count == 0)
                 return;
 
-            List<(string text, int fontSize, string style)> paragraphs = new List<(string, int, string)>();
+            List<(string text, int fontSize, string style, string fontFamily)> paragraphs = new List<(string, int, string, string)>();
 
 
             foreach (FileInformationItem fileInformation in _filesInformation)
@@ -218,19 +218,19 @@ namespace WorkReportCreator.Models
                 {
                     BitmapImage image = new BitmapImage(new Uri(fileInformation.FilePath));
                     string name = string.IsNullOrEmpty(fileInformation.FileDescription) ? "" : ",name=\"" + fileInformation.FileDescription + "\"";
-                    paragraphs.Add(("{{image source=\"" + fileInformation.FilePath + "\"" + name + "}}", 10, "normal"));
+                    paragraphs.Add(("{{image source=\"" + fileInformation.FilePath + "\"" + name + "}}", 10, "normal", "Times New Roman"));
                 }
                 catch (Exception)
                 {
-                    paragraphs.Add((fileInformation.FileName, 16, "bold"));
-
                     if (string.IsNullOrEmpty(fileInformation.FileDescription) == false)
-                        document.InsertParagraph(fileInformation.FileDescription).Font("Times New Roman").FontSize(14);
-                    paragraphs.Add((string.Join("\n", File.ReadAllLines(fileInformation.FilePath)), 10, "normal"));
+                        paragraphs.Add((fileInformation.FileDescription, 14, "normal", "Times New Roman"));
+
+                    paragraphs.Add((fileInformation.FileName.Split('\\').Last(), 16, "bold", "Tahoma"));
+                    paragraphs.Add((string.Join("\n", File.ReadAllLines(fileInformation.FilePath)), 10, "normal", "Consolas"));
                 }
-                paragraphs.Add(("", 10, "normal"));
+                paragraphs.Add(("", 10, "normal", "Consolas"));
             }
-            InsertParagrapsAfterParagraphIndex(document, paragraphs, userFilesParagraphIndex, "Consolas");
+            InsertParagrapsAfterParagraphIndex(document, paragraphs, userFilesParagraphIndex);
             return;
         }
 
