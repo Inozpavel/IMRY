@@ -1,9 +1,12 @@
 ﻿using Microsoft.Win32;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace WorkReportCreator.Views
 {
@@ -113,7 +116,7 @@ namespace WorkReportCreator.Views
             set
             {
                 SetValue(FilePathProperty, value);
-                FileName = File.Exists(value) ? value : null;
+                FileName = File.Exists(value) ? Regex.Split(value, @"/|\\").Last() : null;
                 HintVisibility = string.IsNullOrEmpty(FilePath) == false ? Visibility.Hidden : Visibility.Visible;
                 OnPropertyChanged();
             }
@@ -184,5 +187,15 @@ namespace WorkReportCreator.Views
             .IsSelected = (bool)e.NewValue;
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        private void ScrollViewerPreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var parent = Parent as UIElement;
+            var args = new MouseButtonEventArgs(e.MouseDevice, e.Timestamp, e.ChangedButton)
+            {
+                RoutedEvent = MouseDownEvent
+            };
+            parent.RaiseEvent(args);
+        }
     }
 }
