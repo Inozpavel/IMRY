@@ -50,8 +50,8 @@
                 <Button Grid.Column="0" Style="{StaticResource ImageButtonStyle}" Command="{Binding AddImage}" Width="35" Height="35" Margin="3 0 3 0" Grid.RowSpan="2">
                     <Image Source="../Images/Picture.png" Margin="3" Style="{StaticResource ScalableImage}"/>
                 </Button>
-                <Button Grid.Column="1" ToolTip="Ctrl + S" Width="155" Margin="5" Content="Форматировать" HorizontalAlignment="Right" Style="{StaticResource CommonAnimatedButton}" Command="{Binding FormatText}"/>
-                <Button Grid.Column="2" ToolTip="Ctrl + Enter" Width="155" Margin="5" Content="Подтвердить" HorizontalAlignment="Right" Style="{StaticResource CommonAnimatedButton}" Command="{Binding SubmitInput}"/>
+                <Button Grid.Column="1" Height="50" ToolTip="Ctrl + S" Width="155" Margin="5" Content="Форматировать" HorizontalAlignment="Right" Style="{StaticResource CommonAnimatedButton}" Command="{Binding FormatText}"/>
+                <Button Grid.Column="2" Height="50" ToolTip="Ctrl + Enter" Width="155" Margin="5" Content="Подтвердить" HorizontalAlignment="Right" Style="{StaticResource CommonAnimatedButton}" Command="{Binding SubmitInput}"/>
 
             </Grid>
         </Border>
