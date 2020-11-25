@@ -28,6 +28,8 @@ namespace WorkReportCreator
 
         public Command SwapDownFileInfo { get; private set; }
 
+        public Command ResetItem { get; private set; }
+
         #endregion
 
         private int? _selectedItemIndex;
@@ -132,6 +134,7 @@ namespace WorkReportCreator
             RemoveFileInfo = new Command(RemoveSelectedFileInfo, (sender) => SelectedItem != null);
             SwapUpFileInfo = new Command(SwapUpSelectedFileInfo, (sender) => _selectedItem != null && _selectedItemIndex != 0);
             SwapDownFileInfo = new Command(SwapDownSelectedFileInfo, (sender) => _selectedItem != null && _selectedItemIndex + 1 != FilesArray.Count);
+            ResetItem = new Command(ShowDialogResetItem, null);
 
             for (int i = 0; i < DynamicTasks?.Count; i++)
             {
@@ -294,6 +297,19 @@ namespace WorkReportCreator
         {
             for (int i = 0; i < FilesArray.Count; i++)
                 (FilesArray[i].Content as FileInformationItem).Number = i + 1;
+        }
+
+        private void ShowDialogResetItem(object sender)
+        {
+            if (MessageBox.Show("В уверены, что хотите сбросить все?", "Подтвердите действие",
+                MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
+            {
+                FilesArray.Clear();
+                foreach (var task in DynamicTasksArray)
+                {
+                    task.IsChecked = false;
+                }
+            }
         }
 
         /// <summary>

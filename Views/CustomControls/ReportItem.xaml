@@ -101,14 +101,14 @@
 
                 </ScrollViewer.Style>
 
-                <ItemsControl Background="#FF333337" Focusable="False" BorderThickness="0" ItemsSource="{Binding DynamicTasksArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <ItemsControl Background="#FF252526" Focusable="False" BorderThickness="0" ItemsSource="{Binding DynamicTasksArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             </ScrollViewer>
 
         </Grid>
         
         <!--Drag & Drop область и список файлов-->
-        <Grid Grid.Row="2" Background="#FF252526" ToolTip="Перетащите в эту область файлы или папки, которые хотите добавить в проект">
+        <Grid Grid.Row="2" Background="#FF191A1B" ToolTip="Перетащите в эту область файлы или папки, которые хотите добавить в проект">
             
             <Grid Visibility="{Binding HintVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <Image x:Name="image" Height="200" AllowDrop="True" Source="/Images/FolderTakenIn.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -151,21 +151,27 @@
         </Grid>
         
         <!--Кнопки с управлением для выбранных пользователем файлов-->
-        <DockPanel Grid.Row="3" Background="Transparent">
+        <DockPanel Grid.Row="3" Background="#FF333337">
             <DockPanel.Resources>
-                <ResourceDictionary Source="/Views/Styles/OneSymbolButtonStyle.xaml"/>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/Views/Styles/OneSymbolButtonStyle.xaml"/>
+                        <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
             </DockPanel.Resources>
 
             <Button Content="+" Command="{Binding AddFileInfo}" Style="{StaticResource OneSymbolButton}" Margin="5 2 5 2"/>
             <Button Content="-" Command="{Binding RemoveFileInfo}" Style="{StaticResource OneSymbolButton}" Margin="5 2 5 2"/>
             <Button Content="⮝" Command="{Binding SwapUpFileInfo}" Style="{StaticResource OneSymbolButton}" Margin="5 2 5 2"/>
             <Button Content="⮟" Command="{Binding SwapDownFileInfo}" Style="{StaticResource OneSymbolButton}" HorizontalAlignment="Left" Margin="5 2 5 2"/>
+            <Button Content="Сбросить все" Command="{Binding ResetItem}" Style="{StaticResource CommonAnimatedButton}" Height="40" Width="160" HorizontalAlignment="Right" Margin="5 2 5 2"/>
         </DockPanel>
         
         
 
         <!--Кнопки с сохранием данных-->
-        <Border Background="#FF121212" Grid.Row="5">
+        <Border Background="#FF252526" Grid.Row="5">
             <Grid Margin="4">
 
                 <Grid.ColumnDefinitions>
@@ -177,8 +183,8 @@
                     <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
                 </Grid.Resources>
 
-                <Button Width="320" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Сохранить данные" Margin="3" Style="{StaticResource CommonAnimatedButton}" Click="SaveReportClicked"/>
-                <Button Width="320" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Сгенерировать отчет для работы" Margin="3" Style="{StaticResource CommonAnimatedButton}" Click="GenerateReportClicked"/>
+                <Button Width="320" Height="50" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Сохранить данные" Margin="3" Style="{StaticResource CommonAnimatedButton}" Click="SaveReportClicked"/>
+                <Button Width="320" Height="50" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Сгенерировать отчет для работы" Margin="3" Style="{StaticResource CommonAnimatedButton}" Click="GenerateReportClicked"/>
             </Grid>
         </Border>
     </Grid>
