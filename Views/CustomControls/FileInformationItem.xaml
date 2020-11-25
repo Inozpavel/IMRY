@@ -6,25 +6,30 @@
              mc:Ignorable="d" Background="#FF252526">
     <Grid>
         <Grid.Resources>
-            <Style TargetType="TextBox">
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="FontSize" Value="14"/>
-                <Setter Property="TextWrapping" Value="Wrap"/>
-                <Setter Property="TextAlignment" Value="Center"/>
-                <Setter Property="SpellCheck.IsEnabled" Value="True"/>
-                <Setter Property="Language" Value="ru-ru"/>
-                <Setter Property="Margin" Value="3"/>
-            </Style>
+            <ResourceDictionary>
+                
+                <Style TargetType="TextBox">
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="TextWrapping" Value="Wrap"/>
+                    <Setter Property="TextAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="3"/>
+                </Style>
 
-            <Style TargetType="Label">
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Margin" Value="5"/>
-                <Setter Property="Foreground" Value="White"/>
-                <Setter Property="FontSize" Value="14"/>
-            </Style>
+                <Style TargetType="Label">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="5"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontSize" Value="14"/>
+                </Style>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="/Views/Styles/TiltedButtonStyle.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+            
             
         </Grid.Resources>
-        <Border CornerRadius="15" BorderBrush="#FFA8B3B3" BorderThickness="2" Focusable="False">
+        <Border CornerRadius="17 17 0 0 " BorderBrush="#FFA8B3B3" BorderThickness="2.5" Focusable="False">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -41,26 +46,25 @@
                     </Grid.ColumnDefinitions>
                     
                     <Grid.Resources>
-                        <ResourceDictionary Source="/Views/Styles/TiltedButtonStyle.xaml"/>
                     </Grid.Resources>
 
                     <Grid Grid.Column="0" Margin="10 5 5 5">
-                        <Ellipse Width="40" Height="40" StrokeThickness="3" Stroke="#FF14E7AE"/>
+                        <Ellipse Width="50" Height="50" StrokeThickness="3" Stroke="#FF7AC0FF"/>
                         <TextBlock Text="{Binding Number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="20" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
                     <Grid Grid.Column="1" Width="280" Visibility="{Binding FileNameVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <ScrollViewer  HorizontalAlignment="Left" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+                        <ScrollViewer  HorizontalAlignment="Left" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" PreviewMouseDown="ScrollViewerPreviewMouseDown">
                             <Label Content="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
                         </ScrollViewer>
                     </Grid>
 
-                    <ToggleButton Grid.Column="2" Content="Выбрать файл" Click="ChooseFile" Margin="10 0 0 0" Style="{StaticResource TiltedButton}"/>
+                    <ToggleButton Grid.Column="2" Content="Выбрать файл" Click="ChooseFile" Margin="10 0 10 0" Style="{StaticResource TiltedButton}"/>
                 
                     <Grid Grid.Column="3" Margin="0 0 5 0">
-                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" PreviewMouseDown="ScrollViewerPreviewMouseDown">
                             <Label x:Name="labelFilePath" Content="{Binding FilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
                         </ScrollViewer>
-                        <TextBlock Text="Полный путь до файла" VerticalAlignment="Center" Margin="5" Foreground="Gray" Visibility="{Binding HintVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Text="Файл пока не выбран" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5" Foreground="Gray" Visibility="{Binding HintVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                 </Grid>
 
@@ -69,7 +73,7 @@
                         <ResourceDictionary Source="../Styles/CommonTextBoxStyle.xaml"/>
                     </StackPanel.Resources>
                     
-                    <Label Content="Описание файла" Foreground="White"/>
+                    <Label Content="Комментарий к файлу (при наличии)" Foreground="White"/>
                     
                     <TextBox Text="{Binding FileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalScrollBarVisibility="Auto" Height="auto" MaxHeight="150" MinHeight="50" TextWrapping="Wrap" Margin="6 0 6 6" Style="{StaticResource CommonTextBox}"/>
                     
