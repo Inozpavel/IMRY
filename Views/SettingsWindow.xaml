@@ -130,25 +130,25 @@
             <ScrollViewer Grid.Row="1" Grid.Column="1">
                 <TextBlock Text="{Binding Params.CurrentTemplateFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </ScrollViewer>
-            <Button Grid.Row="1" Grid.Column="2" Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseCurrentTemplateFile}" Margin="10 5 10 5"/>
+            <Button Grid.Row="1" Grid.Column="2" Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseCurrentTemplateFile}" Margin="10 5 10 5" Height="50" />
 
             <TextBlock Grid.Row="2" Text="Файл с разрешенными расширениями файлов для Drag &amp; Drop" TextWrapping="Wrap"/>
             <ScrollViewer Grid.Row="2" Grid.Column="1">
                 <TextBlock Text="{Binding Params.PermittedDragAndDropExtentionsFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </ScrollViewer>
-            <Button Grid.Row="2" Grid.Column="2" Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChoosePermittedExtentionsFile}" Margin="10 5 10 5"/>
+            <Button Grid.Row="2" Grid.Column="2" Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChoosePermittedExtentionsFile}" Margin="10 5 10 5" Height="50" />
 
-            <TextBlock Grid.Row="3" Text="Папка для сохранения сгенерированныъ отчетов" TextWrapping="Wrap"/>
+            <TextBlock Grid.Row="3" Text="Папка для сохранения сгенерированных отчетов" TextWrapping="Wrap"/>
             <ScrollViewer  Grid.Row="3" Grid.Column="1">
                 <TextBlock Text="{Binding Params.ReportsPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </ScrollViewer>
-            <Button Grid.Row="3" Grid.Column="2" Content="Выбрать папку" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseFolderForReports}" Margin="10 5 10 5"/>
+            <Button Grid.Row="3" Grid.Column="2" Content="Выбрать папку" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseFolderForReports}" Margin="10 5 10 5" Height="50" />
 
             <TextBlock Grid.Row="4" Text="Папка для сохранения отчетов с введенными данными" TextWrapping="Wrap"/>
             <ScrollViewer  Grid.Row="4" Grid.Column="1">
                 <TextBlock Text="{Binding Params.SavedReportsPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </ScrollViewer>
-            <Button Grid.Row="4" Grid.Column="2" Content="Выбрать папку" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseFolderForSavedReports}" Margin="10 5 10 5"/>
+            <Button Grid.Row="4" Grid.Column="2" Content="Выбрать папку" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseFolderForSavedReports}" Margin="10 5 10 5" Height="50" />
 
             <TextBlock Grid.Row="5" Text="Титульная страница"/>
             <CheckBox Grid.Row="5" Height="40" x:Name="checkBoxWorkHasTitlePage" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="{Binding Params.WorkHasTitlePage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -171,7 +171,7 @@
                 <ScrollViewer Grid.Row="0" Grid.Column="1">
                     <TextBlock  Text="{Binding Params.WorkTitlePageFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </ScrollViewer>
-                <Button Grid.Row="0" Grid.Column="2"  Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseTitlePageFile}" Margin="10 5 10 5"/>
+                <Button Grid.Row="0" Grid.Column="2"  Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseTitlePageFile}" Margin="10 5 10 5" Height="50" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Параметры для титульной страницы"/>
                 <CheckBox Height="40" x:Name="checkBoxWorkHasTitlePageParams" Grid.Row="1" VerticalAlignment="Center" Grid.Column="1" Grid.ColumnSpan="2" IsChecked="{Binding Params.WorkHasTitlePageParams, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -187,7 +187,7 @@
                     <ScrollViewer Grid.Row="0" Grid.Column="1">
                         <TextBlock Text="{Binding Params.WorkTitlePageParamsFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </ScrollViewer>
-                    <Button Grid.Row="0" Grid.Column="2"  Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseTitlePageParamsFile}" Margin="10 5 10 5"/>
+                    <Button Grid.Row="0" Grid.Column="2"  Content="Выбрать файл" Style="{StaticResource CommonAnimatedButton}" FontSize="14" Command="{Binding ChooseTitlePageParamsFile}" Margin="10 5 10 5" Height="50" />
 
                     <Grid.Style>
                         <Style TargetType="Grid">
