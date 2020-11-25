@@ -19,9 +19,9 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Button Content="Сохранить все данные" Grid.Row="0" Click="ButtonSaveAllClick" Style="{StaticResource CommonAnimatedButton}" Width="270" Margin="0 50 0 5"/>
-        <Button Content="Сгенерировать все отчеты" Grid.Row="1" Click="ButtonGenerateAllClick" Style="{StaticResource CommonAnimatedButton}" Width="270" Margin="0 10 0 5" IsEnabled="{Binding IsButtonEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <Button Content="Вернуться назад" Grid.Row="2" Click="ButtonBackClick" Style="{StaticResource CommonAnimatedButton}" Width="270" Margin="0 10 0 10"/>
+        <Button Content="Сохранить все данные" Height="50" Grid.Row="0" Click="ButtonSaveAllClick" Style="{StaticResource CommonAnimatedButton}" Width="270" Margin="0 50 0 5"/>
+        <Button Content="Сгенерировать все отчеты" Height="50" Grid.Row="1" Click="ButtonGenerateAllClick" Style="{StaticResource CommonAnimatedButton}" Width="270" Margin="0 10 0 5" IsEnabled="{Binding IsButtonEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Content="Вернуться назад" Height="50" Grid.Row="2" Click="ButtonBackClick" Style="{StaticResource CommonAnimatedButton}" Width="270" Margin="0 10 0 10"/>
         
     </Grid>
 </UserControl>

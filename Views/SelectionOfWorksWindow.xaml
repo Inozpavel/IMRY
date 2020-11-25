@@ -168,16 +168,16 @@
             <Grid Grid.Row="2" HorizontalAlignment="Stretch" Margin="0 10 0 10" VerticalAlignment="Bottom">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="105"/>
+                    <ColumnDefinition Width="110"/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="105"/>
+                    <ColumnDefinition Width="110"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Content="В меню" Click="ShowFormMainWindow" Style="{StaticResource CommonAnimatedButton}" Margin="5 0 0 0"/>
-                <Button Grid.Column="1" Width="340" Content="{Binding SaveStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding SaveStudentInfo}" Style="{StaticResource CommonAnimatedButton}" HorizontalAlignment="Right" Margin="5 0 2 0"/>
-                <Button Grid.Column="2" Width="340" Content="Загрузить информацию о студенте" Command="{Binding LoadStudentInfo}" Style="{StaticResource CommonAnimatedButton}" HorizontalAlignment="Left" Margin="2 0 5 0"/>
-                <Button Grid.Column="3" Content="К отчетам" Command ="{Binding ShowReportsPage}" Style="{StaticResource CommonAnimatedButton}" Margin="0 0 5 0"/>
+                <Button Grid.Column="0" Height="50"  Content="В меню" Click="ShowFormMainWindow" Style="{StaticResource CommonAnimatedButton}" Margin="5 0 0 0"/>
+                <Button Grid.Column="1" Height="50"  Width="340" Content="{Binding SaveStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding SaveStudentInfo}" Style="{StaticResource CommonAnimatedButton}" HorizontalAlignment="Right" Margin="5 0 3 0"/>
+                <Button Grid.Column="2" Height="50"  Width="340" Content="Загрузить информацию о студенте" Command="{Binding LoadStudentInfo}" Style="{StaticResource CommonAnimatedButton}" HorizontalAlignment="Left" Margin="3 0 5 0"/>
+                <Button Grid.Column="3" Height="50"  Content="К отчетам" Command ="{Binding ShowReportsPage}" Style="{StaticResource CommonAnimatedButton}" Margin="0 0 5 0"/>
 
             </Grid>
         </Grid>
