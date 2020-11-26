@@ -144,10 +144,11 @@ namespace WorkReportCreator.ViewModels
                 {
                     List<string> dynamicTasks = template[workType][number].DynamicTasks.Select(x => x.Description).Select(x => Regex.Replace(x, "\\n", "").Trim()).ToList();
                     ReportModel report = reports?.FirstOrDefault(x => x.WorkNumber.ToString() == number);
+                    string header = $"{number} {shortDescription}";
                     TabItems.Add(new TabItem()
                     {
-                        Header = $"{number} {shortDescription}",
-                        Content = new ReportItem(dynamicTasks, report),
+                        Header = header,
+                        Content = new ReportItem(header, dynamicTasks, report),
                         Style = style,
                     });
                 }
@@ -164,23 +165,35 @@ namespace WorkReportCreator.ViewModels
             List<int> failedPracticesReports = new List<int>();
             List<int> failedLaboratoriesReports = new List<int>();
 
+            List<int> tabItemsIndicies = new List<int>();
+            List<ReportItem> reportItems = new List<ReportItem>();
+            List<string> reportNames = new List<string>();
             for (int i = 1; i < TabItems.Count; i++)
             {
-                string name = TabItems[i].Header as string;
-                ReportItem item = TabItems[i].Content as ReportItem;
+                tabItemsIndicies.Add(i - 1);
+                reportItems.Add(TabItems[i].Content as ReportItem);
+                reportNames.Add(TabItems[i].Header as string);
+            }
+
+            foreach (int i in tabItemsIndicies)
+            {
+                ReportItem item = reportItems[i];
+                string reportName = reportNames[i];
+
                 try
                 {
                     if (action == ReportAction.Generate)
-                        item.GenerateReport();
+                        item.GenerateReport(reportName);
                     else if (action == ReportAction.Save)
-                        item.SaveReport();
+                        item.SaveReport(reportName);
                 }
                 catch (Exception)
                 {
-                    List<int> list = Regex.IsMatch(name, "пр|Пр") ? failedPracticesReports : failedLaboratoriesReports;
+                    List<int> list = Regex.IsMatch(reportName, "пр|Пр") ? failedPracticesReports : failedLaboratoriesReports;
                     list.Add(i);
                 }
-            }
+            };
+
 
             if (failedLaboratoriesReports.Count == 0 && failedPracticesReports.Count == 0)
             {

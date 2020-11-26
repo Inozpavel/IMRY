@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using WorkReportCreator.Views;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 
@@ -18,13 +17,13 @@ namespace WorkReportCreator.Models
 
         private readonly List<int> _selectedWorksNumbers;
 
-        private readonly List<FileInformationItem> _filesInformation;
+        private readonly List<FileInformation> _filesInformation;
 
         private const string SourcePattern = "source\\s*=\\s*\"[^\"]+\"";
         private const string NamePattern = "name\\s*=\"[^\"]*\"";
         private const string ImagePattern = "{{\\s*image\\s+" + SourcePattern + "(,?\\s*" + NamePattern + ")?\\s*}}";
 
-        public ReportGenerator(string reportName, IEnumerable<int> selectedWorksNumbers, IEnumerable<FileInformationItem> filesInformation)
+        public ReportGenerator(string reportName, IEnumerable<int> selectedWorksNumbers, IEnumerable<FileInformation> filesInformation)
         {
             _reportName = reportName;
             _selectedWorksNumbers = selectedWorksNumbers.ToList();
@@ -47,7 +46,7 @@ namespace WorkReportCreator.Models
 
             if (Directory.Exists(mainParams.ReportsPath) == false)
                 Directory.CreateDirectory(mainParams.ReportsPath);
-            document.SaveAs($"{mainParams.ReportsPath}/Отчет {_reportName}.docx");
+            document.SaveAs($"{mainParams.ReportsPath}/Отчет {_reportName.TrimEnd('.')}.docx");
         }
 
         /// <summary>
@@ -258,7 +257,7 @@ namespace WorkReportCreator.Models
 
             List<(string text, int fontSize, string style, string fontFamily)> paragraphs = new List<(string, int, string, string)>();
 
-            foreach (FileInformationItem fileInformation in _filesInformation)
+            foreach (FileInformation fileInformation in _filesInformation)
             {
                 try
                 {

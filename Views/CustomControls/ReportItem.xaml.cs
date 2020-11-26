@@ -24,23 +24,19 @@ namespace WorkReportCreator
             Generate,
         }
 
-        private string ReportName { get => (Parent as TabItem).Header.ToString().Trim().TrimEnd(".".ToCharArray()); }
-
         /// <summary>
         /// Модель данных этого элемента
         /// </summary>
         private readonly ReportViewModel _model;
 
-        /// <summary>
-        /// Окно, на котором расположен элемент
-        /// </summary>
-        private readonly ReportsWindow _page;
+        private readonly string _reportName;
 
         /// <param name="window">Окно, на котором расположен элемент</param>
         /// <param name="DynamicTasks">Список заданий (при наличии)</param>
-        public ReportItem(List<string> DynamicTasks, ReportModel report = null)
+        public ReportItem(string reportName, List<string> DynamicTasks, ReportModel report = null)
         {
             InitializeComponent();
+            _reportName = reportName;
             _model = new ReportViewModel(DynamicTasks, report);
             DataContext = _model;
             listBox.SelectionChanged += (sender, e) => listBox.ScrollIntoView(listBox.SelectedItem);
@@ -50,9 +46,13 @@ namespace WorkReportCreator
         /// Создает отчет для выбранной работы
         /// </summary>
         /// <exception cref="Exception"/>
-        public void GenerateReport() => _model.GenerateReport(ReportName);
+        public void GenerateReport(string reportName) => _model.GenerateReport(reportName);
 
-        public void SaveReport() => _model.SaveReport(ReportName);
+        /// <summary>
+        /// Сохраняет отчет для выбранной работы
+        /// </summary>
+        /// <exception cref="Exception"/>
+        public void SaveReport(string reportName) => _model.SaveReport(reportName);
 
         /// <summary>
         /// При использовании Drag & Drop добавляет / дополняет информацию о выбранных файлах с список информации о файлах
@@ -165,9 +165,9 @@ namespace WorkReportCreator
             try
             {
                 if (action == ReportAction.Generate)
-                    GenerateReport();
+                    GenerateReport(_reportName);
                 else if (action == ReportAction.Save)
-                    SaveReport();
+                    SaveReport(_reportName);
                 isDone = true;
             }
             catch (Exception exception)

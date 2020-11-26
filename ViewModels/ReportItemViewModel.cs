@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -163,29 +164,32 @@ namespace WorkReportCreator
 
         public void SaveReport(string reportName)
         {
-            MainParams mainParams = new MainParams();
-            string path = mainParams.SavedReportsPath;
-            if (Directory.Exists(path) == false)
-                Directory.CreateDirectory(path);
-
             List<int> indicies = new List<int>();
             for (int i = 0; i < DynamicTasksArray.Count; i++)
             {
                 if (DynamicTasksArray[i].IsChecked)
                     indicies.Add(i);
             }
+            Dictionary<string, string> filesAndDescriptions = FilesArray.Select(x => x.Content as FileInformationItem).ToDictionary(x => x.FilePath, x => x.FileDescription);
 
-            ReportModel report = new ReportModel()
+            Task.Run(() =>
             {
-                WorkNumber = int.Parse(Regex.Match(reportName, @"\d+").Value),
-                WorkType = Regex.IsMatch(reportName, "пр|Пр") ? "Practice" : "Laboratory",
-                FilesAndDescriptions = FilesArray.Select(x => x.Content as FileInformationItem).ToDictionary(x => x.FilePath, x => x.FileDescription),
-                SelectedTasksIndices = indicies,
-            };
+                MainParams mainParams = new MainParams();
+                string path = mainParams.SavedReportsPath;
+                if (Directory.Exists(path) == false)
+                    Directory.CreateDirectory(path);
 
-            string text = JsonConvert.SerializeObject(report, Formatting.Indented);
-            string shortName = string.IsNullOrEmpty(mainParams.ShortSubjectName) ? "" : "." + mainParams.ShortSubjectName;
-            File.WriteAllText(mainParams.SavedReportsPath + $@"/{reportName}{shortName}.json", text);
+                ReportModel report = new ReportModel()
+                {
+                    WorkNumber = int.Parse(Regex.Match(reportName, @"\d+").Value),
+                    WorkType = Regex.IsMatch(reportName, "пр|Пр") ? "Practice" : "Laboratory",
+                    FilesAndDescriptions = filesAndDescriptions,
+                    SelectedTasksIndices = indicies,
+                };
+                string text = JsonConvert.SerializeObject(report, Formatting.Indented);
+                string shortName = string.IsNullOrEmpty(mainParams.ShortSubjectName) ? "" : "." + mainParams.ShortSubjectName;
+                File.WriteAllText(mainParams.SavedReportsPath + $@"/{reportName.TrimEnd('.')}{shortName}.json", text);
+            });
         }
 
         /// <summary>
@@ -324,9 +328,20 @@ namespace WorkReportCreator
                 if (DynamicTasksArray[i].IsChecked)
                     selected.Add(i);
             }
-            List<FileInformationItem> filesInformation = FilesArray.Select(x => x.Content as FileInformationItem).ToList();
-            ReportGenerator reportGenerator = new ReportGenerator(reportName, selected, filesInformation);
-            reportGenerator.GenerateReport();
+            List<FileInformation> filesInformation = FilesArray.Select(x => x.Content as FileInformationItem)
+                .Select(x => new FileInformation()
+                {
+                    FilePath = x.FilePath,
+                    FileName = x.FileName,
+                    FileDescription = x.FileDescription,
+                }).ToList();
+
+            Task.Run(() =>
+            {
+                ReportGenerator reportGenerator = new ReportGenerator(reportName, selected, filesInformation);
+                reportGenerator.GenerateReport();
+            });
+
         }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
