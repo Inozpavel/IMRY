@@ -15,8 +15,14 @@ namespace WorkReportCreator.Models
     internal class ReportGenerator
     {
         private readonly string _reportName;
+
         private readonly List<int> _selectedWorksNumbers;
+
         private readonly List<FileInformationItem> _filesInformation;
+
+        private const string SourcePattern = "source\\s*=\\s*\"[^\"]+\"";
+        private const string NamePattern = "name\\s*=\"[^\"]*\"";
+        private const string ImagePattern = "{{\\s*image\\s+" + SourcePattern + "(,?\\s*" + NamePattern + ")?\\s*}}";
 
         public ReportGenerator(string reportName, IEnumerable<int> selectedWorksNumbers, IEnumerable<FileInformationItem> filesInformation)
         {
@@ -32,7 +38,7 @@ namespace WorkReportCreator.Models
         public void GenerateReport()
         {
             MainParams mainParams = new MainParams();
-            DocX document = mainParams.WorkHasTitlePage ? GenerateTitlePage() : DocX.Create("./Configs/EmptyDocument.docs");
+            DocX document = mainParams.WorkHasTitlePage ? GenerateTitlePage() : DocX.Create("./Configs/EmptyDocument.docx");
 
             AddWorkInformation(document, _reportName);
             AddSelectedTasks(document, _reportName);
@@ -52,8 +58,6 @@ namespace WorkReportCreator.Models
         private DocX GenerateTitlePage()
         {
             MainParams mainParams = new MainParams();
-            if (mainParams.WorkHasTitlePage == false)
-                throw new Exception("Вызвано создание титульника, хотя его быть не должно!");
 
             if (mainParams.WorkHasTitlePageParams && File.Exists(mainParams.WorkTitlePageParamsFilePath) == false)
                 throw new Exception("Файл с параметрами для титульной страницы отсутствует!");
@@ -78,12 +82,11 @@ namespace WorkReportCreator.Models
                 titlePageParams.Add("Group", student.Group);
                 if (student.UseFullName)
                 {
-                    titlePageParams.Add("StudentFullName", string.Join(" ", student.SecondName,
-                       student.FirstName, student.MiddleName));
+                    titlePageParams.Add("UserName", string.Join(" ", student.SecondName, student.FirstName, student.MiddleName));
                 }
                 else
                 {
-                    titlePageParams.Add("StudentFullName", string.Join(" ", student.SecondName,
+                    titlePageParams.Add("UserName", string.Join(" ", student.SecondName,
                        student.FirstName.Substring(0, 1).ToUpper() + ".", student.MiddleName.Substring(0, 1).ToUpper() + "."));
                 }
 
@@ -111,14 +114,45 @@ namespace WorkReportCreator.Models
                 document.ReplaceText("{{WorkType}}", $"{(Regex.IsMatch(reportName, "пр|Пр") ? "Практическая работа" : "Лабораторная работа")}");
                 document.ReplaceText("{{WorkNumber}}", $"{Regex.Match(reportName, @"\d+").Value}");
                 document.ReplaceText("{{WorkName}}", $"{task.Name}");
-                document.ReplaceText("{{WorkTheoryPart}}", $"{task.TheoryPart}");
                 document.ReplaceText("{{WorkTarget}}", $"{task.WorkTarget}");
-                document.ReplaceText("{{CommonTask}}", $"{task.CommonTask}");
+
+                InsertTextInParam(document, "TheoryPart", task.TheoryPart);
+                InsertTextInParam(document, "CommonTask", task.CommonTask);
             }
             catch (Exception)
             {
                 throw new Exception("Не удалось вставить в документ информацию о работе!");
             }
+        }
+
+        private void InsertTextInParam(DocX document, string paramName, string text)
+        {
+            int index = FindParagraphIndexWithParametr(document, paramName); //номер абраза, с которого надо начинать вставлять задания
+            if (index == -1)
+                return;
+
+            if (_selectedWorksNumbers.Count < 0)
+                return;
+
+            MainParams mainParams = new MainParams();
+            document.RemoveParagraphAt(index);
+
+            var images = FindImages(text);
+            var splittedTask = Regex.Split(text, ImagePattern).Where(x => Regex.IsMatch(x, NamePattern) == false).ToList();
+            index--;
+
+            List<(string text, int fontSize, string style, string fontFamily)> paragraphs = new List<(string, int, string, string)>();
+
+
+            for (int j = 0; j < splittedTask.Count; j++)
+            {
+                paragraphs.Add(("\t" + splittedTask[j], 14, "normal", "Times New Roman"));
+
+                if (j < splittedTask.Count - 1)
+                    paragraphs.Add((images[j].Pattern, 10, "normal", "Times New Roman"));
+            }
+
+            InsertParagrapsAfterParagraphIndex(document, paragraphs, index);
         }
 
         /// <summary>
@@ -134,9 +168,11 @@ namespace WorkReportCreator.Models
             if (dynamicTasksParagraphIndex == -1) //Задания вставлять не нужно
                 return;
 
-
             if (_selectedWorksNumbers.Count < 0) // Заданий нет
                 return;
+
+            document.RemoveParagraphAt(dynamicTasksParagraphIndex); //Удаляем надпись {{DynamicTasks}}
+            dynamicTasksParagraphIndex--;
 
             MainParams mainParams = new MainParams();
             Dictionary<string, Dictionary<string, Report>> template;
@@ -150,18 +186,29 @@ namespace WorkReportCreator.Models
                 return;
             }
 
-            var tasks = template[Regex.IsMatch(reportName, "пр|Пр") ? "Practices" : "Laboratories"][Regex.Match(reportName, @"\d+").Value].DynamicTasks.Select(x => x.Description.Trim()).ToList();
-            tasks = tasks.Select(x => Regex.Replace(x, "•", "\t•")).ToList();
+            var tasks = template[Regex.IsMatch(reportName, "пр|Пр") ? "Practices" : "Laboratories"][Regex.Match(reportName, @"\d+").Value].
+                DynamicTasks.Select(x => x.Description.Trim()).Select(x => Regex.Replace(x, "•", "\t•")).ToList();
 
-            document.RemoveParagraphAt(dynamicTasksParagraphIndex); //Удаляем надпись {{DynamicTasks}}
-            dynamicTasksParagraphIndex--;
+            ;
 
             int number = 1;
             List<(string, int, string, string)> paragraps = new List<(string, int, string, string)>();
 
             foreach (int i in _selectedWorksNumbers) // Вставка всех работ по абзацам
             {
-                paragraps.Add((_selectedWorksNumbers.Count > 1 ? $"\t{number}) " + tasks[i] : "\t" + tasks[i], 14, "normal", "Times New Roman"));
+                var images = FindImages(tasks[i]);
+                var splittedTask = Regex.Split(tasks[i], ImagePattern).Where(x => Regex.IsMatch(x, NamePattern) == false).ToList();
+
+                for (int j = 0; j < splittedTask.Count; j++)
+                {
+                    if (j == 0)
+                        paragraps.Add((_selectedWorksNumbers.Count > 1 ? $"\t{number}) " + splittedTask[j] : "\t" + splittedTask[j], 14, "normal", "Times New Roman"));
+                    else
+                        paragraps.Add(("\t" + splittedTask[j], 14, "normal", "Times New Roman"));
+
+                    if (j < splittedTask.Count - 1)
+                        paragraps.Add((images[j].Pattern, 10, "normal", "Times New Roman"));
+                }
                 number++;
             }
 
@@ -211,7 +258,6 @@ namespace WorkReportCreator.Models
 
             List<(string text, int fontSize, string style, string fontFamily)> paragraphs = new List<(string, int, string, string)>();
 
-
             foreach (FileInformationItem fileInformation in _filesInformation)
             {
                 try
@@ -234,7 +280,6 @@ namespace WorkReportCreator.Models
             return;
         }
 
-
         /// <summary>
         /// Заменяет все {{image}} в которых указан путь на картинки
         /// </summary>
@@ -244,24 +289,20 @@ namespace WorkReportCreator.Models
         {
             List<string> paragraphs = document.Paragraphs.Cast<Paragraph>().Select(x => x.Text).ToList();// После вставки всех работ список изменился
             int imagesCount = 0;
-            string sourcePattern = "source\\s*=\\s*\"[^\"]+\"";
-            string namePattern = "name\\s*=\"[^\"]*\"";
             for (int i = 0; i < paragraphs.Count; i++)
             {
-
-                if (Regex.IsMatch(paragraphs[i], "{{\\s*image\\s+" + sourcePattern + "(,?\\s*" + namePattern + ")?\\s*}}"))
+                var images = FindImages(paragraphs[i]);
+                if (images.Count > 0)
                 {
-                    var matches = Regex.Matches(paragraphs[i], "{{\\s*image\\s+" + sourcePattern + "(,?\\s*" + namePattern + ")?\\s*}}").Cast<Match>().Select(x => x.Value).ToList();
-                    foreach (string image in matches)
+                    foreach (var imageInfo in images)
                     {
                         try
                         {
-                            string imagePath = Regex.Match(Regex.Match(image, sourcePattern).Value, "\".+\"").Value.Trim('"');
-                            imagePath = imagePath.Replace('\\', '/');
+                            string imagePath = imageInfo.Source;
                             if (string.IsNullOrEmpty(imagePath) || File.Exists(imagePath) == false)
                                 continue;
 
-                            string imageName = Regex.Match(Regex.Match(image, namePattern).Value, "\".*\"").Value.Trim('"');
+                            string imageName = imageInfo.Name;
                             Paragraph paragraph = document.InsertParagraph();
 
                             document.RemoveParagraphAt(document.Paragraphs.Count - 1);
@@ -282,7 +323,7 @@ namespace WorkReportCreator.Models
                             paragraph.Alignment = Alignment.center;
                             document.Paragraphs[i + imagesCount].InsertParagraphAfterSelf(paragraph);
 
-                            document.ReplaceText(image, "");
+                            document.ReplaceText(imageInfo.Pattern, "");
                             imagesCount++;
                         }
                         catch (Exception)
@@ -301,17 +342,32 @@ namespace WorkReportCreator.Models
         /// <returns>Индекс параметра, если он найден, иначе -1</returns>
         private int FindParagraphIndexWithParametr(DocX document, string parametr)
         {
-            int index = -1;
             var paragraphs = document.Paragraphs.Cast<Paragraph>().Select(x => x.Text).ToList();
             for (int i = 0; i < paragraphs.Count; i++)
             {
                 if (paragraphs[i].Contains("{{" + parametr + "}}"))
                 {
-                    index = i;
-                    break;
+                    return i;
                 }
             }
-            return index;
+            return -1;
+        }
+
+        /// <summary>
+        /// Ищет все изображения в тексте
+        /// </summary>
+        /// <param name="text">Текст для поиска</param>
+        /// <returns>Список изображений</returns>
+        private List<WorkImage> FindImages(string text)
+        {
+            var patterns = Regex.Matches(text, ImagePattern).Cast<Match>().Select(x => x.Value);
+
+            return patterns.Select(pattern => new WorkImage()
+            {
+                Pattern = pattern,
+                Name = Regex.Match(Regex.Match(pattern, NamePattern).Value, "\".*\"").Value.Trim('"'),
+                Source = Regex.Match(Regex.Match(pattern, SourcePattern).Value, "\".+\"").Value.Trim('"').Replace('\\', '/')
+            }).ToList();
         }
     }
 }
