@@ -14,8 +14,8 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        
-        <Grid Grid.Row="0" Height="auto">
+
+        <Grid Grid.Row="0" Height="auto" Background="#FF333337">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
@@ -26,7 +26,7 @@
             <TextBlock Grid.Row="0" Text="{Binding DynamicTasksStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" Margin="0 3 0 3"/>
 
             <!--Свернуть / развернуть блок с заданиями-->
-            <ToggleButton x:Name="toggleButton" Grid.Row="0" Focusable="False" HorizontalAlignment="Right" Visibility="{Binding DynamicTasksVisiblity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ToggleButton x:Name="toggleButton" Grid.Row="0" Focusable="False" HorizontalAlignment="Right" Visibility="{Binding DynamicTasksVisiblity}">
 
                 <ToggleButton.Style>
                     <Style TargetType="ToggleButton">
@@ -34,7 +34,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="ToggleButton">
-                                    <Border Background="Transparent">
+                                    <Border Background="#FF191A1B">
                                         <ContentPresenter/>
                                     </Border>
                                 </ControlTemplate>
@@ -43,8 +43,8 @@
 
                     </Style>
                 </ToggleButton.Style>
-                
-                <Image HorizontalAlignment="Center" VerticalAlignment="Center">
+            
+                <Image HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding DynamicTasksVisiblity}">
                     <Image.Style>
 
                         <Style TargetType="Image">

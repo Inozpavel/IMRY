@@ -181,7 +181,7 @@ namespace WorkReportCreator
             }
             FilePath = report.FilePath;
             _reportName = report.ReportName;
-            DynamicTasksVisiblity = DynamicTasks.Count > 0 ? DynamicTasksVisiblity = Visibility.Visible : DynamicTasksVisiblity = Visibility.Collapsed;
+            DynamicTasksVisiblity = DynamicTasks.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
             DynamicTasksStatus = DynamicTasks.Count == 0 ? "Заданий для выбора нет" : "Выберите, пожалуйста, задание";
 
             void UpdateTasksStatus(object sender) => DynamicTasksStatus = DynamicTasksArray
