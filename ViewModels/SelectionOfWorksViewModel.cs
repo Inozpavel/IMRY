@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 using WorkReportCreator.Models;
 
 namespace WorkReportCreator.ViewModels.Commands
@@ -169,9 +170,28 @@ namespace WorkReportCreator.ViewModels.Commands
 
             AddButtonCheckAll(PracticalWorksButtons);
             AddButtonCheckAll(LaboratoryWorksButtons);
+
             try
             {
                 var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Report>>>(File.ReadAllText(mainParams.CurrentTemplateFilePath));
+                string reportsPath = mainParams.SavedReportsPath;
+                List<ReportModel> existingReports = new List<ReportModel>();
+                if (Directory.Exists(reportsPath))
+                {
+                    string[] paths = Directory.GetFiles(reportsPath, $"*.{mainParams.ShortSubjectName}.json");
+                    foreach (string path in paths)
+                    {
+                        try
+                        {
+                            ReportModel report = JsonConvert.DeserializeObject<ReportModel>(File.ReadAllText(path));
+                            if (report != null)
+                                existingReports.Add(report);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
                 foreach (string workType in template.Keys.Distinct())
                 {
                     foreach (string workNumber in template[workType].Keys.Distinct())
@@ -182,9 +202,17 @@ namespace WorkReportCreator.ViewModels.Commands
                             Style = _numberToggleButtonStyle,
                         };
                         if (workType == "Practices")
+                        {
+                            button.Foreground = GetBrushForWork(existingReports, "Practice", workNumber, "Orange", "#FFBAC3C3");
+                            button.BorderBrush = GetBrushForWork(existingReports, "Practice", workNumber, "LightGreen", "White");
                             PracticalWorksButtons.Add(button);
+                        }
                         else if (workType == "Laboratories")
+                        {
+                            button.Foreground = GetBrushForWork(existingReports, "Laboratory", workNumber, "Orange", "#FFBAC3C3");
+                            button.BorderBrush = GetBrushForWork(existingReports, "Laboratory", workNumber, "LightGreen", "White");
                             LaboratoryWorksButtons.Add(button);
+                        }
                     }
                 }
             }
@@ -196,6 +224,23 @@ namespace WorkReportCreator.ViewModels.Commands
             LaboratoriesVisibility = LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
             WorksSelectVisibility = PracticalWorksButtons.Count > 1 || LaboratoryWorksButtons.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
             SaveStatus = string.IsNullOrEmpty(mainParams.UserDataFilePath) ? "Сохранить пользователя" : "Автосохранение включено";
+        }
+
+        /// <summary>
+        /// Проверяет существование работы, возвращает соответствующую кисть
+        /// </summary>
+        /// <param name="existingReports">существуюшие работы</param>
+        /// <param name="workType">Тип работы</param>
+        /// <param name="workNumber">Номер работы</param>
+        /// <param name="existingWorkColor">Цвет существующей работы</param>
+        /// <param name="notExistingWorkColor">Цвет не существующей работы</param>
+        /// <returns>Кисть</returns>
+        private SolidColorBrush GetBrushForWork(List<ReportModel> existingReports, string workType, string workNumber, string existingWorkColor, string notExistingWorkColor)
+        {
+            if (existingReports.Where(x => x.WorkType == workType).FirstOrDefault(x => x.WorkNumber.ToString() == workNumber) != null)
+               return new SolidColorBrush((Color)ColorConverter.ConvertFromString(existingWorkColor));
+            else
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString(notExistingWorkColor));
         }
 
         /// <summary>
@@ -281,7 +326,7 @@ namespace WorkReportCreator.ViewModels.Commands
                 return null;
             try
             {
-                Student student = JsonConvert.DeserializeObject<Student>(File.ReadAllText(filePath));
+                Student student = JsonConvert.DeserializeObject<Student>(File.ReadAllText(filePath)) ?? new Student();
                 student.PropertyChanged += SaveStudentInformation;
                 return student;
             }
