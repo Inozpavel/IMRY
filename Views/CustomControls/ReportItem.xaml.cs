@@ -29,14 +29,11 @@ namespace WorkReportCreator
         /// </summary>
         private readonly ReportViewModel _model;
 
-        private readonly string _reportName;
-
         /// <param name="window">Окно, на котором расположен элемент</param>
         /// <param name="DynamicTasks">Список заданий (при наличии)</param>
-        public ReportItem(string reportName, List<string> DynamicTasks, ReportModel report = null)
+        public ReportItem(List<string> DynamicTasks, ReportModel report)
         {
             InitializeComponent();
-            _reportName = reportName;
             _model = new ReportViewModel(DynamicTasks, report);
             DataContext = _model;
             listBox.SelectionChanged += (sender, e) => listBox.ScrollIntoView(listBox.SelectedItem);
@@ -46,13 +43,13 @@ namespace WorkReportCreator
         /// Создает отчет для выбранной работы
         /// </summary>
         /// <exception cref="Exception"/>
-        public void GenerateReport(string reportName) => _model.GenerateReport(reportName);
+        public void GenerateReport() => _model.GenerateReport();
 
         /// <summary>
         /// Сохраняет отчет для выбранной работы
         /// </summary>
         /// <exception cref="Exception"/>
-        public void SaveReport(string reportName) => _model.SaveReport(reportName);
+        public void SaveReport() => _model.SaveReport();
 
         /// <summary>
         /// При использовании Drag & Drop добавляет / дополняет информацию о выбранных файлах с список информации о файлах
@@ -165,9 +162,9 @@ namespace WorkReportCreator
             try
             {
                 if (action == ReportAction.Generate)
-                    GenerateReport(_reportName);
+                    GenerateReport();
                 else if (action == ReportAction.Save)
-                    SaveReport(_reportName);
+                    SaveReport();
                 isDone = true;
             }
             catch (Exception exception)

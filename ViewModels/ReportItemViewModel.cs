@@ -33,6 +33,8 @@ namespace WorkReportCreator
 
         #endregion
 
+        private string _saveStatus;
+
         private int? _selectedItemIndex;
 
         private Visibility _hintVisibility;
@@ -43,7 +45,39 @@ namespace WorkReportCreator
 
         private ListBoxItem _selectedItem;
 
+        private readonly string _reportName;
+
+        private string _filePath;
+
+        private static readonly object locker = new object();
+
         #region Properties
+
+        /// <summary>
+        /// Путь до файла, где сохраняется отчет
+        /// </summary>
+        public string FilePath
+        {
+            get => _filePath;
+            set
+            {
+                _filePath = value;
+                SaveStatus = string.IsNullOrEmpty(value) ? "Сохранить данные" : "Автосохранение включено";
+            }
+        }
+
+        /// <summary>
+        /// Надпись Сохранить данные / Автосохранение включено
+        /// </summary>
+        public string SaveStatus
+        {
+            get => _saveStatus;
+            set
+            {
+                _saveStatus = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Индекс текущего выбранного элемента
@@ -127,7 +161,7 @@ namespace WorkReportCreator
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <param name="DynamicTasks">Список заданий (при наличии)</param>
-        public ReportViewModel(List<string> DynamicTasks, ReportModel report = null)
+        public ReportViewModel(List<string> DynamicTasks, ReportModel report)
         {
             FilesArray.CollectionChanged += (sender, e) => HintVisibility = FilesArray.Count != 0 ? Visibility.Hidden : Visibility.Visible;
 
@@ -145,51 +179,25 @@ namespace WorkReportCreator
                     IsChecked = report?.SelectedTasksIndices.Contains(i) ?? false,
                 });
             }
-            foreach (string task in DynamicTasks ?? new List<string>())
-
-                DynamicTasksVisiblity = DynamicTasks.Count > 0 ? DynamicTasksVisiblity = Visibility.Visible : DynamicTasksVisiblity = Visibility.Collapsed;
+            FilePath = report.FilePath;
+            _reportName = report.ReportName;
+            DynamicTasksVisiblity = DynamicTasks.Count > 0 ? DynamicTasksVisiblity = Visibility.Visible : DynamicTasksVisiblity = Visibility.Collapsed;
             DynamicTasksStatus = DynamicTasks.Count == 0 ? "Заданий для выбора нет" : "Выберите, пожалуйста, задание";
 
             void UpdateTasksStatus(object sender) => DynamicTasksStatus = DynamicTasksArray
                 .Any(x => x.IsChecked) ? "Задание выбрано" : "Выберите, пожалуйста, задание";
 
             foreach (var i in DynamicTasksArray)
-                i.CheckedChanged += UpdateTasksStatus;
+                i.IsCheckedChanged += UpdateTasksStatus;
             if (report != null)
             {
                 foreach (var fileItem in report.FilesAndDescriptions)
                     AddNewFileInfo(fileItem.Key, fileItem.Value);
             }
-        }
 
-        public void SaveReport(string reportName)
-        {
-            List<int> indicies = new List<int>();
-            for (int i = 0; i < DynamicTasksArray.Count; i++)
-            {
-                if (DynamicTasksArray[i].IsChecked)
-                    indicies.Add(i);
-            }
-            Dictionary<string, string> filesAndDescriptions = FilesArray.Select(x => x.Content as FileInformationItem).ToDictionary(x => x.FilePath, x => x.FileDescription);
-
-            Task.Run(() =>
-            {
-                MainParams mainParams = new MainParams();
-                string path = mainParams.SavedReportsPath;
-                if (Directory.Exists(path) == false)
-                    Directory.CreateDirectory(path);
-
-                ReportModel report = new ReportModel()
-                {
-                    WorkNumber = int.Parse(Regex.Match(reportName, @"\d+").Value),
-                    WorkType = Regex.IsMatch(reportName, "пр|Пр") ? "Practice" : "Laboratory",
-                    FilesAndDescriptions = filesAndDescriptions,
-                    SelectedTasksIndices = indicies,
-                };
-                string text = JsonConvert.SerializeObject(report, Formatting.Indented);
-                string shortName = string.IsNullOrEmpty(mainParams.ShortSubjectName) ? "" : "." + mainParams.ShortSubjectName;
-                File.WriteAllText(mainParams.SavedReportsPath + $@"/{reportName.TrimEnd('.')}{shortName}.json", text);
-            });
+            FilesArray.CollectionChanged += (sender, e) => Autosave();
+            DynamicTasksArray.CollectionChanged += (sender, e) => Autosave();
+            DynamicTasksArray.ToList().ForEach(x => x.IsCheckedChanged += (sender) => Autosave());
         }
 
         /// <summary>
@@ -197,27 +205,21 @@ namespace WorkReportCreator
         /// </summary>
         public void AddNewFileInfo(string filePath = "", string fileDescription = "")
         {
+            FileInformationItem item = CreateFileInformationItem(FilesArray.Count + 1, filePath, fileDescription);
+
             if (SelectedItemIndex != null)
             {
-                FilesArray.Insert(SelectedItemIndex + 1 ?? 0, new ListBoxItem()
-                {
-                    Content = new FileInformationItem() { Number = FilesArray.Count + 1, FilePath = filePath, FileDescription = fileDescription },
-                    HorizontalContentAlignment = HorizontalAlignment.Stretch
-                });
+                AddFileInformationItem(item, SelectedItemIndex);
                 SelectedItemIndex += 1;
                 UpdateAllNumbers();
             }
             else
             {
-                FilesArray.Add(new ListBoxItem()
-                {
-                    Content = new FileInformationItem() { Number = FilesArray.Count + 1, FilePath = filePath, FileDescription = fileDescription },
-                    HorizontalContentAlignment = HorizontalAlignment.Stretch
-                });
+                AddFileInformationItem(item);
                 SelectedItemIndex = FilesArray.Count - 1;
             }
         }
-
+        
         /// <summary>
         /// Добавляет новый элемент в список элементов с описанием файлов, с указанным файлом
         /// </summary>
@@ -226,11 +228,8 @@ namespace WorkReportCreator
         {
             if (File.Exists(filePath))
             {
-                FilesArray.Add(new ListBoxItem()
-                {
-                    Content = new FileInformationItem() { Number = FilesArray.Count + 1, FilePath = filePath },
-                    HorizontalContentAlignment = HorizontalAlignment.Stretch
-                });
+                FileInformationItem item = CreateFileInformationItem(FilesArray.Count + 1, filePath);
+                AddFileInformationItem(item);
             }
         }
 
@@ -268,6 +267,105 @@ namespace WorkReportCreator
         /// </summary>
         public void SwapDownSelectedFileInfo(object sender) => SwapAdjacentItemWithSelected(+1);
 
+        /// <summary>
+        /// Cоздает отчет для работы
+        /// </summary>
+        public void GenerateReport()
+        {
+            List<int> selected = new List<int>();
+            for (int i = 0; i < DynamicTasksArray.Count; i++)
+            {
+                if (DynamicTasksArray[i].IsChecked)
+                    selected.Add(i);
+            }
+            List<FileInformation> filesInformation = FilesArray.Select(x => x.Content as FileInformationItem)
+                .Select(x => new FileInformation()
+                {
+                    FilePath = x.FilePath,
+                    FileName = x.FileName,
+                    FileDescription = x.FileDescription,
+                }).ToList();
+
+            Task.Run(() =>
+            {
+                ReportGenerator reportGenerator = new ReportGenerator(_reportName, selected, filesInformation);
+                reportGenerator.GenerateReport();
+            });
+
+        }
+
+        /// <summary>
+        /// Сохраняет отчет для работы
+        /// </summary>
+        public void SaveReport()
+        {
+            List<int> indicies = new List<int>();
+            for (int i = 0; i < DynamicTasksArray.Count; i++)
+            {
+                if (DynamicTasksArray[i].IsChecked)
+                    indicies.Add(i);
+            }
+            Dictionary<string, string> filesAndDescriptions = FilesArray.Select(x => x.Content as FileInformationItem)
+                .Where(x => string.IsNullOrEmpty(x.FilePath) == false).ToDictionary(x => x.FilePath, x => x.FileDescription);
+
+            Task.Run(() =>
+            {
+                MainParams mainParams = new MainParams();
+                if (Directory.Exists(mainParams.SavedReportsPath) == false)
+                    Directory.CreateDirectory(mainParams.SavedReportsPath);
+
+                ReportModel report = new ReportModel()
+                {
+                    WorkNumber = int.Parse(Regex.Match(_reportName, @"\d+").Value),
+                    WorkType = Regex.IsMatch(_reportName, "пр|Пр") ? "Practice" : "Laboratory",
+                    FilesAndDescriptions = filesAndDescriptions,
+                    SelectedTasksIndices = indicies,
+                };
+                string text = JsonConvert.SerializeObject(report, Formatting.Indented);
+                string shortName = string.IsNullOrEmpty(mainParams.ShortSubjectName) ? "" : "." + mainParams.ShortSubjectName;
+                string path = mainParams.SavedReportsPath + $@"/{_reportName.TrimEnd('.')}{shortName}.json";
+                lock (locker)
+                {
+                    File.WriteAllText(path, text);
+                    FilePath = path;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Проверяет, указан ли файл для сохранения, если файл указан, сохраняет данные
+        /// </summary>
+        private void Autosave()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(_filePath))
+                    return;
+                SaveReport();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "При автосохранении работы произошла ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Добавляет элемент в список элемента с файлами
+        /// </summary>
+        /// <param name="item">Сам элемент</param>
+        /// <param name="index">Индекс, куда нужно вставить, по умолчанию - в конец</param>
+        private void AddFileInformationItem(FileInformationItem item, int? index = null)
+        {
+            ListBoxItem listBoxItem = new ListBoxItem()
+            {
+                Content = item,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch
+            };
+            if (index == null)
+                FilesArray.Add(listBoxItem);
+            else
+                FilesArray.Insert(index ?? 0 + 1, listBoxItem);
+        }
 
         /// <summary>
         /// Обменивает ближайший элемент с выбранным
@@ -278,6 +376,7 @@ namespace WorkReportCreator
             int number = (_selectedItem.Content as FileInformationItem).Number - 1;
             SwapArrayItems(number, number + i);
             SelectedItemIndex = number + i;
+            Autosave();
         }
 
         /// <summary>
@@ -303,6 +402,9 @@ namespace WorkReportCreator
                 (FilesArray[i].Content as FileInformationItem).Number = i + 1;
         }
 
+        /// <summary>
+        /// Показывает диалог для подтверждения сброса всего введенного в элемент
+        /// </summary>
         private void ShowDialogResetItem(object sender)
         {
             if (MessageBox.Show("В уверены, что хотите сбросить все?", "Подтвердите действие",
@@ -317,31 +419,22 @@ namespace WorkReportCreator
         }
 
         /// <summary>
-        /// Cоздает отчет для работы
+        /// Создает новый элемент с указанными номером, путем и описанием
         /// </summary>
-        /// <exception cref="Exception"/>
-        public void GenerateReport(string reportName)
+        /// <param name="number">Номер элемента</param>
+        /// <param name="filePath">Путь до файла пользователя</param>
+        /// <param name="fileDescription">Описание файла</param>
+        /// <returns>Элемент с описанием файла</returns>
+        private FileInformationItem CreateFileInformationItem(int number, string filePath = "", string fileDescription = "")
         {
-            List<int> selected = new List<int>();
-            for (int i = 0; i < DynamicTasksArray.Count; i++)
+            FileInformationItem item = new FileInformationItem()
             {
-                if (DynamicTasksArray[i].IsChecked)
-                    selected.Add(i);
-            }
-            List<FileInformation> filesInformation = FilesArray.Select(x => x.Content as FileInformationItem)
-                .Select(x => new FileInformation()
-                {
-                    FilePath = x.FilePath,
-                    FileName = x.FileName,
-                    FileDescription = x.FileDescription,
-                }).ToList();
-
-            Task.Run(() =>
-            {
-                ReportGenerator reportGenerator = new ReportGenerator(reportName, selected, filesInformation);
-                reportGenerator.GenerateReport();
-            });
-
+                Number = number,
+                FilePath = filePath,
+                FileDescription = fileDescription
+            };
+            item.PropertyToSaveChanged += (sender, e) => Autosave();
+            return item;
         }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

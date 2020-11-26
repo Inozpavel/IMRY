@@ -56,7 +56,7 @@ namespace WorkReportCreator.ViewModels
         /// <param name="practicalWorks">Список доступный для выбора приктических работ</param>
         /// <param name="reportsWindow">Окно, на котором расположен элемент</param>
         /// <exception cref="Exception"/>
-        public ReportsWindowViewModel(ReportsWindow reportsWindow, List<string> laboratoryWorks, List<string> practicalWorks)
+        public ReportsWindowViewModel(List<string> laboratoryWorks, List<string> practicalWorks)
         {
             FastActionsItem fastActionsItem = new FastActionsItem
             {
@@ -104,7 +104,9 @@ namespace WorkReportCreator.ViewModels
                 {
                     try
                     {
-                        reports.Add(JsonConvert.DeserializeObject<ReportModel>(File.ReadAllText(path)));
+                        ReportModel report = JsonConvert.DeserializeObject<ReportModel>(File.ReadAllText(path));
+                        report.FilePath = path;
+                        reports.Add(report);
                     }
                     catch
                     {
@@ -143,18 +145,19 @@ namespace WorkReportCreator.ViewModels
                 try
                 {
                     List<string> dynamicTasks = template[workType][number].DynamicTasks.Select(x => x.Description).Select(x => Regex.Replace(x, "\\n", "").Trim()).ToList();
-                    ReportModel report = reports?.FirstOrDefault(x => x.WorkNumber.ToString() == number);
-                    string header = $"{number} {shortDescription}";
+                    ReportModel report = reports?.FirstOrDefault(x => x.WorkNumber.ToString() == number) ?? new ReportModel();
+                    string reportName = $"{number} {shortDescription}";
+                    report.ReportName = reportName;
                     TabItems.Add(new TabItem()
                     {
-                        Header = header,
-                        Content = new ReportItem(header, dynamicTasks, report),
+                        Header = reportName,
+                        Content = new ReportItem(dynamicTasks, report),
                         Style = style,
                     });
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show($"Не получилось загрузить {number} {shortDescription} работу,\nвозможно, ошибка в ключах.",
+                    MessageBox.Show($"Не получилось загрузить {number} {shortDescription} работу!",
                         $"Ошибка при загрузке работы!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
@@ -183,9 +186,9 @@ namespace WorkReportCreator.ViewModels
                 try
                 {
                     if (action == ReportAction.Generate)
-                        item.GenerateReport(reportName);
+                        item.GenerateReport();
                     else if (action == ReportAction.Save)
-                        item.SaveReport(reportName);
+                        item.SaveReport();
                 }
                 catch (Exception)
                 {
@@ -193,7 +196,6 @@ namespace WorkReportCreator.ViewModels
                     list.Add(i);
                 }
             };
-
 
             if (failedLaboratoriesReports.Count == 0 && failedPracticesReports.Count == 0)
             {

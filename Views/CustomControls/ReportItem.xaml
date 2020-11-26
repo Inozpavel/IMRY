@@ -183,7 +183,7 @@
                     <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
                 </Grid.Resources>
 
-                <Button Width="320" Height="50" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Сохранить данные" Margin="3" Style="{StaticResource CommonAnimatedButton}" Click="SaveReportClicked"/>
+                <Button Width="320" Height="50" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Content="{Binding SaveStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="3" Style="{StaticResource CommonAnimatedButton}" Click="SaveReportClicked"/>
                 <Button Width="320" Height="50" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Сгенерировать отчет для работы" Margin="3" Style="{StaticResource CommonAnimatedButton}" Click="GenerateReportClicked"/>
             </Grid>
         </Border>

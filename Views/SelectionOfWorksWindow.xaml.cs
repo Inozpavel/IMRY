@@ -14,16 +14,11 @@ namespace WorkReportCreator
         /// </summary>
         private readonly MainWindow _mainWindow;
 
-        /// <summary>
-        /// Модель данных этого элемента
-        /// </summary>
-        private readonly SelectionOfWorksViewModel _model;
-
         /// <exception cref="Exception"/>
         public SelectionOfWorksWindow(MainWindow mainWindow)
         {
             InitializeComponent();
-            DataContext = _model = new SelectionOfWorksViewModel(this);
+            DataContext = new SelectionOfWorksViewModel(this);
             _mainWindow = mainWindow;
         }
 

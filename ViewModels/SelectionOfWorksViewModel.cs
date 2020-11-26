@@ -176,8 +176,8 @@ namespace WorkReportCreator.ViewModels.Commands
                 {
                     foreach (string workNumber in template[workType].Keys.Distinct())
                     {
-                        ToggleButton button = new ToggleButton() 
-                        { 
+                        ToggleButton button = new ToggleButton()
+                        {
                             Content = workNumber,
                             Style = _numberToggleButtonStyle,
                         };

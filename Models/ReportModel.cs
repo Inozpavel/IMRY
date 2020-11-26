@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace WorkReportCreator.Models
 {
@@ -8,8 +9,14 @@ namespace WorkReportCreator.Models
 
         public string WorkType { get; set; }
 
-        public List<int> SelectedTasksIndices { get; set; }
+        public List<int> SelectedTasksIndices { get; set; } = new List<int>();
 
-        public Dictionary<string, string> FilesAndDescriptions { get; set; }
+        public Dictionary<string, string> FilesAndDescriptions { get; set; } = new Dictionary<string, string>();
+
+        [JsonIgnore]
+        public string FilePath { get; set; }
+
+        [JsonIgnore]
+        public string ReportName { get; set; }
     }
 }

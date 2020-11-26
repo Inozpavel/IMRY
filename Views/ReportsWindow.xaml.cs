@@ -27,7 +27,7 @@ namespace WorkReportCreator
         public ReportsWindow(SelectionOfWorksWindow informationPage, List<string> selectedLaboratoryWorks, List<string> selectedPracticalWorks)
         {
             InitializeComponent();
-            DataContext = _model = new ReportsWindowViewModel(this, selectedLaboratoryWorks, selectedPracticalWorks);
+            DataContext = _model = new ReportsWindowViewModel(selectedLaboratoryWorks, selectedPracticalWorks);
             _model.ButtonBackClicked += ShowWorkAndStudentInformation;
             _informationPage = informationPage;
         }

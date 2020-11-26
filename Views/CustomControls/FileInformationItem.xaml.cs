@@ -104,6 +104,7 @@ namespace WorkReportCreator.Views
             {
                 SetValue(FileDescriptionProperty, value);
                 OnPropertyChanged();
+                OnPropertyToSaveChanged();
             }
         }
 
@@ -119,6 +120,7 @@ namespace WorkReportCreator.Views
                 FileName = File.Exists(value) ? Regex.Split(value, @"/|\\").Last() : null;
                 HintVisibility = string.IsNullOrEmpty(FilePath) == false ? Visibility.Hidden : Visibility.Visible;
                 OnPropertyChanged();
+                OnPropertyToSaveChanged();
             }
         }
 
@@ -152,6 +154,8 @@ namespace WorkReportCreator.Views
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
+        
+        public event PropertyChangedEventHandler PropertyToSaveChanged;
 
         public FileInformationItem()
         {
@@ -187,6 +191,8 @@ namespace WorkReportCreator.Views
             .IsSelected = (bool)e.NewValue;
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        public void OnPropertyToSaveChanged([CallerMemberName] string propertyName = "") => PropertyToSaveChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private void ScrollViewerPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
