@@ -194,21 +194,23 @@ namespace WorkReportCreator.Models
                     "ShortSubjectName",
                 };
 
-                var globalParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
-
-                if (requiredParams.All(param => globalParams.Keys.Contains(param)) == false)
+                var mainParams = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("./MainConfig.json"));
+                foreach (string param in requiredParams)
                 {
-                    MessageBox.Show("В главном конфигурационном файле отсутствует обязательный параметр!\nБез него нельзя использовать приложение!",
-                    "Невозможно запустить приложение!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Application.Current.Shutdown();
-                    return;
+                    if (mainParams.Keys.Contains(param) == false)
+                    {
+                        MessageBox.Show($"В главном конфигурационном файле отсутствует обязательный параметр {param}!\nБез него нельзя использовать приложение!",
+                            "Невозможно запустить приложение!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        Application.Current.Shutdown();
+                        return;
+                    }
                 }
 
-                foreach (var param in globalParams.Keys.Where(x => x.Contains("FilePath") && x != "UserDataFilePath"))
+                foreach (var param in mainParams.Keys.Where(x => x.Contains("FilePath") && x != "UserDataFilePath"))
                 {
-                    if (File.Exists(globalParams[param]) == false)
+                    if (File.Exists(mainParams[param]) == false)
                     {
-                        MessageBox.Show($"Ошибка в параметре {param},\nфайл {globalParams[param]} не существует!\nОн необходим для работы приложения!\nПроверьть его корректность",
+                        MessageBox.Show($"Ошибка в параметре {param},\nфайл {mainParams[param]} не существует!\nОн необходим для работы приложения!\nПроверьть его существование!",
                             "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                         Application.Current.Shutdown();
                         return;
