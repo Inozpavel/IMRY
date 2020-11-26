@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="IMRY" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Background="#FF191A1B">
-    <Grid Width="290">
+    <Grid Width="310">
 
         <Grid.Resources>
             <ResourceDictionary>
