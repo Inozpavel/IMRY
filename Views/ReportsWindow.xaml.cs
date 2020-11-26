@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using WorkReportCreator.Models;
 using WorkReportCreator.ViewModels;
 
 namespace WorkReportCreator
@@ -17,31 +16,18 @@ namespace WorkReportCreator
         private readonly ReportsWindowViewModel _model;
 
         /// <summary>
-        /// Данные студента
-        /// </summary>
-        public Student Student { get; set; }
-
-        /// <summary>
         /// Окно с информацией о студенте
         /// </summary>
         private readonly SelectionOfWorksWindow _informationPage;
 
         /// <param name="informationPage">Окно с выбором работ и информацией о студенте</param>
-        /// <param name="laboratoryWorks">Список номеров лабораторных работ</param>
-        /// <param name="practicalWorks">Список номеров практических работ</param>
-        public ReportsWindow(SelectionOfWorksWindow informationPage, List<string> laboratoryWorks, List<string> practicalWorks, Student student, IEnumerable<ReportModel> reports = null)
+        /// <param name="selectedLaboratoryWorks">Список номеров лабораторных работ</param>
+        /// <param name="selectedPracticalWorks">Список номеров практических работ</param>
+        /// <exception cref="Exception"></exception>
+        public ReportsWindow(SelectionOfWorksWindow informationPage, List<string> selectedLaboratoryWorks, List<string> selectedPracticalWorks)
         {
             InitializeComponent();
-            Student = student;
-            try
-            {
-                DataContext = _model = new ReportsWindowViewModel(laboratoryWorks, practicalWorks, this, reports);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                throw new Exception();
-            }
+            DataContext = _model = new ReportsWindowViewModel(this, selectedLaboratoryWorks, selectedPracticalWorks);
             _model.ButtonBackClicked += ShowWorkAndStudentInformation;
             _informationPage = informationPage;
         }

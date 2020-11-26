@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
-using WorkReportCreator.Models;
 using WorkReportCreator.ViewModels.Commands;
 
 namespace WorkReportCreator
@@ -27,12 +25,6 @@ namespace WorkReportCreator
             InitializeComponent();
             DataContext = _model = new SelectionOfWorksViewModel(this);
             _mainWindow = mainWindow;
-        }
-
-        /// <exception cref="Exception"/>
-        public SelectionOfWorksWindow(MainWindow mainWindow, IEnumerable<ReportModel> reports) : this(mainWindow)
-        {
-            DataContext = _model = new SelectionOfWorksViewModel(this, reports);
         }
 
         /// <summary>

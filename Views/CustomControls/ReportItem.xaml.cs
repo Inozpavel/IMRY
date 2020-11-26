@@ -36,14 +36,13 @@ namespace WorkReportCreator
         /// </summary>
         private readonly ReportsWindow _page;
 
-        /// <param name="page">Окно, на котором расположен элемент</param>
+        /// <param name="window">Окно, на котором расположен элемент</param>
         /// <param name="DynamicTasks">Список заданий (при наличии)</param>
-        public ReportItem(ReportsWindow page, List<string> DynamicTasks, ReportModel report = null)
+        public ReportItem(List<string> DynamicTasks, ReportModel report = null)
         {
             InitializeComponent();
             _model = new ReportViewModel(DynamicTasks, report);
             DataContext = _model;
-            _page = page;
             listBox.SelectionChanged += (sender, e) => listBox.ScrollIntoView(listBox.SelectedItem);
         }
 

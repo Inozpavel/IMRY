@@ -11,6 +11,8 @@ namespace WorkReportCreator.ViewModels
 {
     internal class SettingsViewModel
     {
+        #region Commands
+
         public Command ChooseTitlePageFile { get; private set; }
 
         public Command ChooseTitlePageParamsFile { get; private set; }
@@ -23,13 +25,15 @@ namespace WorkReportCreator.ViewModels
 
         public Command ChooseFolderForSavedReports { get; private set; }
 
+        #endregion
+
         public MainParams Params { get; set; }
 
         private OpenFileDialog _dialog;
 
-        public SettingsViewModel()
+        public SettingsViewModel(MainParams mainParams)
         {
-            Params = new MainParams();
+            Params = mainParams;
             ChooseTitlePageFile = new Command((x) => SelectTitlePageFile(), null);
             ChooseTitlePageParamsFile = new Command((x) => SelectTitlePageParamsFile(), null);
             ChooseCurrentTemplateFile = new Command((x) => SelectCurrentTemplateFile(), null);
@@ -73,7 +77,7 @@ namespace WorkReportCreator.ViewModels
         /// </summary>
         private void SelectPermittedExtentionFile()
         {
-            if (ShowDialogAndCheckPathIsCorrect<List<string>>("Выберите файл с разрешенными расширениями файлов для Drag & Drop", "Json файлы(*.json)|*.json"))
+            if (ShowDialogAndCheckPathIsCorrect<List<string>>("Выберите файл с разрешенными расширениями файлов для Drag & Drop", "Json файлы с расширениями (*.extensions.json)|*.extensions.json"))
                 Params.PermittedDragAndDropExtentionsFilePath = _dialog.FileName;
         }
 
@@ -110,7 +114,7 @@ namespace WorkReportCreator.ViewModels
             if (_dialog.ShowDialog() == DialogResult.OK)
             {
                 _dialog.FileName = Regex.Replace(_dialog.FileName, @"\\", "/");
-                return CheckJsonFileHasFormat<T>(File.ReadAllText(_dialog.FileName));
+                return CheckJsonTextHasFormat<T>(File.ReadAllText(_dialog.FileName));
             }
             return false;
         }
@@ -121,7 +125,7 @@ namespace WorkReportCreator.ViewModels
         /// <typeparam name="T">Тип данных, который нужно проверить</typeparam>
         /// <param name="jsonText">Текст в формате json</param>
         /// <returns><paramref name="True"/> если содержится, в противном случае <paramref name="false"/></returns>
-        private bool CheckJsonFileHasFormat<T>(string jsonText)
+        private bool CheckJsonTextHasFormat<T>(string jsonText)
         {
             try
             {
@@ -135,6 +139,11 @@ namespace WorkReportCreator.ViewModels
             }
         }
 
+        /// <summary>
+        /// Показывает диалог для выбора папки, вовзращает путь до нее
+        /// </summary>
+        /// <param name="description">Надпись в диалоге</param>
+        /// <returns>Путь до папки</returns>
         private string ShowFolderDialog(string description)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog()
@@ -151,7 +160,7 @@ namespace WorkReportCreator.ViewModels
         /// </summary>
         /// <param name="title">Заголовок диалогового окна</param>
         /// <param name="filter">Фильтр файлов</param>
-        /// <returns></returns>
+        /// <returns>Диалог для выбора файла</returns>
         private OpenFileDialog BuildDialog(string title, string filter)
         {
             OpenFileDialog dialog = new OpenFileDialog()

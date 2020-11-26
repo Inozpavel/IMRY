@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using WorkReportCreator.Models;
 using WorkReportCreator.ViewModels;
 
 namespace WorkReportCreator.Views
@@ -18,11 +19,12 @@ namespace WorkReportCreator.Views
         public SettingsWindow(MainWindow mainWindow)
         {
             InitializeComponent();
-            DataContext = _model = new SettingsViewModel();
+            MainParams mainParams = new MainParams();
+            DataContext = _model = new SettingsViewModel(mainParams);
             _mainWindow = mainWindow;
 
-            gridTitlePagePath.Opacity = _model.Params.WorkHasTitlePage ? 1 : 0;
-            gridTitlePageParams.Opacity = _model.Params.WorkHasTitlePageParams ? 1 : 0;
+            gridTitlePagePath.Opacity = mainParams.WorkHasTitlePage ? 1 : 0;
+            gridTitlePageParams.Opacity = mainParams.WorkHasTitlePageParams ? 1 : 0;
         }
 
         private void ShowMainWindow(object sender, System.ComponentModel.CancelEventArgs e) => _mainWindow.Show();
