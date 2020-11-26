@@ -28,40 +28,6 @@ namespace WorkReportCreator
         }
 
         /// <summary>
-        /// Показывает диалоговое окно для выбором файла с отчетом, чтобы редактировать его
-        /// </summary>
-        private void LoadSelectionOfWorksWindowWithReports(object sender, RoutedEventArgs e)
-        {
-            MainParams mainParams = new MainParams();
-            string subjectName = mainParams.ShortSubjectName;
-            OpenFileDialog dialog = new OpenFileDialog()
-            {
-                Multiselect = true,
-                Title = "Выберите отчеты, которые хотите изменить",
-                Filter = $"Отчеты для текущего предмета - {subjectName} (*.{subjectName}.json)|*.{subjectName}.json|Все файлы (*.*)|*.*",
-            };
-            if (dialog.ShowDialog() == true)
-            {
-                List<ReportModel> reports = new List<ReportModel>();
-                foreach (var path in dialog.FileNames)
-                {
-                    try
-                    {
-                        reports.Add(JsonConvert.DeserializeObject<ReportModel>(File.ReadAllText(path)));
-                    }
-                    catch
-                    {
-                        MessageBox.Show($"Невозможно распознать сожержимое файла!\nПовторите выбор файлов!\nПуть: {path}");
-                        return;
-                    }
-                }
-                SelectionOfWorksWindow window = new SelectionOfWorksWindow(this, reports);
-                Hide();
-                window.Show();
-            }
-        }
-
-        /// <summary>
         /// Загружает шаблон работы и показывает окно для редактирования шаблона
         /// </summary>
         private void LoadReportsTemplateWindow(object sender, RoutedEventArgs e)
@@ -72,7 +38,6 @@ namespace WorkReportCreator
                 {
                     Title = "Выберите файл с шаблоном",
                     Filter = "JSON файлы (*.template.json)|*.template.json|Все файлы (*.*)|*.*",
-                    DefaultExt = "json",
                 };
                 if (dialog.ShowDialog() == true)
                 {
@@ -101,27 +66,38 @@ namespace WorkReportCreator
         /// <summary>
         /// Показывает окно с выбором заданий и вводом информации о студенте
         /// </summary>
-        private void ShowWindowReportsSelect(object sender, RoutedEventArgs e) => ShowWindow<SelectionOfWorksWindow>();
+        private void ShowWindowReportsSelect(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SelectionOfWorksWindow window = new SelectionOfWorksWindow(this);
+                window.Show();
+                Hide();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         /// <summary>
         /// Показывает окно с настройками
         /// </summary>
-        private void ShowSettingsWindow(object sender, RoutedEventArgs e) => ShowWindow<SettingsWindow>();
+        private void ShowSettingsWindow(object sender, RoutedEventArgs e)
+        {
+            SettingsWindow window = new SettingsWindow(this);
+            window.Show();
+            Hide();
+        }
 
         /// <summary>
         /// Показывает окно для редактирования шаблона
         /// </summary>
-        private void ShowWindowReportsTemplate(object sender, RoutedEventArgs e) => ShowWindow<ReportsTemplateWindow>();
-
-        /// <summary>
-        /// Показывет окно выбранного типа
-        /// </summary>
-        /// <typeparam name="T">Тип окна</typeparam>
-        private void ShowWindow<T>() where T : Window
+        private void ShowWindowReportsTemplate(object sender, RoutedEventArgs e)
         {
-            T window = (T)Activator.CreateInstance(typeof(T), this);
-            Hide();
+            ReportsTemplateWindow window = new ReportsTemplateWindow(this);
             window.Show();
+            Hide();
         }
     }
 }

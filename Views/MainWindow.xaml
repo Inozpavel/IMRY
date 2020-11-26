@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="IMRY" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Background="#FF191A1B">
-    <Grid Width="280">
+    <Grid Width="290">
 
         <Grid.Resources>
             <ResourceDictionary>
@@ -25,15 +25,13 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <Image Grid.Row="0" Source="../AppIcon.png" VerticalAlignment="Center" HorizontalAlignment="Center" Height="160" Margin="0 10 0 0"/>
-        <Button Grid.Row="1" Height="50" Content="Создать отчет" Click="ShowWindowReportsSelect" Margin="10 10 10 5" Style="{StaticResource CommonAnimatedButton}"/>
-        <Button Grid.Row="2" Height="50" Content="Загрузить отчет из файла" Click="LoadSelectionOfWorksWindowWithReports" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
-        <Button Grid.Row="3" Height="50" Content="Создать шаблон" Click="ShowWindowReportsTemplate" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
-        <Button Grid.Row="4" Height="50" Content="Изменить шаблон" Click="LoadReportsTemplateWindow" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
-        <Grid Grid.Row="5" Height="40">
+        <Button Grid.Row="1" Height="50" Content="Создать / изменить отчет" Click="ShowWindowReportsSelect" Margin="10 10 10 5" Style="{StaticResource CommonAnimatedButton}"/>
+        <Button Grid.Row="2" Height="50" Content="Создать шаблон для работы" Click="ShowWindowReportsTemplate" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
+        <Button Grid.Row="3" Height="50" Content="Изменить шаблон для работы" Click="LoadReportsTemplateWindow" Margin="10 5 10 5" Style="{StaticResource CommonAnimatedButton}"/>
+        <Grid Grid.Row="4" Height="40">
             
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>

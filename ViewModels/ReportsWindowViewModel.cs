@@ -19,10 +19,12 @@ namespace WorkReportCreator.ViewModels
     {
         private int? _selectedIndex;
 
+        private readonly Style _tabItemStyle;
+
         private enum ReportAction
         {
             Save,
-            Generate
+            Generate,
         }
 
         /// <summary>
@@ -54,7 +56,7 @@ namespace WorkReportCreator.ViewModels
         /// <param name="practicalWorks">Список доступный для выбора приктических работ</param>
         /// <param name="reportsWindow">Окно, на котором расположен элемент</param>
         /// <exception cref="Exception"/>
-        public ReportsWindowViewModel(List<string> laboratoryWorks, List<string> practicalWorks, ReportsWindow reportsWindow, IEnumerable<ReportModel> reports)
+        public ReportsWindowViewModel(ReportsWindow reportsWindow, List<string> laboratoryWorks, List<string> practicalWorks)
         {
             FastActionsItem fastActionsItem = new FastActionsItem
             {
@@ -65,9 +67,19 @@ namespace WorkReportCreator.ViewModels
             fastActionsItem.ButtonSaveAllClicked += SaveAllReports;
             fastActionsItem.ButtonBackClicked += (sender) => ButtonBackClicked?.Invoke(sender);
 
-            ResourceDictionary tabItemStyle = new ResourceDictionary() { Source = new Uri("./Views/Styles/CommonTabItemStyle.xaml", UriKind.Relative) };
+            ResourceDictionary _tabItemStyleDictionary = new ResourceDictionary()
+            {
+                Source = new Uri("./Views/Styles/CommonTabItemStyle.xaml",
+                UriKind.Relative)
+            };
+            _tabItemStyle = _tabItemStyleDictionary["CommonTabItemStyle"] as Style;
 
-            TabItems.Add(new TabItem() { Header = "Быстрые действия", Content = fastActionsItem, Style = tabItemStyle["CommonTabItemStyle"] as Style });
+            TabItems.Add(new TabItem()
+            {
+                Header = "Быстрые действия",
+                Content = fastActionsItem,
+                Style = _tabItemStyle
+            });
 
             Dictionary<string, Dictionary<string, Report>> template;
             MainParams mainParams = new MainParams();
@@ -83,8 +95,25 @@ namespace WorkReportCreator.ViewModels
             if (template.Keys.Contains("Laboratories") == false && template.Keys.Contains("Practices") == false)
                 throw new Exception("В файле с шаблоном отсутствуют и практические и лабораторные работы!");
 
-            LoadTemplateInfoFromKey(template, reportsWindow, "Practices", "пр.", practicalWorks, tabItemStyle["CommonTabItemStyle"] as Style, reports?.Where(x => x.WorkType == "Practice"));
-            LoadTemplateInfoFromKey(template, reportsWindow, "Laboratories", "лаб.", laboratoryWorks, tabItemStyle["CommonTabItemStyle"] as Style, reports?.Where(x => x.WorkType == "Laboratory"));
+            List<ReportModel> reports = new List<ReportModel>(); ;
+            string reportsPath = mainParams.SavedReportsPath;
+            if (Directory.Exists(reportsPath))
+            {
+                string[] paths = Directory.GetFiles(reportsPath, $"*.{mainParams.ShortSubjectName}.json");
+                foreach (string path in paths)
+                {
+                    try
+                    {
+                        reports.Add(JsonConvert.DeserializeObject<ReportModel>(File.ReadAllText(path)));
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Не получилось подгрузить данные из файла!\nФайл: " + path, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    }
+                }
+            }
+            LoadTemplateInfoFromKey(template, "Practices", "пр.", practicalWorks, _tabItemStyle, reports?.Where(x => x.WorkType == "Practice"));
+            LoadTemplateInfoFromKey(template, "Laboratories", "лаб.", laboratoryWorks, _tabItemStyle, reports?.Where(x => x.WorkType == "Laboratory"));
 
             SelectedIndex = 0;
             OnPropertyChanged();
@@ -103,7 +132,7 @@ namespace WorkReportCreator.ViewModels
         /// <param name="shortDescription">Аббревеатура типа работы</param>
         /// <param name="selectedWorks">Выбранные пользователем работы</param>
         /// <param name="style">Стиль для TabItem</param>
-        private void LoadTemplateInfoFromKey(Dictionary<string, Dictionary<string, Report>> template, ReportsWindow window,
+        private void LoadTemplateInfoFromKey(Dictionary<string, Dictionary<string, Report>> template,
             string workType, string shortDescription, List<string> selectedWorks, Style style, IEnumerable<ReportModel> reports)
         {
             if (template.Keys.Contains(workType) == false)
@@ -114,11 +143,11 @@ namespace WorkReportCreator.ViewModels
                 try
                 {
                     List<string> dynamicTasks = template[workType][number].DynamicTasks.Select(x => x.Description).Select(x => Regex.Replace(x, "\\n", "").Trim()).ToList();
-                    ReportModel report = reports?.First(x => x.WorkNumber.ToString() == number);
+                    ReportModel report = reports?.FirstOrDefault(x => x.WorkNumber.ToString() == number);
                     TabItems.Add(new TabItem()
                     {
                         Header = $"{number} {shortDescription}",
-                        Content = new ReportItem(window, dynamicTasks, report),
+                        Content = new ReportItem(dynamicTasks, report),
                         Style = style,
                     });
                 }
