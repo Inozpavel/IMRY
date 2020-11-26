@@ -55,7 +55,7 @@ namespace WorkReportCreator.ViewModels
         /// </summary>
         private void SelectTitlePageParamsFile()
         {
-            if (ShowDialogAndCheckPathIsCorrect<Dictionary<string, string>>("Выберите файл с шаблоном работ", "Json файлы(*.json)|*.json"))
+            if (ShowDialogAndCheckPathIsCorrect<Dictionary<string, string>>("Выберите файл с параметрами для титульной страницы", "Json файлы с параметрами (*.params.json)|*.params.json"))
                 Params.WorkTitlePageParamsFilePath = _dialog.FileName;
         }
 
@@ -64,7 +64,7 @@ namespace WorkReportCreator.ViewModels
         /// </summary>
         private void SelectCurrentTemplateFile()
         {
-            if (ShowDialogAndCheckPathIsCorrect<Dictionary<string, Dictionary<string, Report>>>("Выберите файл с шаблоном работ", "Json файлы(*.json)|*.json"))
+            if (ShowDialogAndCheckPathIsCorrect<Dictionary<string, Dictionary<string, Report>>>("Выберите файл с шаблоном работ", "Json файлы с шаблонами (*.template.json)|*.template.json"))
                 Params.CurrentTemplateFilePath = _dialog.FileName;
         }
 

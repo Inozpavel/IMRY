@@ -21,7 +21,7 @@ namespace WorkReportCreator
                 MessageBox.Show("У вас отсутствует главый конфигурационный файл!\nБез него нельзя использовать приложение!",
                     "Невозможно запустить приложение!", MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown();
-                return; 
+                return;
             }
             MainParams.ValidateAllParams();
             textBoxVersion.Text = "Версия " + Assembly.GetExecutingAssembly().GetName().Version.ToString().Substring(2);
@@ -38,7 +38,7 @@ namespace WorkReportCreator
             {
                 Multiselect = true,
                 Title = "Выберите отчеты, которые хотите изменить",
-                Filter = $"Отчеты для текущего предмета - {subjectName} (*.{subjectName}.json)|*.{subjectName}.json",
+                Filter = $"Отчеты для текущего предмета - {subjectName} (*.{subjectName}.json)|*.{subjectName}.json|Все файлы (*.*)|*.*",
             };
             if (dialog.ShowDialog() == true)
             {
@@ -71,7 +71,7 @@ namespace WorkReportCreator
                 OpenFileDialog dialog = new OpenFileDialog()
                 {
                     Title = "Выберите файл с шаблоном",
-                    Filter = "JSON файлы (*.json)|*.json|Все файлы (*.*)|*.*",
+                    Filter = "JSON файлы (*.template.json)|*.template.json|Все файлы (*.*)|*.*",
                     DefaultExt = "json",
                 };
                 if (dialog.ShowDialog() == true)

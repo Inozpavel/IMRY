@@ -405,8 +405,8 @@ namespace WorkReportCreator.ViewModels
             SaveFileDialog dialog = new SaveFileDialog()
             {
                 Title = "Выберите файл для сохранения шаблона",
-                Filter = "JSON файлы (*.json)|*.json|Все файлы (*.*)|*.*",
-                DefaultExt = "json",
+                Filter = "JSON файлы (*.template.json)|*.template.json|Все файлы (*.*)|*.*",
+                DefaultExt = "template.json",
                 AddExtension = true,
             };
 
