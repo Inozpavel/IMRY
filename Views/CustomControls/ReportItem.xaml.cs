@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -56,39 +57,69 @@ namespace WorkReportCreator
         /// </summary>
         private void AddFilesFromDragAndDrop(object sender, DragEventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            MainParams mainParams = new MainParams();
-            List<string> permittedExtentions;
-            try
-            {
-                permittedExtentions = JsonConvert.DeserializeObject<List<string>>(
-                    File.ReadAllText(mainParams.PermittedDragAndDropExtentionsFilePath));
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Ошибка при чтении данным из файла с расширениями!",
-                    "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            bool shouldAddAll = permittedExtentions.Contains("*");
-            bool allFilesIsFilePath = files.All(path => Directory.Exists(path) == false);
-            bool allFilesIsDirectoryPath = files.All(path => Directory.Exists(path));
+            List<string> existingPaths = _model.FilesArray.Select(x => x.Content as FileInformationItem).Select(x => x.FilePath).ToList();
+            List<string> pathsToAdd = ((string[])e.Data.GetData(DataFormats.FileDrop)).ToList();
+            AddFiles(existingPaths, pathsToAdd);
+        }
 
-            if (allFilesIsFilePath == false)
+        /// <summary>
+        /// Добавляет файлы в отчет
+        /// </summary>
+        /// <param name="existingPaths">Существующие файла в отчете</param>
+        /// <param name="pathsToAdd">Файлы, которые надо добавить</param>
+        private void AddFiles(List<string> existingPaths, List<string> pathsToAdd)
+        {
+            List<string> paths = new List<string>();
+            Task task = new Task(() =>
             {
-                if (allFilesIsDirectoryPath == false)
+                bool allPathsIsFolders = pathsToAdd.All(path => Directory.Exists(path));
+                bool allPathsIsFiles = pathsToAdd.All(path => File.Exists(path));
+                bool useRecursiveSearch = false;
+
+                if (allPathsIsFiles == allPathsIsFolders)
                 {
-                    if (MessageBox.Show(
-                "Вы выбрали не только файлы, но и папки!\nХотите осуществить поиск файлов в папках рекурсивно?", "Внимание!",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
-                        RecursiveAddFile(files.ToList(), permittedExtentions, shouldAddAll);
+                    useRecursiveSearch = MessageBox.Show("Вы выбрали не только файлы, но и папки!\nХотите осуществить поиск файлов в папках рекурсивно?",
+                   "Внимание!", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes;
                 }
-                else
-                    RecursiveAddFile(files.ToList(), permittedExtentions, shouldAddAll);
-            }
-            else
-                AddFilePaths(files.ToList(), permittedExtentions, shouldAddAll);
+                MainParams mainParams = new MainParams();
+                List<string> permittedExtentions;
+                try
+                {
+                    permittedExtentions = JsonConvert.DeserializeObject<List<string>>(
+                        File.ReadAllText(mainParams.PermittedDragAndDropExtentionsFilePath));
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Ошибка при чтении данным из файла с расширениями!",
+                        "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                bool shouldAddAll = permittedExtentions.Contains("*");
 
+
+                if (allPathsIsFiles)
+                    paths = GetFilesPaths(existingPaths, pathsToAdd, permittedExtentions, shouldAddAll);
+                else if (useRecursiveSearch || allPathsIsFolders)
+                    paths = RecursiveGetPaths(existingPaths, pathsToAdd, permittedExtentions, shouldAddAll);
+                else
+                    paths = GetFilesPaths(existingPaths, pathsToAdd, permittedExtentions, shouldAddAll);
+
+
+            });
+            task.ContinueWith((x) =>
+            {
+                Task.Run(() =>
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        foreach (string path in paths)
+                        {
+                            _model.AddNewFileInfoWithFilePath(path);
+                        }
+                    });
+                });
+            });
+            task.Start();
             ChangeImageToTakenIn(this, null);
         }
 
@@ -97,16 +128,17 @@ namespace WorkReportCreator
         /// </summary>
         /// <param name="filePaths">Список путей файлов</param>
         /// <param name="permittedExtentions">Список разрешенных расширений</param>
-        private void AddFilePaths(List<string> filePaths, List<string> permittedExtentions, bool shouldAddAll)
+        private List<string> GetFilesPaths(List<string> existingPaths, List<string> filePaths, List<string> permittedExtentions, bool shouldAddAll)
         {
+            List<string> paths = new List<string>();
             foreach (string filePath in filePaths)
             {
-                if (shouldAddAll && _model.FilesArray.Select(x => x.Content as FileInformationItem).Select(x => x.FilePath).ToList().Contains(filePath) == false)
-                    _model.AddNewFileInfoWithFilePath(filePath);
-                else if ((shouldAddAll || CheckFileExtentionIsPermitted(filePath, permittedExtentions)) &&
-                    _model.FilesArray.Select(x => x.Content as FileInformationItem).Select(x => x.FilePath).ToList().Contains(filePath) == false)
-                    _model.AddNewFileInfoWithFilePath(filePath);
+                if (shouldAddAll && existingPaths.Contains(filePath) == false)
+                    paths.Add(filePath);
+                else if ((shouldAddAll || CheckFileExtentionIsPermitted(filePath, permittedExtentions)) && existingPaths.Contains(filePath) == false)
+                    paths.Add(filePath);
             }
+            return paths;
         }
 
         /// <summary>
@@ -114,20 +146,22 @@ namespace WorkReportCreator
         /// </summary>
         /// <param name="filePaths">Список путей файлов</param>
         /// <param name="permittedExtentions">Список разрешенных расширений</param>
-        private void RecursiveAddFile(List<string> paths, List<string> permittedExtentions, bool shouldAddAll)
+        private List<string> RecursiveGetPaths(List<string> existingPaths, List<string> pathsToAdd, List<string> permittedExtentions, bool shouldAddAll)
         {
-            foreach (var name in paths)
+            List<string> paths = new List<string>();
+            foreach (var path in pathsToAdd)
             {
-                if (Directory.Exists(name))
+                if (Directory.Exists(path))
                 {
-                    var internalNames = Directory.GetFiles(name, "*.*", SearchOption.AllDirectories).ToList();
+                    var internalFilesPaths = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).ToList();
                     if (shouldAddAll == false)
-                        internalNames = internalNames.Where(x => CheckFileExtentionIsPermitted(x, permittedExtentions)).ToList();
-                    AddFilePaths(internalNames, permittedExtentions, shouldAddAll);
+                        internalFilesPaths = internalFilesPaths.Where(x => CheckFileExtentionIsPermitted(x, permittedExtentions)).ToList();
+                    paths = paths.Union(GetFilesPaths(existingPaths, internalFilesPaths, permittedExtentions, shouldAddAll)).ToList();
                 }
-                else if (shouldAddAll || CheckFileExtentionIsPermitted(name, permittedExtentions))
-                    _model.AddNewFileInfoWithFilePath(name);
+                else if (shouldAddAll || CheckFileExtentionIsPermitted(path, permittedExtentions))
+                    paths.Add(path);
             }
+            return paths;
         }
 
         /// <summary>
@@ -136,7 +170,7 @@ namespace WorkReportCreator
         /// <param name="fileName">Имя файла</param>
         /// <param name="permittedExtentions">Список разрешенных расширений</param>
         /// <returns><paramref name="True"/>, если разрешено, в противном случае <paramref name="false"/></returns>
-        private bool CheckFileExtentionIsPermitted(string fileName, List<string> permittedExtentions) => permittedExtentions.Any(ext => Regex.IsMatch(fileName, $@"\.{ext}$"));
+        private bool CheckFileExtentionIsPermitted(string fileName, List<string> permittedExtentions) => permittedExtentions.Any(ext => Regex.IsMatch(fileName, $@"\.{ext}$", RegexOptions.IgnoreCase));
 
         /// <summary>
         /// Изменяет картинку на папку с вытащенными файлами

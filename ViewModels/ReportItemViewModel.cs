@@ -219,17 +219,16 @@ namespace WorkReportCreator
                 SelectedItemIndex = FilesArray.Count - 1;
             }
         }
-        
+
         /// <summary>
         /// Добавляет новый элемент в список элементов с описанием файлов, с указанным файлом
         /// </summary>
         /// <param name="filePath">Путь до файла</param>
         public void AddNewFileInfoWithFilePath(string filePath)
         {
-            if (File.Exists(filePath))
+            if (string.IsNullOrEmpty(filePath) == false)
             {
-                FileInformationItem item = CreateFileInformationItem(FilesArray.Count + 1, filePath);
-                AddFileInformationItem(item);
+                AddFileInformationItem(CreateFileInformationItem(FilesArray.Count + 1, filePath));
             }
         }
 
