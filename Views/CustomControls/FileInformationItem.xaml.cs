@@ -154,7 +154,7 @@ namespace WorkReportCreator.Views
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         public event PropertyChangedEventHandler PropertyToSaveChanged;
 
         public FileInformationItem()
@@ -200,6 +200,17 @@ namespace WorkReportCreator.Views
             var args = new MouseButtonEventArgs(e.MouseDevice, e.Timestamp, e.ChangedButton)
             {
                 RoutedEvent = MouseDownEvent
+            };
+            parent.RaiseEvent(args);
+        }
+
+        private void ScrollViewerPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var parent = Parent as UIElement;
+
+            var args = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
+            {
+                RoutedEvent = MouseWheelEvent
             };
             parent.RaiseEvent(args);
         }
