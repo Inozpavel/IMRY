@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         Title="IMRY" Height="450" Width="800" Background="#FF191A1B" FontFamily="Verdana" WindowStartupLocation="CenterScreen" MinWidth="600" MinHeight="300">
     <Window.InputBindings>
-        <KeyBinding Key="ESC" Command="{Binding HideWindow}"/>
+        <KeyBinding Key="ESC" Command="{Binding CloseWindow}"/>
         <KeyBinding Modifiers="Ctrl" Key="Enter" Command="{Binding SubmitInput}"/>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding FormatText}"/>
     </Window.InputBindings>

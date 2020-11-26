@@ -14,7 +14,7 @@ namespace WorkReportCreator.Views
 
         public Command FormatText { get; private set; }
 
-        public Command HideWindow { get; private set; }
+        public Command CloseWindow { get; private set; }
 
         public Command AddImage { get; private set; }
 
@@ -29,7 +29,7 @@ namespace WorkReportCreator.Views
             ResultText = text;
 
             SubmitInput = new Command(Submit, null);
-            HideWindow = new Command((sender) => Hide(), null);
+            CloseWindow = new Command((sender) => Close(), null);
             FormatText = new Command(FormatInputText, null);
             AddImage = new Command(ShowDialogAddImage, null);
 
@@ -45,7 +45,7 @@ namespace WorkReportCreator.Views
         private void Submit(object sender)
         {
             ResultText = textBoxInput.Text;
-            Hide();
+            Close();
         }
 
         /// <summary>

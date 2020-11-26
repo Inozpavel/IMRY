@@ -9,9 +9,9 @@
         <KeyBinding Gesture="ESC" Command="{Binding CloseWindow}"/>
         <KeyBinding Gesture="Enter" Command="{Binding ValidateValue}"/>
     </Window.InputBindings>
-    
+
     <Grid>
-        
+
         <Grid.Resources>
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>
@@ -25,15 +25,15 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Введите номер работы" Foreground="White" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5 0 5 0"/>
+        <TextBlock Text="Номер работы:" Foreground="White" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5 0 5 0"/>
         <TextBox x:Name="textBox" Grid.Column="1" Grid.Row="0" Style="{StaticResource CommonTextBox}" Height="40" Width="100" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" FontSize="25"/>
-        <Button ToolTip="Enter" Content="Ок" Grid.Column="1" Grid.Row="1" Style="{StaticResource CommonAnimatedButton}" VerticalAlignment="Center" Width="80" HorizontalAlignment="Right" Command="{Binding ValidateValue}"/>
-    
+        <Button Height="35" ToolTip="Enter" Content="Ок" Grid.Column="1" Grid.Row="1" Style="{StaticResource CommonAnimatedButton}" VerticalAlignment="Center" Width="80" HorizontalAlignment="Right" Command="{Binding ValidateValue}" Margin="0 0 3 3" Grid.RowSpan="2"/>
+
     </Grid>
 </Window>

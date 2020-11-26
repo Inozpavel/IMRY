@@ -43,8 +43,8 @@ namespace WorkReportCreator
                 {
                     var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Report>>>(File.ReadAllText(dialog.FileName));
                     ReportsTemplateWindow reportsTemplate = new ReportsTemplateWindow(this, template, dialog.FileName);
-                    Hide();
                     reportsTemplate.Show();
+                    Hide();
                 }
             }
             catch (Exception)

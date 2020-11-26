@@ -223,8 +223,8 @@ namespace WorkReportCreator.ViewModels.Commands
             try
             {
                 ReportsWindow reportsPage = new ReportsWindow(_selectionOfWorksWindow, selectedLaboratoryWorks, selectedPracticalWorks);
-                _selectionOfWorksWindow.Hide();
                 reportsPage.Show();
+                _selectionOfWorksWindow.Hide();
             }
             catch (Exception e)
             {
