@@ -42,9 +42,9 @@ namespace WorkReportCreator
                 if (dialog.ShowDialog() == true)
                 {
                     var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Report>>>(File.ReadAllText(dialog.FileName));
-                    ReportsTemplateWindow reportsTemplate = new ReportsTemplateWindow(this, template, dialog.FileName);
+                    ReportsTemplateWindow reportsTemplate = new ReportsTemplateWindow(template, dialog.FileName);
                     reportsTemplate.Show();
-                    Hide();
+                    Close();
                 }
             }
             catch (Exception)
@@ -70,9 +70,9 @@ namespace WorkReportCreator
         {
             try
             {
-                SelectionOfWorksWindow window = new SelectionOfWorksWindow(this);
+                SelectionOfWorksWindow window = new SelectionOfWorksWindow();
                 window.Show();
-                Hide();
+                Close();
             }
             catch (Exception exception)
             {
@@ -85,9 +85,9 @@ namespace WorkReportCreator
         /// </summary>
         private void ShowSettingsWindow(object sender, RoutedEventArgs e)
         {
-            SettingsWindow window = new SettingsWindow(this);
+            SettingsWindow window = new SettingsWindow();
             window.Show();
-            Hide();
+            Close();
         }
 
         /// <summary>
@@ -95,9 +95,9 @@ namespace WorkReportCreator
         /// </summary>
         private void ShowWindowReportsTemplate(object sender, RoutedEventArgs e)
         {
-            ReportsTemplateWindow window = new ReportsTemplateWindow(this);
+            ReportsTemplateWindow window = new ReportsTemplateWindow();
             window.Show();
-            Hide();
+            Close();
         }
     }
 }

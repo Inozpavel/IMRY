@@ -15,36 +15,34 @@ namespace WorkReportCreator
     {
         private readonly ReportsTemplateWindowViewModel _model;
 
-        private readonly MainWindow _mainWindow;
-
-        private ReportsTemplateWindow(MainWindow mainWindow, ReportsTemplateWindowViewModel model)
+        private ReportsTemplateWindow(ReportsTemplateWindowViewModel model)
         {
             InitializeComponent();
-            _mainWindow = mainWindow;
             DataContext = _model = model;
         }
 
         /// <param name="mainWindow">Главное окно</param>
-        public ReportsTemplateWindow(MainWindow mainWindow) : this(mainWindow, new ReportsTemplateWindowViewModel())
+        public ReportsTemplateWindow() : this(new ReportsTemplateWindowViewModel())
         {
         }
 
         /// <param name="mainWindow">Главное окно</param>
         /// <param name="template">Шаблон для работ</param>
         /// <param name="filePath">Путь до файла с шаблоном для работ</param>
-        public ReportsTemplateWindow(MainWindow mainWindow, Dictionary<string, Dictionary<string, Report>> template, string filePath) :
-            this(mainWindow, new ReportsTemplateWindowViewModel(template, filePath))
+        public ReportsTemplateWindow(Dictionary<string, Dictionary<string, Report>> template, string filePath) :
+            this(new ReportsTemplateWindowViewModel(template, filePath))
         {
         }
 
         private void CloseApplicationClicked(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            MainWindow window = new MainWindow();
             if (string.IsNullOrEmpty(_model.FilePath) && (_model.LaboratoriesWorksButtons.Count > 0 || _model.PractisesWorksButtons.Count > 0))
             {
                 if (MessageBox.Show("Данные не сохранены!\nПри выходе они будут ПОТЕРЯНЫ!\nВы уверены?", "Внимание!",
                            MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
                 {
-                    _mainWindow.Show();
+                    window.Show();
                 }
                 else
                 {
@@ -53,7 +51,7 @@ namespace WorkReportCreator
                 return;
 
             }
-            _mainWindow.Show();
+            window.Show();
         }
 
         /// <summary>
@@ -97,7 +95,7 @@ namespace WorkReportCreator
                 if (string.IsNullOrEmpty(text))
                     button.Content = Clipboard.GetText();
 
-                CheckShiftStateAndFormatText(true, button);
+                CheckShiftStateAndFormatText(true, button, isName);
             }
         }
 

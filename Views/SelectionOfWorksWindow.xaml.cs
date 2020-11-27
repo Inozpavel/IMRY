@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using WorkReportCreator.ViewModels.Commands;
 
@@ -9,31 +11,31 @@ namespace WorkReportCreator
     /// </summary>
     public partial class SelectionOfWorksWindow : Window
     {
-        /// <summary>
-        /// Главное меню
-        /// </summary>
-        private readonly MainWindow _mainWindow;
-
         /// <exception cref="Exception"/>
-        public SelectionOfWorksWindow(MainWindow mainWindow)
+        public SelectionOfWorksWindow()
         {
             InitializeComponent();
             DataContext = new SelectionOfWorksViewModel(this);
-            _mainWindow = mainWindow;
+        }
+
+        public SelectionOfWorksWindow(List<string> selectedPractices, List<string> selectedLaboratories)
+        {
+            InitializeComponent();
+            DataContext = new SelectionOfWorksViewModel(this, selectedPractices, selectedLaboratories);
         }
 
         /// <summary>
         /// Показывает форму стартового окна
         /// </summary>
-        private void ShowFormMainWindow(object sender, RoutedEventArgs e)
-        {
-            Close();
-            _mainWindow.Show();
-        }
+        private void ShowFormMainWindow(object sender, RoutedEventArgs e) => Close();
 
         /// <summary>
         /// Завершает работу приложения
         /// </summary>
-        private void CloseApplicationClicked(object sender, System.ComponentModel.CancelEventArgs e) => _mainWindow.Show();
+        private void CloseWindow(object sender, CancelEventArgs e)
+        {
+            MainWindow window = new MainWindow();
+            window.Show();
+        }
     }
 }

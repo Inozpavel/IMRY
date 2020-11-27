@@ -6,22 +6,21 @@ namespace WorkReportCreator.Views
 {
     public partial class SettingsWindow : Window
     {
-        /// <summary>
-        /// Главное окно
-        /// </summary>
-        private readonly MainWindow _mainWindow;
-
-        public SettingsWindow(MainWindow mainWindow)
+        public SettingsWindow()
         {
             InitializeComponent();
             MainParams mainParams = new MainParams();
             DataContext = new SettingsViewModel(mainParams);
-            _mainWindow = mainWindow;
 
             gridTitlePagePath.Opacity = mainParams.WorkHasTitlePage ? 1 : 0;
             gridTitlePageParams.Opacity = mainParams.WorkHasTitlePageParams ? 1 : 0;
         }
 
-        private void ShowMainWindow(object sender, System.ComponentModel.CancelEventArgs e) => _mainWindow.Show();
+        private void CloseWindow(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            Close();
+        }
     }
 }
