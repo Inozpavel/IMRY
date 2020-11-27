@@ -44,13 +44,15 @@ namespace WorkReportCreator
         /// Создает отчет для выбранной работы
         /// </summary>
         /// <exception cref="Exception"/>
-        public void GenerateReport() => _model.GenerateReport();
+        public void GenerateReport(List<int> selectedIndicies, List<FileInformation> filesInformation) => _model.GenerateReport(selectedIndicies, filesInformation);
 
         /// <summary>
         /// Сохраняет отчет для выбранной работы
         /// </summary>
         /// <exception cref="Exception"/>
         public void SaveReport() => _model.SaveReport();
+
+        public void AddImageFromBuffer(BitmapSource imageSource) => _model.AddImageFromBuffer(imageSource);
 
         /// <summary>
         /// При использовании Drag & Drop добавляет / дополняет информацию о выбранных файлах с список информации о файлах
@@ -189,17 +191,34 @@ namespace WorkReportCreator
 
         private void SaveReportClicked(object sender, RoutedEventArgs e) => ExecuteWithReport(ReportAction.Save, "сохранить", "сохранен");
 
+        public void GetSelectedTasksAndFilesInformation(out List<int> selectedTasks, out List<FileInformation> filesInformation)
+        {
+            selectedTasks = new List<int>();
+            for (int i = 0; i < _model.DynamicTasksArray.Count; i++)
+            {
+                if (_model.DynamicTasksArray[i].IsChecked)
+                    selectedTasks.Add(i);
+            }
+            filesInformation = _model.FilesArray.Select(x => x.Content as FileInformationItem)
+                .Select(x => new FileInformation()
+                {
+                    FilePath = x.FilePath,
+                    FileName = x.FileName,
+                    FileDescription = x.FileDescription,
+                }).ToList();
+        }
+
         private void ExecuteWithReport(ReportAction action, string actionName, string actionNameInPastSimple)
         {
             MainParams mainParams = new MainParams();
-            bool isDone;
+
+            GetSelectedTasksAndFilesInformation(out List<int> selectedTasks, out List<FileInformation> filesInformation);
             try
             {
                 if (action == ReportAction.Generate)
-                    GenerateReport();
+                    GenerateReport(selectedTasks, filesInformation);
                 else if (action == ReportAction.Save)
                     SaveReport();
-                isDone = true;
             }
             catch (Exception exception)
             {
@@ -207,7 +226,7 @@ namespace WorkReportCreator
                 return;
             }
 
-            if (isDone && MessageBox.Show("Открыть папку с отчетами?", $"Отчет успешно {actionNameInPastSimple}!",
+            if (MessageBox.Show("Открыть папку с отчетами?", $"Отчет успешно {actionNameInPastSimple}!",
                 MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No) == MessageBoxResult.Yes)
             {
                 string path = "";

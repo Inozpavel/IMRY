@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using WorkReportCreator.Models;
 using WorkReportCreator.Views;
 using WorkReportCreator.Views.CustomConrols;
@@ -30,6 +31,8 @@ namespace WorkReportCreator
         public Command SwapDownFileInfo { get; private set; }
 
         public Command ResetItem { get; private set; }
+
+        public Command TrySaveImage { get; private set; }
 
         #endregion
 
@@ -200,6 +203,34 @@ namespace WorkReportCreator
             DynamicTasksArray.ToList().ForEach(x => x.IsCheckedChanged += (sender) => Autosave());
         }
 
+        public void AddImageFromBuffer(BitmapSource imageSource)
+        {
+            MainParams mainParams = new MainParams();
+            string folder = mainParams.SavedReportsPath + "/TempClipboardImages";
+            if (Directory.Exists(folder) == false)
+                Directory.CreateDirectory(folder);
+            try
+            {
+                PngBitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(imageSource));
+
+                string reportName = _reportName.TrimEnd('.');
+                int imagesCount = Directory.GetFiles(mainParams.SavedReportsPath, $"*{reportName}_*.png").Length;
+                string time = DateTime.Now.ToString("ddMMyyyy_HH_mm_ss_fff");
+                string path = folder + $"/{reportName}-{imagesCount + 1}_{time}.png";
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    encoder.Save(fileStream);
+                    AddNewFileInfoWithFilePath(path);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Произошла ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+        }
+
         /// <summary>
         /// Добавляет пустой элемент в список файлов
         /// </summary>
@@ -269,28 +300,10 @@ namespace WorkReportCreator
         /// <summary>
         /// Cоздает отчет для работы
         /// </summary>
-        public void GenerateReport()
+        public void GenerateReport(List<int> selectedIndicies, List<FileInformation> filesInformation)
         {
-            List<int> selected = new List<int>();
-            for (int i = 0; i < DynamicTasksArray.Count; i++)
-            {
-                if (DynamicTasksArray[i].IsChecked)
-                    selected.Add(i);
-            }
-            List<FileInformation> filesInformation = FilesArray.Select(x => x.Content as FileInformationItem)
-                .Select(x => new FileInformation()
-                {
-                    FilePath = x.FilePath,
-                    FileName = x.FileName,
-                    FileDescription = x.FileDescription,
-                }).ToList();
-
-            Task.Run(() =>
-            {
-                ReportGenerator reportGenerator = new ReportGenerator(_reportName, selected, filesInformation);
-                reportGenerator.GenerateReport();
-            });
-
+            ReportGenerator reportGenerator = new ReportGenerator(_reportName, selectedIndicies, filesInformation);
+            reportGenerator.GenerateReport();
         }
 
         /// <summary>
@@ -322,7 +335,7 @@ namespace WorkReportCreator
                 };
                 string text = JsonConvert.SerializeObject(report, Formatting.Indented);
                 string shortName = string.IsNullOrEmpty(mainParams.ShortSubjectName) ? "" : "." + mainParams.ShortSubjectName;
-                string path = mainParams.SavedReportsPath + $@"/{_reportName.TrimEnd('.')}{shortName}.json";
+                string path = FilePath = mainParams.SavedReportsPath + $@"/{_reportName.TrimEnd('.')}{shortName}.json";
                 lock (locker)
                 {
                     File.WriteAllText(path, text);
@@ -338,8 +351,6 @@ namespace WorkReportCreator
         {
             try
             {
-                if (string.IsNullOrEmpty(_filePath))
-                    return;
                 SaveReport();
             }
             catch (Exception e)

@@ -1,6 +1,6 @@
 ﻿namespace WorkReportCreator.Models
 {
-    internal class FileInformation
+    public class FileInformation
     {
         public string FileName { get; set; }
 

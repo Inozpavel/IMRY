@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WorkReportCreator.Models;
@@ -17,6 +18,8 @@ namespace WorkReportCreator.ViewModels
 {
     internal class ReportsWindowViewModel : INotifyPropertyChanged
     {
+        public Command AddImage { get; private set; }
+
         private int? _selectedIndex;
 
         private readonly Style _tabItemStyle;
@@ -66,7 +69,7 @@ namespace WorkReportCreator.ViewModels
             fastActionsItem.ButtonGenerateAllClicked += GenerateAllReports;
             fastActionsItem.ButtonSaveAllClicked += SaveAllReports;
             fastActionsItem.ButtonBackClicked += (sender) => ButtonBackClicked?.Invoke(sender);
-
+            AddImage = new Command(sender => TryAddImage(), null);
             ResourceDictionary _tabItemStyleDictionary = new ResourceDictionary()
             {
                 Source = new Uri("./Views/Styles/CommonTabItemStyle.xaml",
@@ -86,6 +89,8 @@ namespace WorkReportCreator.ViewModels
             try
             {
                 template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Report>>>(File.ReadAllText(mainParams.CurrentTemplateFilePath));
+                if (template == null)
+                    throw new Exception();
             }
             catch (Exception)
             {
@@ -105,8 +110,11 @@ namespace WorkReportCreator.ViewModels
                     try
                     {
                         ReportModel report = JsonConvert.DeserializeObject<ReportModel>(File.ReadAllText(path));
-                        report.FilePath = path;
-                        reports.Add(report);
+                        if (report != null)
+                        {
+                            report.FilePath = path;
+                            reports.Add(report);
+                        }
                     }
                     catch
                     {
@@ -144,7 +152,7 @@ namespace WorkReportCreator.ViewModels
             {
                 try
                 {
-                    List<string> dynamicTasks = template[workType][number].DynamicTasks.Select(x => x.Description).Select(x => Regex.Replace(x, "\\n", "").Trim()).ToList();
+                    List<string> dynamicTasks = template[workType][number].DynamicTasks.Select(x => x.Description).Select(x => Regex.Replace(x, "\\n", " ").Trim()).ToList();
                     ReportModel report = reports?.FirstOrDefault(x => x.WorkNumber.ToString() == number) ?? new ReportModel();
                     string reportName = $"{number} {shortDescription}";
                     report.ReportName = reportName;
@@ -168,67 +176,94 @@ namespace WorkReportCreator.ViewModels
             List<int> failedPracticesReports = new List<int>();
             List<int> failedLaboratoriesReports = new List<int>();
 
-            List<int> tabItemsIndicies = new List<int>();
+            List<int> workNumbers = new List<int>();
             List<ReportItem> reportItems = new List<ReportItem>();
             List<string> reportNames = new List<string>();
             for (int i = 1; i < TabItems.Count; i++)
             {
-                tabItemsIndicies.Add(i - 1);
+                workNumbers.Add(int.Parse(Regex.Match(TabItems[i].Header as string, @"\d+").Value));
                 reportItems.Add(TabItems[i].Content as ReportItem);
                 reportNames.Add(TabItems[i].Header as string);
             }
+            int completedCount = 0;
 
-            foreach (int i in tabItemsIndicies)
+            for (int i = 0; i < reportItems.Count; i++)
             {
                 ReportItem item = reportItems[i];
                 string reportName = reportNames[i];
-
-                try
+                int workNumber = workNumbers[i];
+                item.GetSelectedTasksAndFilesInformation(out List<int> selectedTasks, out List<FileInformation> filesInformation);
+                Task.Run(() =>
                 {
-                    if (action == ReportAction.Generate)
-                        item.GenerateReport();
-                    else if (action == ReportAction.Save)
-                        item.SaveReport();
-                }
-                catch (Exception)
-                {
-                    List<int> list = Regex.IsMatch(reportName, "пр|Пр") ? failedPracticesReports : failedLaboratoriesReports;
-                    list.Add(i);
-                }
+                    try
+                    {
+                        if (action == ReportAction.Generate)
+                            item.GenerateReport(selectedTasks, filesInformation);
+                        else if (action == ReportAction.Save)
+                            item.SaveReport();
+                    }
+                    catch (Exception)
+                    {
+                        List<int> list = Regex.IsMatch(reportName, "пр|Пр") ? failedPracticesReports : failedLaboratoriesReports;
+                        list.Add(workNumber);
+                    }
+                    finally
+                    {
+                        completedCount++;
+                    }
+                });
             };
-
-            if (failedLaboratoriesReports.Count == 0 && failedPracticesReports.Count == 0)
+            Task.Run(() =>
             {
-                if (MessageBox.Show($"Все отчеты успешно {actionName}!\nОткрыть папку с отчетами?", "Поздравляю!",
-               MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No) == MessageBoxResult.Yes)
+                do
                 {
-                    MainParams mainParams = new MainParams();
-                    string path = action == ReportAction.Generate ? mainParams.ReportsPath : mainParams.SavedReportsPath;
-                    if (Directory.Exists(path))
-                        Process.Start(path.StartsWith(".") || path.StartsWith("/") ? Directory.GetCurrentDirectory() + path : path);
-                    else
-                        MessageBox.Show("Не получилось найти папку с отчетами!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
-            }
-            else if (failedPracticesReports.Count == 0 && failedLaboratoriesReports.Count > 0)
-            {
-                MessageBox.Show($"При {actionNameDuringAction} отчетов для лабораторных работ произошли ошибки, номера работ:\n" +
-                    string.Join(" ", failedLaboratoriesReports.Take(10)) + (failedLaboratoriesReports.Count > 10 ? "..." : ""),
-                    "Внимание!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
-            else if (failedPracticesReports.Count > 0 && failedLaboratoriesReports.Count == 0)
-            {
-                MessageBox.Show($"При {actionNameDuringAction} отчетов для практических работ произошли ошибки, номера работ:\n" +
-                    string.Join(" ", failedPracticesReports.Take(10)) + (failedPracticesReports.Count > 10 ? "..." : ""),
-                    "Внимание!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
-            else
-            {
-                MessageBox.Show($"При {actionNameDuringAction} отчетов произошли ошибки!\n" +
-                    $"Практические работы:\n{string.Join(" ", failedPracticesReports.Take(10)) + (failedPracticesReports.Count > 10 ? "..." : "")}" +
-                    $"\nЛабораторные работы:\n{string.Join(" ", failedLaboratoriesReports.Take(10)) + (failedLaboratoriesReports.Count > 10 ? "..." : "")}",
-                    "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                while (completedCount != reportItems.Count);
+
+                if (failedLaboratoriesReports.Count == 0 && failedPracticesReports.Count == 0)
+                {
+                    if (MessageBox.Show($"Все отчеты успешно {actionName}!\nОткрыть папку с отчетами?", "Поздравляю!",
+                    MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No) == MessageBoxResult.Yes)
+                    {
+                        MainParams mainParams = new MainParams();
+                        string path = action == ReportAction.Generate ? mainParams.ReportsPath : mainParams.SavedReportsPath;
+                        if (Directory.Exists(path))
+                            Process.Start(path.StartsWith(".") || path.StartsWith("/") ? Directory.GetCurrentDirectory() + path : path);
+                        else
+                            MessageBox.Show("Не получилось найти папку с отчетами!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    }
+                }
+                else if (failedPracticesReports.Count == 0 && failedLaboratoriesReports.Count > 0)
+                {
+                    MessageBox.Show($"При {actionNameDuringAction} отчетов для лабораторных работ произошли ошибки, номера работ:\n" +
+                        string.Join(" ", failedLaboratoriesReports.Take(10)) + (failedLaboratoriesReports.Count > 10 ? "..." : ""),
+                        "Внимание!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
+                else if (failedPracticesReports.Count > 0 && failedLaboratoriesReports.Count == 0)
+                {
+                    MessageBox.Show($"При {actionNameDuringAction} отчетов для практических работ произошли ошибки, номера работ:\n" +
+                        string.Join(" ", failedPracticesReports.Take(10)) + (failedPracticesReports.Count > 10 ? "..." : ""),
+                        "Внимание!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
+                else
+                {
+                    MessageBox.Show($"При {actionNameDuringAction} отчетов произошли ошибки!\n" +
+                        $"Практические работы:\n{string.Join(" ", failedPracticesReports.Take(10)) + (failedPracticesReports.Count > 10 ? "..." : "")}" +
+                        $"\nЛабораторные работы:\n{string.Join(" ", failedLaboratoriesReports.Take(10)) + (failedLaboratoriesReports.Count > 10 ? "..." : "")}",
+                        "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            });
+
+        }
+
+        /// <summary>
+        /// Пробует добавить картинку из буфера в работу
+        /// </summary>
+        private void TryAddImage()
+        {
+            if (Clipboard.ContainsImage() == false || SelectedIndex == null || SelectedIndex < 1)
+                return;
+            (TabItems[SelectedIndex ?? 0].Content as ReportItem).AddImageFromBuffer(Clipboard.GetImage());
         }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

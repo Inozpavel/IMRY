@@ -261,7 +261,7 @@ namespace WorkReportCreator.Models
             {
                 try
                 {
-                    BitmapImage image = new BitmapImage(new Uri(fileInformation.FilePath));
+                    BitmapImage image = new BitmapImage(new Uri(fileInformation.FilePath, UriKind.RelativeOrAbsolute));
                     string name = string.IsNullOrEmpty(fileInformation.FileDescription) ? "" : ",name=\"" + fileInformation.FileDescription + "\"";
                     paragraphs.Add(("{{image source=\"" + fileInformation.FilePath + "\"" + name + "}}", 10, "normal", "Times New Roman"));
                 }

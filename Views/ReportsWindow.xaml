@@ -2,8 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:viewmodels="clr-namespace:WorkReportCreator.ViewModels"
         mc:Ignorable="d"
-        Title="IMRY" WindowStartupLocation="CenterScreen" Background="#FF191A1B" SizeToContent="Height" Closing="CloseApplicationClicked" FontFamily="Verdana">
+        Title="IMRY" WindowStartupLocation="CenterScreen" Background="#FF191A1B" SizeToContent="Height" Closing="CloseWindow" FontFamily="Verdana">
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding AddImage}"/>
+    </Window.InputBindings>
     <TabControl Background="#FF1E1E1E" ItemsSource="{Binding TabItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0"/>
 </Window>
