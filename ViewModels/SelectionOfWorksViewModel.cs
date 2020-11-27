@@ -139,7 +139,7 @@ namespace WorkReportCreator.ViewModels.Commands
 
         /// <param name="window">Окно с вводом информации о пользователе и выбором работ</param>
         /// <exception cref="Exception"/>
-        public SelectionOfWorksViewModel(SelectionOfWorksWindow window)
+        public SelectionOfWorksViewModel(SelectionOfWorksWindow window, List<string> selectedPractices = null, List<string> selectedLaboratories = null)
         {
             ResourceDictionary _tiltedButtonDictionary = new ResourceDictionary()
             {
@@ -203,15 +203,13 @@ namespace WorkReportCreator.ViewModels.Commands
                         };
                         if (workType == "Practices")
                         {
-                            button.Foreground = GetBrushForWork(existingReports, "Practice", workNumber, "Orange", "#FFBAC3C3");
-                            button.BorderBrush = GetBrushForWork(existingReports, "Practice", workNumber, "LightGreen", "White");
-                            PracticalWorksButtons.Add(button);
+                            PracticalWorksButtons.Add(StylizeButton(button, existingReports, "Practice", workNumber));
+                            button.IsChecked = selectedPractices?.Contains(button.Content as string) ?? false;
                         }
                         else if (workType == "Laboratories")
                         {
-                            button.Foreground = GetBrushForWork(existingReports, "Laboratory", workNumber, "Orange", "#FFBAC3C3");
-                            button.BorderBrush = GetBrushForWork(existingReports, "Laboratory", workNumber, "LightGreen", "White");
-                            LaboratoryWorksButtons.Add(button);
+                            LaboratoryWorksButtons.Add(StylizeButton(button, existingReports, "Laboratory", workNumber));
+                            button.IsChecked = selectedLaboratories?.Contains(button.Content as string) ?? false;
                         }
                     }
                 }
@@ -227,18 +225,32 @@ namespace WorkReportCreator.ViewModels.Commands
         }
 
         /// <summary>
-        /// Проверяет существование работы, возвращает соответствующую кисть
+        /// Проверяет существование работы, стилизует кнопку
         /// </summary>
-        /// <param name="existingReports">существуюшие работы</param>
+        /// <param name="button">Сама кнопка</param>
+        /// <param name="existingReports">Сохраненные работы работы</param>
         /// <param name="workType">Тип работы</param>
         /// <param name="workNumber">Номер работы</param>
         /// <param name="existingWorkColor">Цвет существующей работы</param>
         /// <param name="notExistingWorkColor">Цвет не существующей работы</param>
-        /// <returns>Кисть</returns>
-        private SolidColorBrush GetBrushForWork(List<ReportModel> existingReports, string workType, string workNumber, string existingWorkColor, string notExistingWorkColor)
+        private ToggleButton StylizeButton(ToggleButton button, List<ReportModel> existingReports, string workType, string workNumber)
         {
-            if (existingReports.Where(x => x.WorkType == workType).FirstOrDefault(x => x.WorkNumber.ToString() == workNumber) != null)
-               return new SolidColorBrush((Color)ColorConverter.ConvertFromString(existingWorkColor));
+            bool isExisting = existingReports.Where(x => x.WorkType == workType).FirstOrDefault(x => x.WorkNumber.ToString() == workNumber) != null;
+            button.Foreground = GetBrushForWork(isExisting, "Orange", "#FFBAC3C3");
+            button.BorderBrush = GetBrushForWork(isExisting, "LightGreen", "White");
+            if (isExisting)
+                button.ToolTip = "Работа уже сохранена";
+            return button;
+        }
+
+        /// <summary>
+        /// Возвращает кисть
+        /// </summary>
+        /// <returns>Кисть</returns>
+        private SolidColorBrush GetBrushForWork(bool isExisting, string existingWorkColor, string notExistingWorkColor)
+        {
+            if (isExisting)
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString(existingWorkColor));
             else
                 return new SolidColorBrush((Color)ColorConverter.ConvertFromString(notExistingWorkColor));
         }
@@ -267,7 +279,7 @@ namespace WorkReportCreator.ViewModels.Commands
             List<string> selectedPracticalWorks = PracticalWorksButtons.Where(x => x.IsChecked ?? false).Select(x => x.Content as string).ToList();
             try
             {
-                ReportsWindow reportsPage = new ReportsWindow(_selectionOfWorksWindow, selectedLaboratoryWorks, selectedPracticalWorks);
+                ReportsWindow reportsPage = new ReportsWindow(selectedLaboratoryWorks, selectedPracticalWorks);
                 reportsPage.Show();
                 _selectionOfWorksWindow.Hide();
             }
