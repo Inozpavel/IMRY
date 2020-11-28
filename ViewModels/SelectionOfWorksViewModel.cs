@@ -33,6 +33,8 @@ namespace WorkReportCreator.ViewModels.Commands
 
         private string _saveStatus;
 
+        private bool _canShowPageWithReports;
+
         /// <summary>
         /// От значения зависит, все кнопки с практическими работами будут отмечены / не отмечены
         /// </summary>
@@ -133,6 +135,15 @@ namespace WorkReportCreator.ViewModels.Commands
             }
         }
 
+        public bool CanShowPageWithReports
+        {
+            get => _canShowPageWithReports;
+            set
+            {
+                _canShowPageWithReports = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -201,6 +212,8 @@ namespace WorkReportCreator.ViewModels.Commands
                             Content = workNumber,
                             Style = _numberToggleButtonStyle,
                         };
+                        button.Unchecked += (sender, e) => CanShowPageWithReports = LaboratoryWorksButtons.Skip(1).Any(x => x.IsChecked ?? false) || PracticalWorksButtons.Skip(1).Any(x => x.IsChecked ?? false);
+                        button.Checked += (sender, e) => CanShowPageWithReports = LaboratoryWorksButtons.Skip(1).Any(x => x.IsChecked ?? false) || PracticalWorksButtons.Skip(1).Any(x => x.IsChecked ?? false);
                         if (workType == "Practices")
                         {
                             PracticalWorksButtons.Add(StylizeButton(button, existingReports, "Practice", workNumber));
@@ -275,6 +288,12 @@ namespace WorkReportCreator.ViewModels.Commands
         /// </summary>
         private void LoadReportsPage(object sender)
         {
+            MainParams mainParams = new MainParams();
+            if (string.IsNullOrEmpty(mainParams.UserDataFilePath))
+            {
+                MessageBox.Show("Сначала сохраните или загрузите информацию о себе.", "Не пущу!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             List<string> selectedLaboratoryWorks = LaboratoryWorksButtons.Where(x => x.IsChecked ?? false).Select(x => x.Content as string).ToList();
             List<string> selectedPracticalWorks = PracticalWorksButtons.Where(x => x.IsChecked ?? false).Select(x => x.Content as string).ToList();
             try
