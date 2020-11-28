@@ -129,8 +129,7 @@ namespace WorkReportCreator.ViewModels
         {
             try
             {
-                JsonConvert.DeserializeObject<T>(jsonText);
-                return true;
+                return JsonConvert.DeserializeObject<T>(jsonText) != null;
             }
             catch (Exception)
             {
