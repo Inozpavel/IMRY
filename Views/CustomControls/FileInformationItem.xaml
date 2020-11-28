@@ -52,7 +52,7 @@
                         <Ellipse Width="50" Height="50" StrokeThickness="3" Stroke="#FF7AC0FF"/>
                         <TextBlock Text="{Binding Number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="20" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
-                    <Grid Grid.Column="1" Width="280" Visibility="{Binding FileNameVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <Grid Grid.Column="1" Width="290" Visibility="{Binding FileNameVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ScrollViewer  HorizontalAlignment="Left" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" PreviewMouseDown="ScrollViewerPreviewMouseDown" PreviewMouseWheel="ScrollViewerPreviewMouseWheel">
                             <Label Content="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
                         </ScrollViewer>

@@ -81,7 +81,7 @@ namespace WorkReportCreator.ViewModels
             {
                 Header = "Быстрые действия",
                 Content = fastActionsItem,
-                Style = _tabItemStyle
+                Style = _tabItemStyle,
             });
 
             Dictionary<string, Dictionary<string, Report>> template;
@@ -152,14 +152,16 @@ namespace WorkReportCreator.ViewModels
             {
                 try
                 {
-                    List<string> dynamicTasks = template[workType][number].DynamicTasks.Select(x => x.Description).Select(x => Regex.Replace(x, "\\n", " ").Trim()).ToList();
+                    List<string> dynamicTasks = template[workType][number].DynamicTasks.Select(x => x.Description).Where(x => string.IsNullOrEmpty(x) == false).ToList();
+                    string task = template[workType][number].CommonTask;
+                    string commonTask = string.IsNullOrEmpty(task) ? "Общего задания нет." : task;
                     ReportModel report = reports?.FirstOrDefault(x => x.WorkNumber.ToString() == number) ?? new ReportModel();
                     string reportName = $"{number} {shortDescription}";
                     report.ReportName = reportName;
                     TabItems.Add(new TabItem()
                     {
                         Header = reportName,
-                        Content = new ReportItem(dynamicTasks, report),
+                        Content = new ReportItem(commonTask, dynamicTasks, report),
                         Style = style,
                     });
                 }

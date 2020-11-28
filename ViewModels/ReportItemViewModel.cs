@@ -36,9 +36,11 @@ namespace WorkReportCreator
 
         #endregion
 
+        private string _commonTask;
+
         private string _saveStatus;
 
-        private int? _selectedItemIndex;
+        private int _selectedItemIndex = 0;
 
         private Visibility _hintVisibility;
 
@@ -55,6 +57,16 @@ namespace WorkReportCreator
         private static readonly object locker = new object();
 
         #region Properties
+
+        public string CommonTask
+        {
+            get => _commonTask;
+            private set
+            {
+                _commonTask = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Путь до файла, где сохраняется отчет
@@ -85,7 +97,7 @@ namespace WorkReportCreator
         /// <summary>
         /// Индекс текущего выбранного элемента
         /// </summary>
-        public int? SelectedItemIndex
+        public int SelectedItemIndex
         {
             get => _selectedItemIndex;
             set
@@ -164,7 +176,7 @@ namespace WorkReportCreator
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <param name="DynamicTasks">Список заданий (при наличии)</param>
-        public ReportViewModel(List<string> DynamicTasks, ReportModel report)
+        public ReportViewModel(string commonTask, List<string> DynamicTasks, ReportModel report)
         {
             FilesArray.CollectionChanged += (sender, e) => HintVisibility = FilesArray.Count != 0 ? Visibility.Hidden : Visibility.Visible;
 
@@ -180,10 +192,12 @@ namespace WorkReportCreator
                 {
                     Text = DynamicTasks[i],
                     IsChecked = report?.SelectedTasksIndices.Contains(i) ?? false,
+                    Margin = new Thickness(0, 6, 0, 0)
                 });
             }
             FilePath = report.FilePath;
             _reportName = report.ReportName;
+            CommonTask = commonTask;
             DynamicTasksVisiblity = DynamicTasks.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
             DynamicTasksStatus = DynamicTasks.Count == 0 ? "Заданий для выбора нет" : "Выберите, пожалуйста, задание";
 
@@ -218,11 +232,9 @@ namespace WorkReportCreator
                 int imagesCount = Directory.GetFiles(mainParams.SavedReportsPath, $"*{reportName}_*.png").Length;
                 string time = DateTime.Now.ToString("ddMMyyyy_HH_mm_ss_fff");
                 string path = folder + $"/{reportName}-{imagesCount + 1}_{time}.png";
-                using (var fileStream = new FileStream(path, FileMode.Create))
-                {
-                    encoder.Save(fileStream);
-                    AddNewFileInfoWithFilePath(path);
-                }
+                using var fileStream = new FileStream(path, FileMode.Create);
+                encoder.Save(fileStream);
+                AddNewFileInfoWithFilePath(path);
             }
             catch (Exception e)
             {
@@ -238,7 +250,7 @@ namespace WorkReportCreator
         {
             FileInformationItem item = CreateFileInformationItem(FilesArray.Count + 1, filePath, fileDescription);
 
-            if (SelectedItemIndex != null)
+            if (SelectedItemIndex != -1)
             {
                 AddFileInformationItem(item, SelectedItemIndex);
                 SelectedItemIndex += 1;

@@ -32,10 +32,10 @@ namespace WorkReportCreator
 
         /// <param name="window">Окно, на котором расположен элемент</param>
         /// <param name="DynamicTasks">Список заданий (при наличии)</param>
-        public ReportItem(List<string> DynamicTasks, ReportModel report)
+        public ReportItem(string commonTask, List<string> DynamicTasks, ReportModel report)
         {
             InitializeComponent();
-            _model = new ReportViewModel(DynamicTasks, report);
+            _model = new ReportViewModel(commonTask, DynamicTasks, report);
             DataContext = _model;
             listBox.SelectionChanged += (sender, e) => listBox.ScrollIntoView(listBox.SelectedItem);
         }
