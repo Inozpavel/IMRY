@@ -318,15 +318,16 @@ namespace WorkReportCreator.ViewModels
         {
             RadioButton radioButton;
             Report reportInformation;
+            int number = WorksButtons.Count == 0 ? 1 : WorksButtons.Select(x => x.Content.ToString()).Max(x => int.Parse(x.Trim())) + 1;
             if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-                radioButton = GenerateNewItem(WorksButtons.Count + 1);
+                radioButton = GenerateNewItem(number);
             else
             {
-                InputWorkNumberBox box = new InputWorkNumberBox(WorksButtons.Select(x => x.Content.ToString()).ToList());
+                InputWorkNumberBox box = new InputWorkNumberBox(existingWorks: WorksButtons.Select(x => x.Content.ToString()).ToList());
                 box.ShowDialog();
                 if (box.ResultNumber == null)
                     return;
-                radioButton = GenerateNewItem(box.ResultNumber ?? WorksButtons.Count + 1);
+                radioButton = GenerateNewItem(box.ResultNumber ?? number);
 
             }
             reportInformation = new Report();
