@@ -14,6 +14,8 @@ namespace WorkReportCreator.Models
 
         private string _commonTask = "";
 
+        private string _conclusions = "";
+
         private ObservableCollection<DynamicTask> _dynamicTasks = new ObservableCollection<DynamicTask>();
 
         #region Properties
@@ -36,7 +38,7 @@ namespace WorkReportCreator.Models
         /// </summary>
         public string WorkTarget
         {
-            get { return _target; }
+            get => _target;
             set
             {
                 _target = value;
@@ -49,7 +51,7 @@ namespace WorkReportCreator.Models
         /// </summary>
         public string TheoryPart
         {
-            get { return _theoryPart; }
+            get => _theoryPart;
             set
             {
                 _theoryPart = value;
@@ -62,10 +64,23 @@ namespace WorkReportCreator.Models
         /// </summary>
         public string CommonTask
         {
-            get { return _commonTask; }
+            get => _commonTask;
             set
             {
                 _commonTask = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Выводы для работы
+        /// </summary>
+        public string Conclusions
+        {
+            get => _conclusions; 
+            set
+            {
+                _conclusions = value;
                 OnPropertyChanged();
             }
         }

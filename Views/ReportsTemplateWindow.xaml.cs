@@ -116,5 +116,8 @@ namespace WorkReportCreator
         private void ShowEditWindowForWorkCommonTask(object sender, RoutedEventArgs e) => ShowEditWindow("Введите общее задание работы", sender);
 
         private void ShowEditWindowForDynamicTask(object sender, RoutedEventArgs e) => ShowEditWindow("Введите описание индивидуального задания", sender);
+
+        private void ShowEditWindowForWorkConclusions(object sender, RoutedEventArgs e) => ShowEditWindow("Введите выводы работы", sender);
+
     }
 }

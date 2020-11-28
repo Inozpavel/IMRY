@@ -114,6 +114,7 @@ namespace WorkReportCreator.Models
                 document.ReplaceText("{{WorkNumber}}", $"{Regex.Match(reportName, @"\d+").Value}");
                 document.ReplaceText("{{WorkName}}", $"{task.Name}");
                 document.ReplaceText("{{WorkTarget}}", $"{task.WorkTarget}");
+                document.ReplaceText("{{Conclusions}}", $"{task.Conclusions}");
 
                 InsertTextInParam(document, "TheoryPart", task.TheoryPart);
                 InsertTextInParam(document, "CommonTask", task.CommonTask);
