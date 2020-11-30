@@ -164,7 +164,7 @@
                             <ColumnDefinition Width="18"/>
                         </Grid.ColumnDefinitions>
 
-                        <RepeatButton Grid.Column="0" Command="ScrollBar.LineUpCommand">
+                        <RepeatButton Grid.Column="0" Command="ScrollBar.LineLeftCommand">
                             <RepeatButton.Style>
                                 <Style TargetType="RepeatButton">
                                     <Setter Property="Focusable" Value="False"/>
@@ -243,7 +243,7 @@
 
                         </Track>
 
-                        <RepeatButton Grid.Column="3" Command="ScrollBar.LineDownCommand">
+                        <RepeatButton Grid.Column="3" Command="ScrollBar.LineRightCommand">
                             <RepeatButton.Style>
                                 <Style TargetType="RepeatButton">
                                     <Setter Property="Focusable" Value="False"/>
