@@ -37,7 +37,7 @@ namespace WorkReportCreator.Models
         public void GenerateReport()
         {
             MainParams mainParams = new MainParams();
-            DocX document = mainParams.WorkHasTitlePage ? GenerateTitlePage() : DocX.Create("./Configs/EmptyDocument.docx");
+            DocX document = mainParams.WorkHasTitlePage ? GenerateTitlePage() : DocX.Create("./EmptyDocument.docx");
 
             AddWorkInformation(document, _reportName);
             AddSelectedTasks(document, _reportName);
