@@ -77,7 +77,7 @@ namespace WorkReportCreator.Models
         /// </summary>
         public string Conclusions
         {
-            get => _conclusions; 
+            get => _conclusions;
             set
             {
                 _conclusions = value;
