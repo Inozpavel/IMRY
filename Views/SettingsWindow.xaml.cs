@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using WorkReportCreator.Models;
 using WorkReportCreator.ViewModels;
 
@@ -16,11 +17,10 @@ namespace WorkReportCreator.Views
             gridTitlePageParams.Opacity = mainParams.WorkHasTitlePageParams ? 1 : 0;
         }
 
-        private void CloseWindow(object sender, System.ComponentModel.CancelEventArgs e)
+        private void CloseWindow(object sender, CancelEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
-            Close();
         }
     }
 }
