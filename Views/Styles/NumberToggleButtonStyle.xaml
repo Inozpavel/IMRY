@@ -8,7 +8,7 @@
                 <ControlTemplate TargetType="ToggleButton">
 
                     <Grid>
-                        <Ellipse x:Name="ellipse" Width="40" Height="40" Fill="#FF121212" StrokeThickness="2" Stroke ="{TemplateBinding BorderBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Ellipse x:Name="ellipse" Width="40" Height="40" Fill="{TemplateBinding Background}" StrokeThickness="2" Stroke ="{TemplateBinding BorderBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label x:Name="label" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
 
                         <VisualStateManager.VisualStateGroups>
@@ -18,7 +18,8 @@
                                 <VisualState x:Name="Unchecked">
                                     <Storyboard>
                                         <ColorAnimation To="Transparent" Duration="0:0:0" Storyboard.TargetName="ellipse" Storyboard.TargetProperty="Stroke.(SolidColorBrush.Color)"/>
-                                        <ColorAnimation To="{TemplateBinding Foreground}" Duration="0:0:0.2" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
+                                        <ColorAnimation To="{TemplateBinding Background}" Duration="0:0:0" Storyboard.TargetName="ellipse" Storyboard.TargetProperty="Fill.(SolidColorBrush.Color)"/>
+                                        <ColorAnimation To="{TemplateBinding Foreground}" Duration="0:0:0" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
                                     </Storyboard>
                                 </VisualState>
 
@@ -26,13 +27,14 @@
                                 <VisualState x:Name="Checked">
                                     <Storyboard>
                                         <ColorAnimation To="{TemplateBinding BorderBrush}" Duration="0:0:0.2" Storyboard.TargetName="ellipse" Storyboard.TargetProperty="Stroke.(SolidColorBrush.Color)"/>
-                                        <ColorAnimation To="DarkCyan" Duration="0:0:0.2" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
+                                        <ColorAnimation To="Transparent" Duration="0:0:0.2" Storyboard.TargetName="ellipse" Storyboard.TargetProperty="Fill.(SolidColorBrush.Color)"/>
+                                        <ColorAnimation To="#FFBAC3C3" Duration="0:0:0.2" Storyboard.TargetName="label" Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)"/>
                                     </Storyboard>
                                 </VisualState>
 
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        
+
                     </Grid>
                 
                 </ControlTemplate>

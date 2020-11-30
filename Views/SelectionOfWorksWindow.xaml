@@ -91,7 +91,7 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <CheckBox x:Name="checkBoxNameType" Grid.Row="4" Grid.Column="1" Content="1" Width="80" Height="23" Margin="0 0 0 0" Focusable="False" IsChecked="{Binding Student.UseFullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <CheckBox x:Name="checkBoxNameType" Grid.Row="4" Grid.Column="1" Width="124" Height="20" Margin="0 3 0 1" Focusable="False" IsChecked="{Binding Student.UseFullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox">
                                 <Setter Property="Template">
@@ -101,7 +101,7 @@
                                             
                                             <Border x:Name="border" BorderBrush="White" BorderThickness="1" CornerRadius="10" Background="Transparent">
                                                 <Canvas>
-                                                    <Border x:Name="moveableBorder" Background="#FFA8B3B3" CornerRadius="{Binding CornerRadius, ElementName=border}" Width="40" Canvas.Left="-1" Canvas.Top="-1" Height="{TemplateBinding Height}"/>
+                                                    <Border x:Name="moveableBorder" Background="#FFA8B3B3" CornerRadius="{Binding CornerRadius, ElementName=border}" Width="62" Canvas.Left="-1" Canvas.Top="-1" Height="{TemplateBinding Height}"/>
                                                 </Canvas>
 
                                                 <VisualStateManager.VisualStateGroups>
@@ -109,7 +109,7 @@
                                                         
                                                         <VisualState x:Name="Checked">
                                                             <Storyboard>
-                                                                <DoubleAnimation To="39" Duration="0:0:0.5" Storyboard.TargetName="moveableBorder" Storyboard.TargetProperty="(Canvas.Left)"/>
+                                                                <DoubleAnimation To="61" Duration="0:0:0.5" Storyboard.TargetName="moveableBorder" Storyboard.TargetProperty="(Canvas.Left)"/>
                                                                 <ColorAnimation To="Orange" Duration="0:0:0.3" Storyboard.TargetName="moveableBorder" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>
                                                             </Storyboard>
                                                         </VisualState>

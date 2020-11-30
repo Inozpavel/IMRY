@@ -249,8 +249,9 @@ namespace WorkReportCreator.ViewModels.Commands
         private ToggleButton StylizeButton(ToggleButton button, List<ReportModel> existingReports, string workType, string workNumber)
         {
             bool isExisting = existingReports.Where(x => x.WorkType == workType).FirstOrDefault(x => x.WorkNumber.ToString() == workNumber) != null;
-            button.Foreground = GetBrushForWork(isExisting, "Orange", "#FFBAC3C3");
-            button.BorderBrush = GetBrushForWork(isExisting, "LightGreen", "White");
+            button.Foreground = GetBrushForWork(isExisting, "Black", "#FFBAC3C3");
+            button.BorderBrush = GetBrushForWork(isExisting, "#FF18FF00", "White");
+            button.Background = GetBrushForWork(isExisting, "#FFFAA515", "#FF121212");
             if (isExisting)
                 button.ToolTip = "Работа уже сохранена";
             return button;
