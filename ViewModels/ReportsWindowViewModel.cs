@@ -202,7 +202,7 @@ namespace WorkReportCreator.ViewModels
                         if (action == ReportAction.Generate)
                             item.GenerateReport(selectedTasks, filesInformation);
                         else if (action == ReportAction.Save)
-                            item.SaveReport();
+                            item.SaveReport(selectedTasks, filesInformation);
                     }
                     catch (Exception)
                     {

@@ -321,16 +321,10 @@ namespace WorkReportCreator
         /// <summary>
         /// Сохраняет отчет для работы
         /// </summary>
-        public void SaveReport()
+        public void SaveReport(List<int> selectedIndicies, List<FileInformation> filesInformation)
         {
-            List<int> indicies = new List<int>();
-            for (int i = 0; i < DynamicTasksArray.Count; i++)
-            {
-                if (DynamicTasksArray[i].IsChecked)
-                    indicies.Add(i);
-            }
-            Dictionary<string, string> filesAndDescriptions = FilesArray.Select(x => x.Content as FileInformationItem)
-                .Where(x => string.IsNullOrEmpty(x.FilePath) == false).ToDictionary(x => x.FilePath, x => x.FileDescription);
+            Dictionary<string, string> filesAndDescriptions = filesInformation.Where(x => string.IsNullOrEmpty(x.FilePath) == false).
+                ToDictionary(x => x.FilePath, x => x.FileDescription);
 
             Task.Run(() =>
             {
@@ -343,7 +337,7 @@ namespace WorkReportCreator
                     WorkNumber = int.Parse(Regex.Match(_reportName, @"\d+").Value),
                     WorkType = Regex.IsMatch(_reportName, "пр|Пр") ? "Practice" : "Laboratory",
                     FilesAndDescriptions = filesAndDescriptions,
-                    SelectedTasksIndices = indicies,
+                    SelectedTasksIndices = selectedIndicies,
                 };
                 string text = JsonConvert.SerializeObject(report, Formatting.Indented);
                 string shortName = string.IsNullOrEmpty(mainParams.ShortSubjectName) ? "" : "." + mainParams.ShortSubjectName;
@@ -356,6 +350,23 @@ namespace WorkReportCreator
             });
         }
 
+        public void GetSelectedTasksAndFilesInformation(out List<int> selectedTasks, out List<FileInformation> filesInformation)
+        {
+            selectedTasks = new List<int>();
+            for (int i = 0; i < DynamicTasksArray.Count; i++)
+            {
+                if (DynamicTasksArray[i].IsChecked)
+                    selectedTasks.Add(i);
+            }
+            filesInformation = FilesArray.Select(x => x.Content as FileInformationItem)
+                .Select(x => new FileInformation()
+                {
+                    FilePath = x.FilePath,
+                    FileName = x.FileName,
+                    FileDescription = x.FileDescription,
+                }).ToList();
+        }
+
         /// <summary>
         /// Проверяет, указан ли файл для сохранения, если файл указан, сохраняет данные
         /// </summary>
@@ -363,7 +374,8 @@ namespace WorkReportCreator
         {
             try
             {
-                SaveReport();
+                GetSelectedTasksAndFilesInformation(out List<int> selectedTasks, out List<FileInformation> filesInformation);
+                SaveReport(selectedTasks, filesInformation);
             }
             catch (Exception e)
             {

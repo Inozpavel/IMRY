@@ -50,7 +50,7 @@ namespace WorkReportCreator
         /// Сохраняет отчет для выбранной работы
         /// </summary>
         /// <exception cref="Exception"/>
-        public void SaveReport() => _model.SaveReport();
+        public void SaveReport(List<int> selectedIndicies, List<FileInformation> filesInformation) => _model.SaveReport(selectedIndicies, filesInformation);
 
         public void AddImageFromBuffer(BitmapSource imageSource) => _model.AddImageFromBuffer(imageSource);
 
@@ -193,19 +193,7 @@ namespace WorkReportCreator
 
         public void GetSelectedTasksAndFilesInformation(out List<int> selectedTasks, out List<FileInformation> filesInformation)
         {
-            selectedTasks = new List<int>();
-            for (int i = 0; i < _model.DynamicTasksArray.Count; i++)
-            {
-                if (_model.DynamicTasksArray[i].IsChecked)
-                    selectedTasks.Add(i);
-            }
-            filesInformation = _model.FilesArray.Select(x => x.Content as FileInformationItem)
-                .Select(x => new FileInformation()
-                {
-                    FilePath = x.FilePath,
-                    FileName = x.FileName,
-                    FileDescription = x.FileDescription,
-                }).ToList();
+            _model.GetSelectedTasksAndFilesInformation(out selectedTasks, out filesInformation);
         }
 
         private void ExecuteWithReport(ReportAction action, string actionName, string actionNameInPastSimple)
@@ -218,7 +206,7 @@ namespace WorkReportCreator
                 if (action == ReportAction.Generate)
                     GenerateReport(selectedTasks, filesInformation);
                 else if (action == ReportAction.Save)
-                    SaveReport();
+                    SaveReport(selectedTasks, filesInformation);
             }
             catch (Exception exception)
             {
