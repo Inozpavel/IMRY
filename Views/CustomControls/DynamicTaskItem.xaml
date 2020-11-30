@@ -5,16 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:customconrols="clr-namespace:WorkReportCreator.Views.CustomConrols" d:DataContext="{d:DesignInstance Type=customconrols:DynamicTaskItem}"
              mc:Ignorable="d" 
              d:DesignWidth="800" MouseDown="InvertIsChecked" Height="auto" FontFamily="Verdana">
-    <Grid Background="Transparent">
-        
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+    <Border BorderBrush="#FFBAC3C3" BorderThickness="0.5" CornerRadius="5">
+        <Grid Background="Transparent">
 
-        <Border Height="30" Width="30" BorderBrush="White" BorderThickness="1" CornerRadius="6" Margin="10 3 10 0" VerticalAlignment="Center">
-            <Image VerticalAlignment="Center" HorizontalAlignment="Center" Source="{Binding ImagePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        </Border>
-        <TextBlock Grid.Column="1" Text="{Binding Text}" TextWrapping="Wrap" Foreground="White" Background="Transparent" Margin="0 9 0 0"/>
-    </Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Border Height="30" Width="30" BorderBrush="White" BorderThickness="1" CornerRadius="6" Margin="10 3 10 3" VerticalAlignment="Center">
+                <Image VerticalAlignment="Center" HorizontalAlignment="Center" Source="{Binding ImagePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </Border>
+            <TextBlock Grid.Column="1" Text="{Binding Text}" TextWrapping="Wrap" Foreground="White" Background="Transparent" Margin="0 9 0 9"/>
+        </Grid>
+    </Border>
 </UserControl>
