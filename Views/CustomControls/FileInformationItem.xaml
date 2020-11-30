@@ -8,6 +8,11 @@
         <Grid.Resources>
             <ResourceDictionary>
                 
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="/Views/Styles/TiltedButtonStyle.xaml"/>
+                    <ResourceDictionary Source="/Views/Styles/AnimatedScrollViewerStyle.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+                
                 <Style TargetType="TextBox">
                     <Setter Property="VerticalContentAlignment" Value="Center"/>
                     <Setter Property="FontSize" Value="14"/>
@@ -22,9 +27,9 @@
                     <Setter Property="Foreground" Value="White"/>
                     <Setter Property="FontSize" Value="14"/>
                 </Style>
-                <ResourceDictionary.MergedDictionaries>
-                    <ResourceDictionary Source="/Views/Styles/TiltedButtonStyle.xaml"/>
-                </ResourceDictionary.MergedDictionaries>
+                
+                <Style TargetType="ScrollViewer" BasedOn="{StaticResource AnimatedScrollViewer}"/>
+                
             </ResourceDictionary>
             
             

@@ -18,8 +18,11 @@
                     <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
                     <ResourceDictionary Source="/Views/Styles/ScrollBarTextDarkTextBoxStyle.xaml"/>
                     <ResourceDictionary Source="/Views/Styles/ScalableImageStyle.xaml"/>
+                    <ResourceDictionary Source="/Views/Styles/AnimatedScrollViewerStyle.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
 
+                <Style TargetType="ScrollViewer" BasedOn="{StaticResource AnimatedScrollViewer}"/>
+                
                 <Style TargetType="RadioButton" x:Key="radioButtonSelectWorkType">
                     <Setter Property="Foreground" Value="White"/>
                     <Setter Property="Focusable" Value="False"/>
@@ -174,7 +177,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="10 0 10 0" VerticalAlignment="Top">
+            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="10 0 10 0" VerticalAlignment="Top" Style="{StaticResource AnimatedScrollViewer}">
 
                 <StackPanel HorizontalAlignment="Stretch">
 
@@ -184,7 +187,7 @@
                     <TextBlock Text="Цель работы" Style="{StaticResource Description}"/>
                     <Button Content="{Binding CurrentInformation.WorkTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Click="ShowEditWindowForWorkTarget" Style="{StaticResource buttonSelectableText}" MouseRightButtonUp="FormatText" MouseUp="InsertNotNameFromBufferAndFormat"/>
 
-                    <TextBlock Text="Теоритическая часть" Style="{StaticResource Description}"/>
+                    <TextBlock Text="Теоретическая часть" Style="{StaticResource Description}"/>
                     <Button Content="{Binding CurrentInformation.TheoryPart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Click="ShowEditWindowForWorkTheoryPart" Style="{StaticResource buttonSelectableText}" MouseRightButtonUp="FormatText" MouseUp="InsertNotNameFromBufferAndFormat"/>
 
                     <TextBlock Text="Общее задание" Style="{StaticResource Description}"/>

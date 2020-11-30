@@ -13,11 +13,16 @@
     <Grid>
         <Grid.Resources>
             <ResourceDictionary>
+                
                 <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
                     <ResourceDictionary Source="/Views/Styles/ImageButtonStyle.xaml"/>
                     <ResourceDictionary Source="/Views/Styles/ScalableImageStyle.xaml"/>
+                    <ResourceDictionary Source="/Views/Styles/AnimatedScrollViewerStyle.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
+                
+                <Style TargetType="ScrollViewer" BasedOn="{StaticResource AnimatedScrollViewer}"/>
+            
             </ResourceDictionary>
         </Grid.Resources>
         
@@ -31,12 +36,14 @@
             <Label Name="labelCaption" Content="Название вводимого поля" Height="30" Foreground="White" FontSize="16"/>
         </Border>
 
-        <ScrollViewer  Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            
             <TextBox x:Name="textBoxInput" Background="Transparent" TextWrapping="Wrap" Foreground="White" FontSize="14" BorderThickness="0" AcceptsReturn="True" AcceptsTab="True">
                 <TextBox.CaretBrush>
                     <SolidColorBrush Color="White"/>
                 </TextBox.CaretBrush>
             </TextBox>
+            
         </ScrollViewer>
 
         <Border Grid.Row="2" Background="#FF333337" CornerRadius="10 0 0 0" HorizontalAlignment="Right">

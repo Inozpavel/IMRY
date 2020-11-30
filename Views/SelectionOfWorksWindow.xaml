@@ -9,8 +9,10 @@
                 <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
                     <ResourceDictionary Source="/Views/Styles/CommonTextBoxStyle.xaml"/>
+                    <ResourceDictionary Source="/Views/Styles/AnimatedScrollViewerStyle.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
 
+                <Style TargetType="ScrollViewer" BasedOn="{StaticResource AnimatedScrollViewer}"/>
                 <!--Дизайн групповых контейнеров-->
                 <Style TargetType="GroupBox">
                     <Setter Property="HorizontalAlignment" Value="Center"/>

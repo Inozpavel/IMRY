@@ -12,6 +12,7 @@
                     <ResourceDictionary.MergedDictionaries>
                         <ResourceDictionary Source="/Views/Styles/CommonAnimatedButtonStyle.xaml"/>
                         <ResourceDictionary Source="/Views/Styles/CommonTextBoxStyle.xaml"/>
+                        <ResourceDictionary Source="/Views/Styles/AnimatedScrollViewerStyle.xaml"/>
                     </ResourceDictionary.MergedDictionaries>
 
                     <Style TargetType="TextBlock">
@@ -23,7 +24,7 @@
                         <Setter Property="TextAlignment" Value="Center"/>
                     </Style>
 
-                    <Style TargetType="ScrollViewer">
+                    <Style TargetType="ScrollViewer" BasedOn="{StaticResource AnimatedScrollViewer}">
                         <Setter Property="VerticalScrollBarVisibility" Value="Disabled"/>
                         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
                     </Style>
