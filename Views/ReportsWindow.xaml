@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:viewmodels="clr-namespace:WorkReportCreator.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:ReportsWindowViewModel}"
         mc:Ignorable="d"
-        Title="IMRY" WindowStartupLocation="CenterScreen" Background="#FF191A1B" Closing="CloseWindow" FontFamily="Verdana" Height="650" MinHeight="600" MinWidth="900" Width="1100">
+        Title="IMRY" WindowStartupLocation="CenterScreen" Background="#FF191A1B" Closing="CloseWindow" FontFamily="Verdana" Height="650" MinHeight="600" MinWidth="880" Width="1100">
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding AddImage}"/>
     </Window.InputBindings>

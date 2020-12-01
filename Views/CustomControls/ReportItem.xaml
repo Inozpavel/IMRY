@@ -95,7 +95,7 @@
             <Grid Margin="0 2 0 0" Visibility="{Binding HintVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <Image x:Name="image" Source="/Images/FolderTakenIn.png" MaxHeight="200" MinHeight="60"/>
             </Grid>
-            <ListBox Margin="0 2 0 0" AllowDrop="True" BorderThickness="0" BorderBrush="Transparent" x:Name="listBox" Background="Transparent" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding FilesArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Drop="AddFilesFromDragAndDrop" DragEnter="ChangeImageToTakenOut" DragLeave="ChangeImageToTakenIn" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox Margin="0 2 0 0" AllowDrop="True" BorderThickness="2" BorderBrush="Transparent" x:Name="listBox" Background="Transparent" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding FilesArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Drop="AddFilesFromDragAndDrop" DragEnter="ChangeImageToTakenOut" DragLeave="ChangeImageToTakenIn" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
 
                 <ListBox.Style>
                     <Style TargetType="ListBox">
@@ -164,8 +164,8 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <Button Width="260" Grid.Column="0" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center" Content="{Binding SaveStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0 1 5 1" Style="{StaticResource CommonAnimatedButton}" Click="SaveReportClicked"/>
-                <Button Width="260" Grid.Column="1" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Сгенерировать отчет" Margin="5 1 0 1" Style="{StaticResource CommonAnimatedButton}" Click="GenerateReportClicked"/>
+                <Button Width="240" Grid.Column="0" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center" Content="{Binding SaveStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0 1 5 1" Style="{StaticResource CommonAnimatedButton}" Click="SaveReportClicked"/>
+                <Button Width="240" Grid.Column="1" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Сгенерировать отчет" Margin="5 1 0 1" Style="{StaticResource CommonAnimatedButton}" Click="GenerateReportClicked"/>
 
             </Grid>
             
