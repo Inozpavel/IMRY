@@ -8,7 +8,7 @@ namespace WorkReportCreator
         /// <summary>
         /// Метод, который выполнится, если команда может запуститься
         /// </summary>
-        private readonly Action<object> _execute;
+        private readonly Action _execute;
 
         /// <summary>
         /// Метод, который проверяет, может ли команда выполниться
@@ -17,7 +17,7 @@ namespace WorkReportCreator
 
         /// <param name="execute">Метод, который будет запускаться</param>
         /// <param name="canExecute">Метод, который проверяет, может ли команда запуститься</param>
-        public Command(Action<object> execute, Predicate<object> canExecute)
+        public Command(Action execute, Predicate<object> canExecute)
         {
             _execute = execute;
             _canExecute = canExecute;
@@ -43,6 +43,7 @@ namespace WorkReportCreator
         /// Метод, который выполнится, если команда может запуститься
         /// </summary>
         /// <param name="sender">Объект, который вызвал команду</param>
-        public void Execute(object sender) => _execute?.Invoke(sender);
+        public void Execute(object sender) => _execute?.Invoke();
+
     }
 }

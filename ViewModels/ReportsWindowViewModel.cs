@@ -69,7 +69,7 @@ namespace WorkReportCreator.ViewModels
             fastActionsItem.ButtonGenerateAllClicked += GenerateAllReports;
             fastActionsItem.ButtonSaveAllClicked += SaveAllReports;
             fastActionsItem.ButtonBackClicked += (sender) => ButtonBackClicked?.Invoke(sender);
-            AddImage = new Command(sender => TryAddImage(), null);
+            AddImage = new Command(TryAddImage, null);
             ResourceDictionary _tabItemStyleDictionary = new ResourceDictionary()
             {
                 Source = new Uri("./Views/Styles/CommonTabItemStyle.xaml",

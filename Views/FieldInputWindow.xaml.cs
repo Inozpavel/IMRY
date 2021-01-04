@@ -29,7 +29,7 @@ namespace WorkReportCreator.Views
             ResultText = text;
 
             SubmitInput = new Command(Submit, null);
-            CloseWindow = new Command((sender) => Close(), null);
+            CloseWindow = new Command(Close, null);
             FormatText = new Command(FormatInputText, null);
             AddImage = new Command(ShowDialogAddImage, null);
 
@@ -42,7 +42,7 @@ namespace WorkReportCreator.Views
         /// <summary>
         /// Сохраняет текст, закрывает окно
         /// </summary>
-        private void Submit(object sender)
+        private void Submit()
         {
             ResultText = textBoxInput.Text;
             Close();
@@ -51,7 +51,7 @@ namespace WorkReportCreator.Views
         /// <summary>
         /// Форматирует текст
         /// </summary>
-        private void FormatInputText(object sender)
+        private void FormatInputText()
         {
             string text = textBoxInput.Text.Trim();
             if (text.Length == 0)
@@ -72,7 +72,7 @@ namespace WorkReportCreator.Views
         /// <summary>
         /// Показывает диалог для выбора картинки и вставки ссылки на нее в текст
         /// </summary>
-        private void ShowDialogAddImage(object sender)
+        private void ShowDialogAddImage()
         {
             OpenFileDialog fileDialog = new OpenFileDialog()
             {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
-using WorkReportCreator.ViewModels.Commands;
+using WorkReportCreator.ViewModels;
 
 namespace WorkReportCreator
 {

@@ -243,10 +243,10 @@ namespace WorkReportCreator.ViewModels
             AddDescription = new Command(AddNewDescription, null);
             RemoveDescription = new Command(RemoveSelectedDescription, (sender) => SelectedDescriptionIndex != null);
 
-            SwapUpDescription = new Command((sender) => CurrentInformation.DynamicTasks.Move(SelectedDescriptionIndex ?? 0, SelectedDescriptionIndex - 1 ?? 0),
+            SwapUpDescription = new Command(() => CurrentInformation.DynamicTasks.Move(SelectedDescriptionIndex ?? 0, SelectedDescriptionIndex - 1 ?? 0),
                 (sender) => SelectedDescriptionIndex != null && SelectedDescriptionIndex > 0);
 
-            SwapDownDescription = new Command((sender) => CurrentInformation.DynamicTasks.Move(SelectedDescriptionIndex ?? 0, SelectedDescriptionIndex + 1 ?? 0),
+            SwapDownDescription = new Command(() => CurrentInformation.DynamicTasks.Move(SelectedDescriptionIndex ?? 0, SelectedDescriptionIndex + 1 ?? 0),
                 (sender) => SelectedDescriptionIndex != null && SelectedDescriptionIndex < CurrentInformation?.DynamicTasks.Count - 1);
 
             WorksButtons.CollectionChanged += (sender, e) => ReportInformationVisibility = WorksButtons.Any(x => x.IsChecked ?? false) ? Visibility.Visible : Visibility.Collapsed;
@@ -263,7 +263,7 @@ namespace WorkReportCreator.ViewModels
             LaboratoriesWorksButtons.CollectionChanged += (sender, e) => SaveAllInformation(this, null);
         }
 
-        private void FormatAllFields(object sender)
+        private void FormatAllFields()
         {
             CurrentInformation.Name = FormatText(CurrentInformation.Name, isNameOfWork: true);
             CurrentInformation.WorkTarget = FormatText(CurrentInformation.WorkTarget);
@@ -293,7 +293,7 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Переключает видимые номера работ
         /// </summary>
-        private void ChangeWorksList(object sender)
+        private void ChangeWorksList()
         {
             if (IsPracticesChecked)
             {
@@ -314,7 +314,7 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Добавляет новую пустую работу в список работ
         /// </summary>
-        private void AddNewWork(object sender)
+        private void AddNewWork()
         {
             RadioButton radioButton;
             Report reportInformation;
@@ -339,7 +339,7 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Удаляет выбранную работу из списка, если в ней есть данные, попросит подтвердить действие
         /// </summary>
-        private void RemoveSelectedWork(object sender)
+        private void RemoveSelectedWork()
         {
             int index = GetSelectedIndex();
             RadioButton selectedButton = WorksButtons[index];
@@ -401,7 +401,7 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Показывает диалоговое окно для выбора файла для сохранения шаблона
         /// </summary>
-        private void ChooseFilePath(object sender)
+        private void ChooseFilePath()
         {
             SaveFileDialog dialog = new SaveFileDialog()
             {
@@ -421,12 +421,12 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Перемещает выбранны элемент вверх
         /// </summary>
-        private void SwapUpSelectedItem(object sender) => SwapAdjacentItemWithSelected(-1);
+        private void SwapUpSelectedItem() => SwapAdjacentItemWithSelected(-1);
 
         /// <summary>
         /// Перемещает выбранны элемент вниз
         /// </summary>
-        private void SwapDownSelectedItem(object sender) => SwapAdjacentItemWithSelected(+1);
+        private void SwapDownSelectedItem() => SwapAdjacentItemWithSelected(+1);
 
         /// <summary>
         /// Обменивает ближайший элемент с выбранным
@@ -454,7 +454,7 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Добавляет новое описание работы в список, подписывает его на автообновление
         /// </summary>
-        private void AddNewDescription(object sender)
+        private void AddNewDescription()
         {
             DynamicTask task = new DynamicTask();
             task.PropertyChanged += (s, e) => SaveAllInformation(this, null);
@@ -482,7 +482,7 @@ namespace WorkReportCreator.ViewModels
         /// <summary>
         /// Удаляет выбранное задание из работы из списка
         /// </summary>
-        private void RemoveSelectedDescription(object sender)
+        private void RemoveSelectedDescription()
         {
             int index = SelectedDescriptionIndex ?? 0;
             string text = CurrentInformation.DynamicTasks[index].Description;

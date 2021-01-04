@@ -31,7 +31,7 @@ namespace WorkReportCreator.Models
         }
 
         /// <summary>
-        /// Cоздает отчет для работы
+        /// Cоздает отчет для работы и сохраняет его
         /// </summary>
         /// <exception cref="Exception"/>
         public void GenerateReport()
@@ -39,8 +39,8 @@ namespace WorkReportCreator.Models
             MainParams mainParams = new MainParams();
             DocX document = mainParams.WorkHasTitlePage ? GenerateTitlePage() : DocX.Create("./EmptyDocument.docx");
 
-            AddWorkInformation(document, _reportName);
-            AddSelectedTasks(document, _reportName);
+            AddWorkInformation(mainParams, document, _reportName);
+            AddSelectedTasks(mainParams, document, _reportName);
             AddUserFiles(document);
             InsertAllImages(document);
 
@@ -103,21 +103,23 @@ namespace WorkReportCreator.Models
         /// <param name="reportName">Название отчета</param>
         /// <returns>Документ со вставленной информацией о работе</returns>
         /// <exception cref="Exception"/>
-        private void AddWorkInformation(DocX document, string reportName)
+        private void AddWorkInformation(MainParams mainParams, DocX document, string reportName)
         {
-            MainParams mainParams = new MainParams();
             try
             {
                 var template = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Report>>>(File.ReadAllText(mainParams.CurrentTemplateFilePath));
-                Report task = template[Regex.IsMatch(reportName, "пр|Пр") ? "Practices" : "Laboratories"][Regex.Match(reportName, @"\d+").Value];
+                string taskType = Regex.IsMatch(reportName, "пр|Пр") ? "Practices" : "Laboratories";
+                string taskNumber = Regex.Match(reportName, @"\d+").Value;
+                Report report = template[taskType][taskNumber];
+
                 document.ReplaceText("{{WorkType}}", $"{(Regex.IsMatch(reportName, "пр|Пр") ? "Практическая работа" : "Лабораторная работа")}");
                 document.ReplaceText("{{WorkNumber}}", $"{Regex.Match(reportName, @"\d+").Value}");
-                document.ReplaceText("{{WorkName}}", $"{task.Name}");
-                document.ReplaceText("{{WorkTarget}}", $"{task.WorkTarget}");
-                document.ReplaceText("{{Conclusions}}", $"{task.Conclusions}");
+                document.ReplaceText("{{WorkName}}", $"{report.Name}");
+                document.ReplaceText("{{WorkTarget}}", $"{report.WorkTarget}");
+                document.ReplaceText("{{Conclusions}}", $"{report.Conclusions}");
 
-                InsertTextInParam(document, "TheoryPart", task.TheoryPart);
-                InsertTextInParam(document, "CommonTask", task.CommonTask);
+                InsertTextInParam(document, "TheoryPart", report.TheoryPart);
+                InsertTextInParam(document, "CommonTask", report.CommonTask);
             }
             catch (Exception)
             {
@@ -141,15 +143,15 @@ namespace WorkReportCreator.Models
             var splittedTask = Regex.Split(text, ImagePattern).Where(x => Regex.IsMatch(x, NamePattern) == false).ToList();
             index--;
 
-            List<(string text, int fontSize, string style, string fontFamily)> paragraphs = new List<(string, int, string, string)>();
+            List<DocumentParagraph> paragraphs = new List<DocumentParagraph>();
 
 
             for (int j = 0; j < splittedTask.Count; j++)
             {
-                paragraphs.Add(("\t" + splittedTask[j], 14, "normal", "Times New Roman"));
+                paragraphs.Add(new DocumentParagraph("\t" + splittedTask[j], "Times New Roman", 14));
 
                 if (j < splittedTask.Count - 1)
-                    paragraphs.Add((images[j].Pattern, 10, "normal", "Times New Roman"));
+                    paragraphs.Add(new DocumentParagraph(images[j].Pattern, "Times New Roman", 10));
             }
 
             InsertParagrapsAfterParagraphIndex(document, paragraphs, index);
@@ -161,7 +163,7 @@ namespace WorkReportCreator.Models
         /// <param name="reportName">Название отчета</param>
         /// <returns>Документ со вставленной информацией о работе</returns>
         /// <exception cref="Exception"/>
-        private void AddSelectedTasks(DocX document, string reportName)
+        private void AddSelectedTasks(MainParams mainParams, DocX document, string reportName)
         {
             int dynamicTasksParagraphIndex = FindParagraphIndexWithParametr(document, "DynamicTasks"); //номер абраза, с котоого надо начинать вставлять задания
 
@@ -174,7 +176,6 @@ namespace WorkReportCreator.Models
             document.RemoveParagraphAt(dynamicTasksParagraphIndex); //Удаляем надпись {{DynamicTasks}}
             dynamicTasksParagraphIndex--;
 
-            MainParams mainParams = new MainParams();
             Dictionary<string, Dictionary<string, Report>> template;
             try
             {
@@ -189,11 +190,9 @@ namespace WorkReportCreator.Models
             var tasks = template[Regex.IsMatch(reportName, "пр|Пр") ? "Practices" : "Laboratories"][Regex.Match(reportName, @"\d+").Value].
                 DynamicTasks.Select(x => x.Description.Trim()).Select(x => Regex.Replace(x, "•", "\t•")).ToList();
 
-            ;
-
             int number = 1;
-            List<(string, int, string, string)> paragraps = new List<(string, int, string, string)>();
-
+            List<DocumentParagraph> paragraps = new List<DocumentParagraph>();
+                
             foreach (int i in _selectedWorksNumbers) // Вставка всех работ по абзацам
             {
                 var images = FindImages(tasks[i]);
@@ -202,12 +201,15 @@ namespace WorkReportCreator.Models
                 for (int j = 0; j < splittedTask.Count; j++)
                 {
                     if (j == 0)
-                        paragraps.Add((_selectedWorksNumbers.Count > 1 ? $"\t{number}) " + splittedTask[j] : "\t" + splittedTask[j], 14, "normal", "Times New Roman"));
+                    {
+                        string text = _selectedWorksNumbers.Count > 1 ? $"\t{number}) " + splittedTask[j] : "\t" + splittedTask[j];
+                        paragraps.Add(new DocumentParagraph(text, "Times New Roman", 14));
+                    }
                     else
-                        paragraps.Add(("\t" + splittedTask[j], 14, "normal", "Times New Roman"));
+                        paragraps.Add(new DocumentParagraph("\t" + splittedTask[j], "Times New Roman", 14));
 
                     if (j < splittedTask.Count - 1)
-                        paragraps.Add((images[j].Pattern, 10, "normal", "Times New Roman"));
+                    paragraps.Add(new DocumentParagraph(images[j].Pattern, "Times New Roman", 10));
                 }
                 number++;
             }
@@ -222,14 +224,16 @@ namespace WorkReportCreator.Models
         /// <param name="paragraphs">Абзацы</param>
         /// <param name="paragraphIndex">Индекс параграфа</param>
         /// <param name="FontFamily">Шрифт</param>
-        private void InsertParagrapsAfterParagraphIndex(DocX document, List<(string text, int fontSize, string style, string fontFamily)> paragraphs, int paragraphIndex)
+        private void InsertParagrapsAfterParagraphIndex(DocX document, List<DocumentParagraph> paragraphs, int paragraphIndex)
         {
             for (int i = 0; i < paragraphs.Count; i++)
             {
-                Paragraph paragraph = document.InsertParagraph(paragraphs[i].text).FontSize(paragraphs[i].fontSize).Font(paragraphs[i].fontFamily);
+                Paragraph paragraph = document.InsertParagraph(paragraphs[i].Text).FontSize(paragraphs[i].FontSize).Font(paragraphs[i].FontFamily);
 
-                if (paragraphs[i].style == "bold")
+                if (paragraphs[i].Style == "bold")
                     paragraph = paragraph.Bold();
+                if (paragraphs[i].Style == "italic")
+                    paragraph = paragraph.Italic();
 
                 document.Paragraphs[paragraphIndex].InsertParagraphAfterSelf(paragraph);
                 document.RemoveParagraphAt(document.Paragraphs.Count - 1); // пакет зачем-то вставляет еще один в конец
@@ -256,7 +260,7 @@ namespace WorkReportCreator.Models
             if (_filesInformation.Count == 0)
                 return;
 
-            List<(string text, int fontSize, string style, string fontFamily)> paragraphs = new List<(string, int, string, string)>();
+            List<DocumentParagraph> paragraphs = new List<DocumentParagraph>();
 
             foreach (FileInformation fileInformation in _filesInformation)
             {
@@ -264,17 +268,17 @@ namespace WorkReportCreator.Models
                 {
                     BitmapImage image = new BitmapImage(new Uri(fileInformation.FilePath, UriKind.RelativeOrAbsolute));
                     string name = string.IsNullOrEmpty(fileInformation.FileDescription) ? "" : ",name=\"" + fileInformation.FileDescription + "\"";
-                    paragraphs.Add(("{{image source=\"" + fileInformation.FilePath + "\"" + name + "}}", 10, "normal", "Times New Roman"));
+                    paragraphs.Add(new DocumentParagraph("{{image source=\"" + fileInformation.FilePath + "\"" + name + "}}", "Times New Roman", 10));
                 }
                 catch (Exception)
                 {
                     if (string.IsNullOrEmpty(fileInformation.FileDescription) == false)
-                        paragraphs.Add((fileInformation.FileDescription, 14, "normal", "Times New Roman"));
+                        paragraphs.Add(new DocumentParagraph(fileInformation.FileDescription, "Times New Roman", 14));
 
-                    paragraphs.Add((fileInformation.FileName.Split('\\').Last(), 16, "bold", "Tahoma"));
-                    paragraphs.Add((string.Join("\n", File.ReadAllLines(fileInformation.FilePath)), 10, "normal", "Consolas"));
+                    paragraphs.Add(new DocumentParagraph(fileInformation.FileName.Split('\\').Last(), "Tahoma", 16));
+                    paragraphs.Add(new DocumentParagraph(string.Join("\n", File.ReadAllLines(fileInformation.FilePath), "Consolas", 10)));
                 }
-                paragraphs.Add(("", 10, "normal", "Consolas"));
+                paragraphs.Add(new DocumentParagraph(""));
             }
             InsertParagrapsAfterParagraphIndex(document, paragraphs, userFilesParagraphIndex);
             return;

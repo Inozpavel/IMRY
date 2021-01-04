@@ -34,12 +34,12 @@ namespace WorkReportCreator.ViewModels
         public SettingsViewModel(MainParams mainParams)
         {
             Params = mainParams;
-            ChooseTitlePageFile = new Command((x) => SelectTitlePageFile(), null);
-            ChooseTitlePageParamsFile = new Command((x) => SelectTitlePageParamsFile(), null);
-            ChooseCurrentTemplateFile = new Command((x) => SelectCurrentTemplateFile(), null);
-            ChoosePermittedExtentionsFile = new Command((x) => SelectPermittedExtentionFile(), null);
-            ChooseFolderForReports = new Command((x) => SelectFolderForReports(), null);
-            ChooseFolderForSavedReports = new Command((x) => SelectFolderForSavedReports(), null);
+            ChooseTitlePageFile = new Command(SelectTitlePageFile, null);
+            ChooseTitlePageParamsFile = new Command(SelectTitlePageParamsFile, null);
+            ChooseCurrentTemplateFile = new Command(SelectCurrentTemplateFile, null);
+            ChoosePermittedExtentionsFile = new Command(SelectPermittedExtentionFile, null);
+            ChooseFolderForReports = new Command(SelectFolderForReports, null);
+            ChooseFolderForSavedReports = new Command(SelectFolderForSavedReports, null);
         }
 
         /// <summary>
@@ -49,9 +49,7 @@ namespace WorkReportCreator.ViewModels
         {
             OpenFileDialog dialog = BuildDialog("Выберите файл с титульной страницей", "Doc и Docx файлы(*.doc ,*.docx)|*.doc; *.docx");
             if (dialog.ShowDialog() == DialogResult.OK)
-            {
                 Params.WorkTitlePageFilePath = dialog.FileName;
-            }
         }
 
         /// <summary>

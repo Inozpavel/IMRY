@@ -25,8 +25,8 @@ namespace WorkReportCreator.Views
             InitializeComponent();
             DataContext = this;
             _existingWorks = existingWorks;
-            CloseWindow = new Command((sender) => Close(), null);
-            ValidateValue = new Command((sender) => ValidateInput(), null);
+            CloseWindow = new Command(Close, null);
+            ValidateValue = new Command(ValidateInput, null);
             textBox.Focus();
         }
 

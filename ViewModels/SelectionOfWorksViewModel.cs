@@ -11,9 +11,9 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using WorkReportCreator.Models;
 
-namespace WorkReportCreator.ViewModels.Commands
+namespace WorkReportCreator.ViewModels
 {
-    internal class SelectionOfWorksViewModel : INotifyPropertyChanged
+    public class SelectionOfWorksViewModel : INotifyPropertyChanged
     {
         #region Fields
 
@@ -169,8 +169,8 @@ namespace WorkReportCreator.ViewModels.Commands
 
             SaveStudentInfo = new Command(ShowDialogSaveStudent, null);
             LoadStudentInfo = new Command(ShowDialogLoadStudent, null);
-            CheckAllLaboratoryButtons = new Command((sender) => CheckAllButtons(LaboratoryWorksButtons, ref _shouldCheckAllLaboratoryWorks), null);
-            CheckAllPracticalButtons = new Command((sender) => CheckAllButtons(PracticalWorksButtons, ref _shouldCheckAllPracticalWorks), null);
+            CheckAllLaboratoryButtons = new Command(() => CheckAllButtons(LaboratoryWorksButtons, ref _shouldCheckAllLaboratoryWorks), null);
+            CheckAllPracticalButtons = new Command(() => CheckAllButtons(PracticalWorksButtons, ref _shouldCheckAllPracticalWorks), null);
             ShowReportsPage = new Command(LoadReportsPage, null);
 
             MainParams mainParams = new MainParams();
@@ -287,7 +287,7 @@ namespace WorkReportCreator.ViewModels.Commands
         /// <summary>
         /// Создает окно с работами и показывает его
         /// </summary>
-        private void LoadReportsPage(object sender)
+        private void LoadReportsPage()
         {
             MainParams mainParams = new MainParams();
             if (string.IsNullOrEmpty(mainParams.UserDataFilePath))
@@ -329,7 +329,7 @@ namespace WorkReportCreator.ViewModels.Commands
         /// <summary>
         /// Сохраняет информацию о пользователе в выбранном файле
         /// </summary>
-        private void ShowDialogSaveStudent(object sender)
+        private void ShowDialogSaveStudent()
         {
 
             SaveFileDialog dialog = new SaveFileDialog()
@@ -371,7 +371,7 @@ namespace WorkReportCreator.ViewModels.Commands
         /// <summary>
         /// Загружает информацию о пользователе из выбранного файла
         /// </summary>
-        private void ShowDialogLoadStudent(object sender)
+        private void ShowDialogLoadStudent()
         {
             MainParams mainParams = new MainParams();
             OpenFileDialog dialog = new OpenFileDialog()

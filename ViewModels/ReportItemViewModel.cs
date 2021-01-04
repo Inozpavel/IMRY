@@ -180,7 +180,7 @@ namespace WorkReportCreator
         {
             FilesArray.CollectionChanged += (sender, e) => HintVisibility = FilesArray.Count != 0 ? Visibility.Hidden : Visibility.Visible;
 
-            AddFileInfo = new Command((sender) => AddNewFileInfo(), null);
+            AddFileInfo = new Command(() => AddNewFileInfo(), null);
             RemoveFileInfo = new Command(RemoveSelectedFileInfo, (sender) => SelectedItem != null);
             SwapUpFileInfo = new Command(SwapUpSelectedFileInfo, (sender) => _selectedItem != null && _selectedItemIndex != 0);
             SwapDownFileInfo = new Command(SwapDownSelectedFileInfo, (sender) => _selectedItem != null && _selectedItemIndex + 1 != FilesArray.Count);
@@ -278,7 +278,7 @@ namespace WorkReportCreator
         /// <summary>
         /// Удаляет выбранный элемент из списка файлов
         /// </summary>
-        public void RemoveSelectedFileInfo(object sender)
+        public void RemoveSelectedFileInfo()
         {
             FileInformationItem reportMenuItem = _selectedItem.Content as FileInformationItem;
 
@@ -302,12 +302,12 @@ namespace WorkReportCreator
         /// <summary>
         /// Перемещает выбранный элемент выше
         /// </summary>
-        public void SwapUpSelectedFileInfo(object sender) => SwapAdjacentItemWithSelected(-1);
+        public void SwapUpSelectedFileInfo() => SwapAdjacentItemWithSelected(-1);
 
         /// <summary>
         /// Перемещает выбранный элемент ниже
         /// </summary>
-        public void SwapDownSelectedFileInfo(object sender) => SwapAdjacentItemWithSelected(+1);
+        public void SwapDownSelectedFileInfo() => SwapAdjacentItemWithSelected(+1);
 
         /// <summary>
         /// Cоздает отчет для работы
@@ -439,7 +439,7 @@ namespace WorkReportCreator
         /// <summary>
         /// Показывает диалог для подтверждения сброса всего введенного в элемент
         /// </summary>
-        private void ShowDialogResetItem(object sender)
+        private void ShowDialogResetItem()
         {
             if (MessageBox.Show("В уверены, что хотите сбросить все?", "Подтвердите действие",
                 MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
