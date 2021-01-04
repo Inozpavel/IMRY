@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:customconrols="clr-namespace:WorkReportCreator.Views.CustomConrols" d:DataContext="{d:DesignInstance Type=customconrols:DynamicTaskItem}"
              mc:Ignorable="d" 
-             d:DesignWidth="800" MouseDown="InvertIsChecked" Height="auto" FontFamily="Verdana">
+             d:DesignWidth="800" MouseUp="InvertIsChecked" Height="auto" FontFamily="Verdana">
     <Border BorderBrush="#FFBAC3C3" BorderThickness="0.5" CornerRadius="5">
         <Grid Background="Transparent">
 
