@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkReportsCreator", "WorkReportsCreator.csproj", "{4F7C0CC8-6236-42A7-870B-94A800E5B6BD}"
+EndProject
+Project("{840C416C-B8F3-42BC-B0DD-F6BB14C9F8CB}") = "Installer", "InstallationFiles\Installer\Installer.aiproj", "{B0894B02-F4CF-4D5A-8F6E-4FFA36F7B8D8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		All|Any CPU = All|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4F7C0CC8-6236-42A7-870B-94A800E5B6BD}.All|Any CPU.ActiveCfg = Release|Any CPU
+		{4F7C0CC8-6236-42A7-870B-94A800E5B6BD}.All|Any CPU.Build.0 = Release|Any CPU
+		{4F7C0CC8-6236-42A7-870B-94A800E5B6BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F7C0CC8-6236-42A7-870B-94A800E5B6BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F7C0CC8-6236-42A7-870B-94A800E5B6BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F7C0CC8-6236-42A7-870B-94A800E5B6BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0894B02-F4CF-4D5A-8F6E-4FFA36F7B8D8}.All|Any CPU.ActiveCfg = DefaultBuild
+		{B0894B02-F4CF-4D5A-8F6E-4FFA36F7B8D8}.Debug|Any CPU.ActiveCfg = DefaultBuild
+		{B0894B02-F4CF-4D5A-8F6E-4FFA36F7B8D8}.Release|Any CPU.ActiveCfg = DefaultBuild
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E7142CCB-245B-417E-9382-F00FB017F669}
+	EndGlobalSection
+EndGlobal
